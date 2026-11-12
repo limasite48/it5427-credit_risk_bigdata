@@ -1,1 +1,8 @@
 _data/
+side_quest.md
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+outputs/.matplotlib/
+*.egg-info/

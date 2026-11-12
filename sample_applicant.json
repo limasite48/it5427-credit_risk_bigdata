@@ -1,0 +1,16 @@
+{
+  "SK_ID_CURR": 888001,
+  "AMT_INCOME_TOTAL": 350000.0,
+  "AMT_CREDIT": 400000.0,
+  "AMT_ANNUITY": 20000.0,
+  "DAYS_BIRTH": -15000,
+  "DAYS_EMPLOYED": -3000,
+  "NAME_INCOME_TYPE": "Commercial associate",
+  "OCCUPATION_TYPE": "Managers",
+  "NAME_EDUCATION_TYPE": "Higher education",
+  "NAME_FAMILY_STATUS": "Married",
+  "CODE_GENDER": "F",
+  "EXT_SOURCE_1": 0.85,
+  "EXT_SOURCE_2": 0.80,
+  "EXT_SOURCE_3": 0.75
+}
