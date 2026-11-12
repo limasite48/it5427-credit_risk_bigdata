@@ -1,0 +1,225 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:homecredit-bigdata:schema:hc.card.balance-monthly.v1",
+  "title": "card.statement_issued (CARD_SYSTEM)",
+  "description": "One event = one row of credit_card_balance.csv (original column names and values are kept in payload). event_time: 02:00 on day 1 of the month after MONTHS_BALANCE (counted from the submission month).",
+  "x-kafka": {
+    "topic": "hc.card.balance-monthly.v1",
+    "key": "customer_id (UTF-8 string)",
+    "value": "JSON UTF-8",
+    "headers": [
+      "event_type",
+      "schema_version"
+    ]
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "event_id",
+    "event_type",
+    "schema_version",
+    "source_system",
+    "source_table",
+    "event_time",
+    "produced_at",
+    "customer_id",
+    "payload"
+  ],
+  "properties": {
+    "event_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{32}$",
+      "description": "BLAKE2b-128 of source_table + natural key. Deterministic -> use it for de-duplication."
+    },
+    "event_type": {
+      "const": "card.statement_issued"
+    },
+    "schema_version": {
+      "type": "string",
+      "pattern": "^1\\.\\d+\\.\\d+$",
+      "description": "SemVer. A MAJOR change -> new topic (.v2)."
+    },
+    "source_system": {
+      "const": "CARD_SYSTEM"
+    },
+    "source_table": {
+      "const": "credit_card_balance"
+    },
+    "event_time": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?(Z|[+-]\\d{2}:\\d{2})$",
+      "description": "Business time (simulated, +07:00). 02:00 on day 1 of the month after MONTHS_BALANCE (counted from the submission month)."
+    },
+    "produced_at": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?(Z|[+-]\\d{2}:\\d{2})$",
+      "description": "Wall-clock time the producer sent the event."
+    },
+    "customer_id": {
+      "type": "integer",
+      "description": "SK_ID_CURR of the customer; also the Kafka message key."
+    },
+    "payload": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "SK_ID_PREV",
+        "SK_ID_CURR",
+        "MONTHS_BALANCE",
+        "AMT_BALANCE",
+        "AMT_CREDIT_LIMIT_ACTUAL",
+        "AMT_DRAWINGS_ATM_CURRENT",
+        "AMT_DRAWINGS_CURRENT",
+        "AMT_DRAWINGS_OTHER_CURRENT",
+        "AMT_DRAWINGS_POS_CURRENT",
+        "AMT_INST_MIN_REGULARITY",
+        "AMT_PAYMENT_CURRENT",
+        "AMT_PAYMENT_TOTAL_CURRENT",
+        "AMT_RECEIVABLE_PRINCIPAL",
+        "AMT_RECIVABLE",
+        "AMT_TOTAL_RECEIVABLE",
+        "CNT_DRAWINGS_ATM_CURRENT",
+        "CNT_DRAWINGS_CURRENT",
+        "CNT_DRAWINGS_OTHER_CURRENT",
+        "CNT_DRAWINGS_POS_CURRENT",
+        "CNT_INSTALMENT_MATURE_CUM",
+        "NAME_CONTRACT_STATUS",
+        "SK_DPD",
+        "SK_DPD_DEF"
+      ],
+      "properties": {
+        "SK_ID_PREV": {
+          "type": "integer"
+        },
+        "SK_ID_CURR": {
+          "type": "integer",
+          "description": "ID of loan in our sample",
+          "x-note": "hashed"
+        },
+        "MONTHS_BALANCE": {
+          "type": "integer",
+          "description": "Month of balance relative to application date (-1 means the freshest balance date)",
+          "x-note": "time only relative to the application"
+        },
+        "AMT_BALANCE": {
+          "type": "number",
+          "description": "Balance during the month of previous credit"
+        },
+        "AMT_CREDIT_LIMIT_ACTUAL": {
+          "type": "integer",
+          "description": "Credit card limit during the month of the previous credit"
+        },
+        "AMT_DRAWINGS_ATM_CURRENT": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Amount drawing at ATM during the month of the previous credit"
+        },
+        "AMT_DRAWINGS_CURRENT": {
+          "type": "number",
+          "description": "Amount drawing during the month of the previous credit"
+        },
+        "AMT_DRAWINGS_OTHER_CURRENT": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Amount of other drawings during the month of the previous credit"
+        },
+        "AMT_DRAWINGS_POS_CURRENT": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Amount drawing or buying goods during the month of the previous credit"
+        },
+        "AMT_INST_MIN_REGULARITY": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Minimal installment for this month of the previous credit"
+        },
+        "AMT_PAYMENT_CURRENT": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "How much did the client pay during the month on the previous credit"
+        },
+        "AMT_PAYMENT_TOTAL_CURRENT": {
+          "type": "number",
+          "description": "How much did the client pay during the month in total on the previous credit"
+        },
+        "AMT_RECEIVABLE_PRINCIPAL": {
+          "type": "number",
+          "description": "Amount receivable for principal on the previous credit"
+        },
+        "AMT_RECIVABLE": {
+          "type": "number",
+          "description": "Amount receivable on the previous credit"
+        },
+        "AMT_TOTAL_RECEIVABLE": {
+          "type": "number",
+          "description": "Total amount receivable on the previous credit"
+        },
+        "CNT_DRAWINGS_ATM_CURRENT": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Number of drawings at ATM during this month on the previous credit"
+        },
+        "CNT_DRAWINGS_CURRENT": {
+          "type": "integer",
+          "description": "Number of drawings during this month on the previous credit"
+        },
+        "CNT_DRAWINGS_OTHER_CURRENT": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Number of other drawings during this month on the previous credit"
+        },
+        "CNT_DRAWINGS_POS_CURRENT": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Number of drawings for goods during this month on the previous credit"
+        },
+        "CNT_INSTALMENT_MATURE_CUM": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Number of paid installments on the previous credit"
+        },
+        "NAME_CONTRACT_STATUS": {
+          "type": "string",
+          "description": "Contract status (active signed,...) on the previous credit",
+          "x-observed-values": [
+            "Active",
+            "Approved",
+            "Completed",
+            "Demand",
+            "Refused",
+            "Sent proposal",
+            "Signed"
+          ]
+        },
+        "SK_DPD": {
+          "type": "integer",
+          "description": "DPD (Days past due) during the month on the previous credit"
+        },
+        "SK_DPD_DEF": {
+          "type": "integer",
+          "description": "DPD (Days past due) during the month with tolerance (debts with low loan amounts are ignored) of the previous credit"
+        }
+      }
+    }
+  }
+}

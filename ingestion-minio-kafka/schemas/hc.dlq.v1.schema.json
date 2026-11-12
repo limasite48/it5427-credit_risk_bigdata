@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:homecredit-bigdata:schema:hc.dlq.v1",
+  "title": "Dead-letter event",
+  "description": "Written by the sink when a message is not valid JSON or violates its topic schema.",
+  "x-kafka": {
+    "topic": "hc.dlq.v1",
+    "key": "original key",
+    "value": "JSON UTF-8"
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "original_topic",
+    "partition",
+    "offset",
+    "error",
+    "raw_value",
+    "failed_at"
+  ],
+  "properties": {
+    "original_topic": {
+      "type": "string"
+    },
+    "partition": {
+      "type": "integer"
+    },
+    "offset": {
+      "type": "integer"
+    },
+    "error": {
+      "type": "string",
+      "description": "First error (parse error or schema violation)."
+    },
+    "raw_value": {
+      "type": "string",
+      "description": "Original message, verbatim."
+    },
+    "failed_at": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?(Z|[+-]\\d{2}:\\d{2})$"
+    }
+  }
+}

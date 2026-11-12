@@ -1,0 +1,15 @@
+{
+  "event_id": "962a22491e8d908f5ee079cdb1a45575",
+  "event_type": "bureau.credit_balance.reported",
+  "schema_version": "1.0.0",
+  "source_system": "CREDIT_BUREAU",
+  "source_table": "bureau_balance",
+  "event_time": "2025-12-01T05:05:19+07:00",
+  "produced_at": "2026-11-12T10:50:48.173+07:00",
+  "customer_id": 418493,
+  "payload": {
+    "SK_ID_BUREAU": 5367782,
+    "MONTHS_BALANCE": -12,
+    "STATUS": "0"
+  }
+}

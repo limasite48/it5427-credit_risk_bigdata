@@ -32,7 +32,7 @@ from src.models.explainability import CreditRiskExplainer
 from src.service.scoring_service import CreditRiskScoringService
 
 
-def run_pipeline(sample_size: int = None, fast_mode: bool = False):
+def run_pipeline(sample_size: int = None, fast_mode: bool = False, include_macro: bool = False):
     start_time = time.time()
     print("=" * 70)
     print(" IT5427 Big Data: Track A Credit Risk Analytics & ML Pipeline")
@@ -42,6 +42,16 @@ def run_pipeline(sample_size: int = None, fast_mode: bool = False):
     print(f"\n[1/7] Loading application data from {TRAIN_DATA_PATH.name}...")
     df = load_application_data(TRAIN_DATA_PATH, nrows=sample_size)
     print(f"      Loaded {len(df):,} records with {df.shape[1]} columns.")
+
+    # Optional Multi-source macro enrichment
+    if include_macro:
+        from src.data.macro_loader import MacroFeatureJoiner
+        try:
+            joiner = MacroFeatureJoiner()
+            df = joiner.join_macro_features(df)
+            print("      Enriched with regional macro indicators (GDP, Unemployment, CPI).")
+        except Exception as e:
+            print(f"      Macro indicators not joined: {e}")
 
     # 2. Statistical EDA & NPL Metrics
     print("\n[2/7] Computing portfolio-level risk metrics & baseline NPL...")
@@ -151,6 +161,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run Track A Credit Risk Pipeline")
     parser.add_argument("--sample-size", type=int, default=None, help="Limit number of rows for testing")
     parser.add_argument("--fast", action="store_true", help="Run with reduced trees for faster execution")
+    parser.add_argument("--include-macro", action="store_true", help="Join regional macroeconomic indicators")
     args = parser.parse_args()
 
-    run_pipeline(sample_size=args.sample_size, fast_mode=args.fast)
+    run_pipeline(sample_size=args.sample_size, fast_mode=args.fast, include_macro=args.include_macro)

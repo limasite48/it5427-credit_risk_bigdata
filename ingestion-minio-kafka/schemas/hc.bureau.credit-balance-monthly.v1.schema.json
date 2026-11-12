@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:homecredit-bigdata:schema:hc.bureau.credit-balance-monthly.v1",
+  "title": "bureau.credit_balance.reported (CREDIT_BUREAU)",
+  "description": "One event = one row of bureau_balance.csv (original column names and values are kept in payload). event_time: Same as bureau (same credit report); customer resolved via SK_ID_BUREAU -> bureau.",
+  "x-kafka": {
+    "topic": "hc.bureau.credit-balance-monthly.v1",
+    "key": "customer_id (UTF-8 string)",
+    "value": "JSON UTF-8",
+    "headers": [
+      "event_type",
+      "schema_version"
+    ]
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "event_id",
+    "event_type",
+    "schema_version",
+    "source_system",
+    "source_table",
+    "event_time",
+    "produced_at",
+    "customer_id",
+    "payload"
+  ],
+  "properties": {
+    "event_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{32}$",
+      "description": "BLAKE2b-128 of source_table + natural key. Deterministic -> use it for de-duplication."
+    },
+    "event_type": {
+      "const": "bureau.credit_balance.reported"
+    },
+    "schema_version": {
+      "type": "string",
+      "pattern": "^1\\.\\d+\\.\\d+$",
+      "description": "SemVer. A MAJOR change -> new topic (.v2)."
+    },
+    "source_system": {
+      "const": "CREDIT_BUREAU"
+    },
+    "source_table": {
+      "const": "bureau_balance"
+    },
+    "event_time": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?(Z|[+-]\\d{2}:\\d{2})$",
+      "description": "Business time (simulated, +07:00). Same as bureau (same credit report); customer resolved via SK_ID_BUREAU -> bureau."
+    },
+    "produced_at": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?(Z|[+-]\\d{2}:\\d{2})$",
+      "description": "Wall-clock time the producer sent the event."
+    },
+    "customer_id": {
+      "type": "integer",
+      "description": "SK_ID_CURR of the customer; also the Kafka message key."
+    },
+    "payload": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "SK_ID_BUREAU",
+        "MONTHS_BALANCE",
+        "STATUS"
+      ],
+      "properties": {
+        "SK_ID_BUREAU": {
+          "type": "integer"
+        },
+        "MONTHS_BALANCE": {
+          "type": "integer",
+          "description": "Month of balance relative to application date (-1 means the freshest balance date)",
+          "x-note": "time only relative to the application"
+        },
+        "STATUS": {
+          "type": "string",
+          "description": "Status of Credit Bureau loan during the month (active, closed, DPD0-30,… [C means closed, X means status unknown, 0 means no DPD, 1 means maximal did during month between 1-30, 2 means DPD 31-60,… 5 means DPD 120+ or sold or written off ] )",
+          "x-observed-values": [
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "C",
+            "X"
+          ]
+        }
+      }
+    }
+  }
+}

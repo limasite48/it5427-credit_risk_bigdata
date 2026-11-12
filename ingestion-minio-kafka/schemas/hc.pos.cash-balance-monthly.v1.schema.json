@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:homecredit-bigdata:schema:hc.pos.cash-balance-monthly.v1",
+  "title": "pos_cash.statement_issued (POS_PARTNER)",
+  "description": "One event = one row of POS_CASH_balance.csv (original column names and values are kept in payload). event_time: 02:00 on day 1 of the month after MONTHS_BALANCE (counted from the submission month).",
+  "x-kafka": {
+    "topic": "hc.pos.cash-balance-monthly.v1",
+    "key": "customer_id (UTF-8 string)",
+    "value": "JSON UTF-8",
+    "headers": [
+      "event_type",
+      "schema_version"
+    ]
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "event_id",
+    "event_type",
+    "schema_version",
+    "source_system",
+    "source_table",
+    "event_time",
+    "produced_at",
+    "customer_id",
+    "payload"
+  ],
+  "properties": {
+    "event_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{32}$",
+      "description": "BLAKE2b-128 of source_table + natural key. Deterministic -> use it for de-duplication."
+    },
+    "event_type": {
+      "const": "pos_cash.statement_issued"
+    },
+    "schema_version": {
+      "type": "string",
+      "pattern": "^1\\.\\d+\\.\\d+$",
+      "description": "SemVer. A MAJOR change -> new topic (.v2)."
+    },
+    "source_system": {
+      "const": "POS_PARTNER"
+    },
+    "source_table": {
+      "const": "pos_cash_balance"
+    },
+    "event_time": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?(Z|[+-]\\d{2}:\\d{2})$",
+      "description": "Business time (simulated, +07:00). 02:00 on day 1 of the month after MONTHS_BALANCE (counted from the submission month)."
+    },
+    "produced_at": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?(Z|[+-]\\d{2}:\\d{2})$",
+      "description": "Wall-clock time the producer sent the event."
+    },
+    "customer_id": {
+      "type": "integer",
+      "description": "SK_ID_CURR of the customer; also the Kafka message key."
+    },
+    "payload": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "SK_ID_PREV",
+        "SK_ID_CURR",
+        "MONTHS_BALANCE",
+        "CNT_INSTALMENT",
+        "CNT_INSTALMENT_FUTURE",
+        "NAME_CONTRACT_STATUS",
+        "SK_DPD",
+        "SK_DPD_DEF"
+      ],
+      "properties": {
+        "SK_ID_PREV": {
+          "type": "integer"
+        },
+        "SK_ID_CURR": {
+          "type": "integer",
+          "description": "ID of loan in our sample"
+        },
+        "MONTHS_BALANCE": {
+          "type": "integer",
+          "description": "Month of balance relative to application date (-1 means the information to the freshest monthly snapshot, 0 means the information at application - often it will be the same as -1 as many banks are not updating the information to Credit Bureau regularly )",
+          "x-note": "time only relative to the application"
+        },
+        "CNT_INSTALMENT": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Term of previous credit (can change over time)"
+        },
+        "CNT_INSTALMENT_FUTURE": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Installments left to pay on the previous credit"
+        },
+        "NAME_CONTRACT_STATUS": {
+          "type": "string",
+          "description": "Contract status during the month",
+          "x-observed-values": [
+            "Active",
+            "Amortized debt",
+            "Approved",
+            "Canceled",
+            "Completed",
+            "Demand",
+            "Returned to the store",
+            "Signed",
+            "XNA"
+          ]
+        },
+        "SK_DPD": {
+          "type": "integer",
+          "description": "DPD (days past due) during the month of previous credit"
+        },
+        "SK_DPD_DEF": {
+          "type": "integer",
+          "description": "DPD during the month with tolerance (debts with low loan amounts are ignored) of the previous credit"
+        }
+      }
+    }
+  }
+}

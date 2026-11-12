@@ -1,0 +1,63 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ListBuckets",
+      "Effect": "Allow",
+      "Action": [
+        "s3:ListBucket",
+        "s3:GetBucketLocation"
+      ],
+      "Resource": [
+        "arn:aws:s3:::landing",
+        "arn:aws:s3:::bronze",
+        "arn:aws:s3:::reference",
+        "arn:aws:s3:::silver",
+        "arn:aws:s3:::gold",
+        "arn:aws:s3:::quarantine",
+        "arn:aws:s3:::checkpoints"
+      ]
+    },
+    {
+      "Sid": "Read",
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject"
+      ],
+      "Resource": [
+        "arn:aws:s3:::landing/*",
+        "arn:aws:s3:::bronze/*",
+        "arn:aws:s3:::reference/*"
+      ]
+    },
+    {
+      "Sid": "Write",
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject",
+        "s3:PutObject",
+        "s3:AbortMultipartUpload",
+        "s3:ListMultipartUploadParts"
+      ],
+      "Resource": [
+        "arn:aws:s3:::quarantine/*"
+      ]
+    },
+    {
+      "Sid": "ReadWriteDelete",
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject",
+        "s3:PutObject",
+        "s3:DeleteObject",
+        "s3:AbortMultipartUpload",
+        "s3:ListMultipartUploadParts"
+      ],
+      "Resource": [
+        "arn:aws:s3:::silver/*",
+        "arn:aws:s3:::gold/*",
+        "arn:aws:s3:::checkpoints/*"
+      ]
+    }
+  ]
+}

@@ -112,25 +112,28 @@ class CreditRiskPreprocessor(BaseEstimator, TransformerMixin):
         """Transform raw data into a clean model-ready DataFrame."""
         data = self._engineer_domain_features(X)
 
-        # Handle numeric imputation using precomputed medians
+        # Efficient vectorized numerical imputation without DataFrame fragmentation
+        num_dict = {}
         for c in self.num_cols:
             if c in data.columns:
-                data[c] = data[c].fillna(self.medians_.get(c, 0.0))
+                num_dict[c] = data[c].fillna(self.medians_.get(c, 0.0))
             else:
-                data[c] = self.medians_.get(c, 0.0)
+                num_dict[c] = pd.Series(self.medians_.get(c, 0.0), index=data.index)
+        num_df = pd.DataFrame(num_dict, index=data.index)
 
-        # Handle categoricals
+        # Vectorized categorical encoding
         if self.cat_cols and self.encoder:
+            cat_dict = {}
             for c in self.cat_cols:
-                if c not in data.columns:
-                    data[c] = "Missing"
+                if c in data.columns:
+                    cat_dict[c] = data[c].fillna("Missing").astype(str)
                 else:
-                    data[c] = data[c].fillna("Missing").astype(str)
-            cat_encoded = self.encoder.transform(data[self.cat_cols])
-            cat_df = pd.DataFrame(
-                cat_encoded, columns=self.cat_cols, index=data.index
-            )
-            for c in self.cat_cols:
-                data[c] = cat_df[c]
+                    cat_dict[c] = pd.Series("Missing", index=data.index)
+            cat_raw_df = pd.DataFrame(cat_dict, index=data.index)
+            cat_encoded = self.encoder.transform(cat_raw_df)
+            cat_df = pd.DataFrame(cat_encoded, columns=self.cat_cols, index=data.index)
+            out_df = pd.concat([num_df, cat_df], axis=1)
+        else:
+            out_df = num_df
 
-        return data[self.feature_names_]
+        return out_df[self.feature_names_]

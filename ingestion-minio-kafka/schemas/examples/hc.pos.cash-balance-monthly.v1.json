@@ -1,0 +1,20 @@
+{
+  "event_id": "09b3ee8d60d7d088894e6675ea3022ff",
+  "event_type": "pos_cash.statement_issued",
+  "schema_version": "1.0.0",
+  "source_system": "POS_PARTNER",
+  "source_table": "pos_cash_balance",
+  "event_time": "2025-12-01T02:00:05+07:00",
+  "produced_at": "2026-11-12T10:50:48.173+07:00",
+  "customer_id": 314694,
+  "payload": {
+    "SK_ID_PREV": 2102405,
+    "SK_ID_CURR": 314694,
+    "MONTHS_BALANCE": -1,
+    "CNT_INSTALMENT": 12.0,
+    "CNT_INSTALMENT_FUTURE": 2.0,
+    "NAME_CONTRACT_STATUS": "Active",
+    "SK_DPD": 0,
+    "SK_DPD_DEF": 0
+  }
+}

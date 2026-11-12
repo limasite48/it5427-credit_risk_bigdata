@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:homecredit-bigdata:schema:hc.core.installment-payment.v1",
+  "title": "installment.payment_recorded (CORE_BANKING)",
+  "description": "One event = one row of installments_payments.csv (original column names and values are kept in payload). event_time: Submission date + DAYS_ENTRY_PAYMENT (DAYS_INSTALMENT if missing), during business hours.",
+  "x-kafka": {
+    "topic": "hc.core.installment-payment.v1",
+    "key": "customer_id (UTF-8 string)",
+    "value": "JSON UTF-8",
+    "headers": [
+      "event_type",
+      "schema_version"
+    ]
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "event_id",
+    "event_type",
+    "schema_version",
+    "source_system",
+    "source_table",
+    "event_time",
+    "produced_at",
+    "customer_id",
+    "payload"
+  ],
+  "properties": {
+    "event_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{32}$",
+      "description": "BLAKE2b-128 of source_table + natural key. Deterministic -> use it for de-duplication."
+    },
+    "event_type": {
+      "const": "installment.payment_recorded"
+    },
+    "schema_version": {
+      "type": "string",
+      "pattern": "^1\\.\\d+\\.\\d+$",
+      "description": "SemVer. A MAJOR change -> new topic (.v2)."
+    },
+    "source_system": {
+      "const": "CORE_BANKING"
+    },
+    "source_table": {
+      "const": "installments_payments"
+    },
+    "event_time": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?(Z|[+-]\\d{2}:\\d{2})$",
+      "description": "Business time (simulated, +07:00). Submission date + DAYS_ENTRY_PAYMENT (DAYS_INSTALMENT if missing), during business hours."
+    },
+    "produced_at": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?(Z|[+-]\\d{2}:\\d{2})$",
+      "description": "Wall-clock time the producer sent the event."
+    },
+    "customer_id": {
+      "type": "integer",
+      "description": "SK_ID_CURR of the customer; also the Kafka message key."
+    },
+    "payload": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "SK_ID_PREV",
+        "SK_ID_CURR",
+        "NUM_INSTALMENT_VERSION",
+        "NUM_INSTALMENT_NUMBER",
+        "DAYS_INSTALMENT",
+        "DAYS_ENTRY_PAYMENT",
+        "AMT_INSTALMENT",
+        "AMT_PAYMENT"
+      ],
+      "properties": {
+        "SK_ID_PREV": {
+          "type": "integer"
+        },
+        "SK_ID_CURR": {
+          "type": "integer",
+          "description": "ID of loan in our sample",
+          "x-note": "hashed"
+        },
+        "NUM_INSTALMENT_VERSION": {
+          "type": "number",
+          "description": "Version of installment calendar (0 is for credit card) of previous credit. Change of installment version from month to month signifies that some parameter of payment calendar has changed"
+        },
+        "NUM_INSTALMENT_NUMBER": {
+          "type": "integer",
+          "description": "On which installment we observe payment"
+        },
+        "DAYS_INSTALMENT": {
+          "type": "number",
+          "description": "When the installment of previous credit was supposed to be paid (relative to application date of current loan)",
+          "x-note": "time only relative to the application"
+        },
+        "DAYS_ENTRY_PAYMENT": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "When was the installments of previous credit paid actually (relative to application date of current loan)",
+          "x-note": "time only relative to the application"
+        },
+        "AMT_INSTALMENT": {
+          "type": "number",
+          "description": "What was the prescribed installment amount of previous credit on this installment"
+        },
+        "AMT_PAYMENT": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "What the client actually paid on previous credit on this installment"
+        }
+      }
+    }
+  }
+}

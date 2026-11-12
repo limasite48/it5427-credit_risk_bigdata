@@ -1,0 +1,492 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:homecredit-bigdata:schema:hc.history.previous-application.v1",
+  "title": "previous_application.decided (LOAN_HISTORY_DB)",
+  "description": "One event = one row of previous_application.csv (original column names and values are kept in payload). event_time: Current submission date + DAYS_DECISION, hour = HOUR_APPR_PROCESS_START of the previous application.",
+  "x-kafka": {
+    "topic": "hc.history.previous-application.v1",
+    "key": "customer_id (UTF-8 string)",
+    "value": "JSON UTF-8",
+    "headers": [
+      "event_type",
+      "schema_version"
+    ]
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "event_id",
+    "event_type",
+    "schema_version",
+    "source_system",
+    "source_table",
+    "event_time",
+    "produced_at",
+    "customer_id",
+    "payload"
+  ],
+  "properties": {
+    "event_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{32}$",
+      "description": "BLAKE2b-128 of source_table + natural key. Deterministic -> use it for de-duplication."
+    },
+    "event_type": {
+      "const": "previous_application.decided"
+    },
+    "schema_version": {
+      "type": "string",
+      "pattern": "^1\\.\\d+\\.\\d+$",
+      "description": "SemVer. A MAJOR change -> new topic (.v2)."
+    },
+    "source_system": {
+      "const": "LOAN_HISTORY_DB"
+    },
+    "source_table": {
+      "const": "previous_application"
+    },
+    "event_time": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?(Z|[+-]\\d{2}:\\d{2})$",
+      "description": "Business time (simulated, +07:00). Current submission date + DAYS_DECISION, hour = HOUR_APPR_PROCESS_START of the previous application."
+    },
+    "produced_at": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?(Z|[+-]\\d{2}:\\d{2})$",
+      "description": "Wall-clock time the producer sent the event."
+    },
+    "customer_id": {
+      "type": "integer",
+      "description": "SK_ID_CURR of the customer; also the Kafka message key."
+    },
+    "payload": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "SK_ID_PREV",
+        "SK_ID_CURR",
+        "NAME_CONTRACT_TYPE",
+        "AMT_ANNUITY",
+        "AMT_APPLICATION",
+        "AMT_CREDIT",
+        "AMT_DOWN_PAYMENT",
+        "AMT_GOODS_PRICE",
+        "WEEKDAY_APPR_PROCESS_START",
+        "HOUR_APPR_PROCESS_START",
+        "FLAG_LAST_APPL_PER_CONTRACT",
+        "NFLAG_LAST_APPL_IN_DAY",
+        "RATE_DOWN_PAYMENT",
+        "RATE_INTEREST_PRIMARY",
+        "RATE_INTEREST_PRIVILEGED",
+        "NAME_CASH_LOAN_PURPOSE",
+        "NAME_CONTRACT_STATUS",
+        "DAYS_DECISION",
+        "NAME_PAYMENT_TYPE",
+        "CODE_REJECT_REASON",
+        "NAME_TYPE_SUITE",
+        "NAME_CLIENT_TYPE",
+        "NAME_GOODS_CATEGORY",
+        "NAME_PORTFOLIO",
+        "NAME_PRODUCT_TYPE",
+        "CHANNEL_TYPE",
+        "SELLERPLACE_AREA",
+        "NAME_SELLER_INDUSTRY",
+        "CNT_PAYMENT",
+        "NAME_YIELD_GROUP",
+        "PRODUCT_COMBINATION",
+        "DAYS_FIRST_DRAWING",
+        "DAYS_FIRST_DUE",
+        "DAYS_LAST_DUE_1ST_VERSION",
+        "DAYS_LAST_DUE",
+        "DAYS_TERMINATION",
+        "NFLAG_INSURED_ON_APPROVAL"
+      ],
+      "properties": {
+        "SK_ID_PREV": {
+          "type": "integer"
+        },
+        "SK_ID_CURR": {
+          "type": "integer",
+          "description": "ID of loan in our sample",
+          "x-note": "hashed"
+        },
+        "NAME_CONTRACT_TYPE": {
+          "type": "string",
+          "description": "Contract product type (Cash loan, consumer loan [POS] ,...) of the previous application",
+          "x-observed-values": [
+            "Cash loans",
+            "Consumer loans",
+            "Revolving loans",
+            "XNA"
+          ]
+        },
+        "AMT_ANNUITY": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Annuity of previous application"
+        },
+        "AMT_APPLICATION": {
+          "type": "number",
+          "description": "For how much credit did client ask on the previous application"
+        },
+        "AMT_CREDIT": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Final credit amount on the previous application. This differs from AMT_APPLICATION in a way that the AMT_APPLICATION is the amount for which the client initially applied for, but during our approval process he could have received different amount - AMT_CREDIT"
+        },
+        "AMT_DOWN_PAYMENT": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Down payment on the previous application"
+        },
+        "AMT_GOODS_PRICE": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Goods price of good that client asked for (if applicable) on the previous application"
+        },
+        "WEEKDAY_APPR_PROCESS_START": {
+          "type": "string",
+          "description": "On which day of the week did the client apply for previous application",
+          "x-observed-values": [
+            "FRIDAY",
+            "MONDAY",
+            "SATURDAY",
+            "SUNDAY",
+            "THURSDAY",
+            "TUESDAY",
+            "WEDNESDAY"
+          ]
+        },
+        "HOUR_APPR_PROCESS_START": {
+          "type": "integer",
+          "description": "Approximately at what day hour did the client apply for the previous application",
+          "x-note": "rounded"
+        },
+        "FLAG_LAST_APPL_PER_CONTRACT": {
+          "type": "string",
+          "description": "Flag if it was last application for the previous contract. Sometimes by mistake of client or our clerk there could be more applications for one single contract",
+          "x-observed-values": [
+            "N",
+            "Y"
+          ]
+        },
+        "NFLAG_LAST_APPL_IN_DAY": {
+          "type": "integer",
+          "description": "Flag if the application was the last application per day of the client. Sometimes clients apply for more applications a day. Rarely it could also be error in our system that one application is in the database twice"
+        },
+        "RATE_DOWN_PAYMENT": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Down payment rate normalized on previous credit",
+          "x-note": "normalized"
+        },
+        "RATE_INTEREST_PRIMARY": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Interest rate normalized on previous credit",
+          "x-note": "normalized"
+        },
+        "RATE_INTEREST_PRIVILEGED": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Interest rate normalized on previous credit",
+          "x-note": "normalized"
+        },
+        "NAME_CASH_LOAN_PURPOSE": {
+          "type": "string",
+          "description": "Purpose of the cash loan",
+          "x-observed-values": [
+            "Building a house or an annex",
+            "Business development",
+            "Buying a garage",
+            "Buying a holiday home / land",
+            "Buying a home",
+            "Buying a new car",
+            "Buying a used car",
+            "Car repairs",
+            "Education",
+            "Everyday expenses",
+            "Furniture",
+            "Gasification / water supply",
+            "Hobby",
+            "Journey",
+            "Medicine",
+            "Money for a third person",
+            "Other",
+            "Payments on other loans",
+            "Purchase of electronic equipment",
+            "Refusal to name the goal",
+            "Repairs",
+            "Urgent needs",
+            "Wedding / gift / holiday",
+            "XAP",
+            "XNA"
+          ]
+        },
+        "NAME_CONTRACT_STATUS": {
+          "type": "string",
+          "description": "Contract status (approved, cancelled, ...) of previous application",
+          "x-observed-values": [
+            "Approved",
+            "Canceled",
+            "Refused",
+            "Unused offer"
+          ]
+        },
+        "DAYS_DECISION": {
+          "type": "integer",
+          "description": "Relative to current application when was the decision about previous application made",
+          "x-note": "time only relative to the application"
+        },
+        "NAME_PAYMENT_TYPE": {
+          "type": "string",
+          "description": "Payment method that client chose to pay for the previous application",
+          "x-observed-values": [
+            "Cash through the bank",
+            "Cashless from the account of the employer",
+            "Non-cash from your account",
+            "XNA"
+          ]
+        },
+        "CODE_REJECT_REASON": {
+          "type": "string",
+          "description": "Why was the previous application rejected",
+          "x-observed-values": [
+            "CLIENT",
+            "HC",
+            "LIMIT",
+            "SCO",
+            "SCOFR",
+            "SYSTEM",
+            "VERIF",
+            "XAP",
+            "XNA"
+          ]
+        },
+        "NAME_TYPE_SUITE": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Who accompanied client when applying for the previous application",
+          "x-observed-values": [
+            "Children",
+            "Family",
+            "Group of people",
+            "Other_A",
+            "Other_B",
+            "Spouse, partner",
+            "Unaccompanied"
+          ]
+        },
+        "NAME_CLIENT_TYPE": {
+          "type": "string",
+          "description": "Was the client old or new client when applying for the previous application",
+          "x-observed-values": [
+            "New",
+            "Refreshed",
+            "Repeater",
+            "XNA"
+          ]
+        },
+        "NAME_GOODS_CATEGORY": {
+          "type": "string",
+          "description": "What kind of goods did the client apply for in the previous application",
+          "x-observed-values": [
+            "Additional Service",
+            "Animals",
+            "Audio/Video",
+            "Auto Accessories",
+            "Clothing and Accessories",
+            "Computers",
+            "Construction Materials",
+            "Consumer Electronics",
+            "Direct Sales",
+            "Education",
+            "Fitness",
+            "Furniture",
+            "Gardening",
+            "Homewares",
+            "House Construction",
+            "Insurance",
+            "Jewelry",
+            "Medical Supplies",
+            "Medicine",
+            "Mobile",
+            "Office Appliances",
+            "Other",
+            "Photo / Cinema Equipment",
+            "Sport and Leisure",
+            "Tourism",
+            "Vehicles",
+            "Weapon",
+            "XNA"
+          ]
+        },
+        "NAME_PORTFOLIO": {
+          "type": "string",
+          "description": "Was the previous application for CASH, POS, CAR, …",
+          "x-observed-values": [
+            "Cards",
+            "Cars",
+            "Cash",
+            "POS",
+            "XNA"
+          ]
+        },
+        "NAME_PRODUCT_TYPE": {
+          "type": "string",
+          "description": "Was the previous application x-sell o walk-in",
+          "x-observed-values": [
+            "XNA",
+            "walk-in",
+            "x-sell"
+          ]
+        },
+        "CHANNEL_TYPE": {
+          "type": "string",
+          "description": "Through which channel we acquired the client on the previous application",
+          "x-observed-values": [
+            "AP+ (Cash loan)",
+            "Car dealer",
+            "Channel of corporate sales",
+            "Contact center",
+            "Country-wide",
+            "Credit and cash offices",
+            "Regional / Local",
+            "Stone"
+          ]
+        },
+        "SELLERPLACE_AREA": {
+          "type": "integer",
+          "description": "Selling area of seller place of the previous application"
+        },
+        "NAME_SELLER_INDUSTRY": {
+          "type": "string",
+          "description": "The industry of the seller",
+          "x-observed-values": [
+            "Auto technology",
+            "Clothing",
+            "Connectivity",
+            "Construction",
+            "Consumer electronics",
+            "Furniture",
+            "Industry",
+            "Jewelry",
+            "MLM partners",
+            "Tourism",
+            "XNA"
+          ]
+        },
+        "CNT_PAYMENT": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Term of previous credit at application of the previous application"
+        },
+        "NAME_YIELD_GROUP": {
+          "type": "string",
+          "description": "Grouped interest rate into small medium and high of the previous application",
+          "x-note": "grouped",
+          "x-observed-values": [
+            "XNA",
+            "high",
+            "low_action",
+            "low_normal",
+            "middle"
+          ]
+        },
+        "PRODUCT_COMBINATION": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Detailed product combination of the previous application",
+          "x-observed-values": [
+            "Card Street",
+            "Card X-Sell",
+            "Cash",
+            "Cash Street: high",
+            "Cash Street: low",
+            "Cash Street: middle",
+            "Cash X-Sell: high",
+            "Cash X-Sell: low",
+            "Cash X-Sell: middle",
+            "POS household with interest",
+            "POS household without interest",
+            "POS industry with interest",
+            "POS industry without interest",
+            "POS mobile with interest",
+            "POS mobile without interest",
+            "POS other with interest",
+            "POS others without interest"
+          ]
+        },
+        "DAYS_FIRST_DRAWING": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Relative to application date of current application when was the first disbursement of the previous application",
+          "x-note": "time only relative to the application"
+        },
+        "DAYS_FIRST_DUE": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Relative to application date of current application when was the first due supposed to be of the previous application",
+          "x-note": "time only relative to the application"
+        },
+        "DAYS_LAST_DUE_1ST_VERSION": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Relative to application date of current application when was the first due of the previous application",
+          "x-note": "time only relative to the application"
+        },
+        "DAYS_LAST_DUE": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Relative to application date of current application when was the last due date of the previous application",
+          "x-note": "time only relative to the application"
+        },
+        "DAYS_TERMINATION": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Relative to application date of current application when was the expected termination of the previous application",
+          "x-note": "time only relative to the application"
+        },
+        "NFLAG_INSURED_ON_APPROVAL": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Did the client requested insurance during the previous application"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,93 @@
+# Ingestion layer infrastructure: Kafka (KRaft, single node) + MinIO, plus 2 one-off init jobs.
+#   docker compose -f infra/docker-compose.yml up -d
+# From the host:                               Kafka localhost:9092 | MinIO S3 localhost:9000 | MinIO console http://localhost:9001
+# From other containers (same network hc-net): Kafka kafka:19092    | MinIO http://minio:9000
+name: homecredit-bigdata
+
+services:
+  kafka:
+    image: apache/kafka:3.9.0
+    container_name: hc-kafka
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: INTERNAL://:19092,EXTERNAL://:9092,CONTROLLER://:9093
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:19092,EXTERNAL://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"   # topics are only created by kafka/create-topics.sh
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server localhost:9092 > /dev/null 2>&1"]
+      interval: 10s
+      timeout: 10s
+      retries: 12
+    networks: [hc-net]
+
+  kafka-init:
+    image: apache/kafka:3.9.0
+    depends_on:
+      kafka:
+        condition: service_healthy
+    environment:
+      BOOTSTRAP: kafka:19092
+    volumes:
+      - ./kafka/create-topics.sh:/create-topics.sh:ro
+    entrypoint: ["/bin/bash", "/create-topics.sh"]
+    restart: "no"
+    networks: [hc-net]
+
+  # The official minio/minio and minio/mc images were removed from Docker Hub and Quay (MinIO stopped
+  # publishing community builds in 10/2025) -> use Bitnami's archived build: MinIO 2025-07-23, no longer
+  # receiving security patches, for demo/local use only.
+  minio:
+    image: bitnamilegacy/minio:2025.7.23-debian-12-r5
+    container_name: hc-minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minioadmin123}
+    volumes:
+      - minio-data:/bitnami/minio/data
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:9000/minio/health/live"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    networks: [hc-net]
+
+  minio-init:
+    image: bitnamilegacy/minio-client:2025.7.21-debian-12-r3
+    depends_on:
+      minio:
+        condition: service_healthy
+    environment:
+      HOME: /tmp  # the image runs as user 1001; mc needs a writable home to store its alias
+      MINIO_URL: http://minio:9000
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minioadmin123}
+      SVC_INGEST_SECRET: ${SVC_INGEST_SECRET:-ingest-secret-123}
+      SVC_SPARK_SECRET: ${SVC_SPARK_SECRET:-spark-secret-123}
+      SVC_ML_SECRET: ${SVC_ML_SECRET:-ml-secret-123}
+      SVC_DASHBOARD_SECRET: ${SVC_DASHBOARD_SECRET:-dashboard-secret-123}
+    volumes:
+      - ./minio:/init:ro
+    entrypoint: ["/bin/sh", "/init/init-buckets.sh"]
+    restart: "no"
+    networks: [hc-net]
+
+volumes:
+  minio-data:
+
+networks:
+  hc-net:
+    name: hc-net

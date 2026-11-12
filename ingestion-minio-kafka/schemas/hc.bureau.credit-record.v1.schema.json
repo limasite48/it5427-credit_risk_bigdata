@@ -1,0 +1,213 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:homecredit-bigdata:schema:hc.bureau.credit-record.v1",
+  "title": "bureau.credit_record.reported (CREDIT_BUREAU)",
+  "description": "One event = one row of bureau.csv (original column names and values are kept in payload). event_time: Submission time - 5 minutes (the credit bureau returns its report during underwriting).",
+  "x-kafka": {
+    "topic": "hc.bureau.credit-record.v1",
+    "key": "customer_id (UTF-8 string)",
+    "value": "JSON UTF-8",
+    "headers": [
+      "event_type",
+      "schema_version"
+    ]
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "event_id",
+    "event_type",
+    "schema_version",
+    "source_system",
+    "source_table",
+    "event_time",
+    "produced_at",
+    "customer_id",
+    "payload"
+  ],
+  "properties": {
+    "event_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{32}$",
+      "description": "BLAKE2b-128 of source_table + natural key. Deterministic -> use it for de-duplication."
+    },
+    "event_type": {
+      "const": "bureau.credit_record.reported"
+    },
+    "schema_version": {
+      "type": "string",
+      "pattern": "^1\\.\\d+\\.\\d+$",
+      "description": "SemVer. A MAJOR change -> new topic (.v2)."
+    },
+    "source_system": {
+      "const": "CREDIT_BUREAU"
+    },
+    "source_table": {
+      "const": "bureau"
+    },
+    "event_time": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?(Z|[+-]\\d{2}:\\d{2})$",
+      "description": "Business time (simulated, +07:00). Submission time - 5 minutes (the credit bureau returns its report during underwriting)."
+    },
+    "produced_at": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?(Z|[+-]\\d{2}:\\d{2})$",
+      "description": "Wall-clock time the producer sent the event."
+    },
+    "customer_id": {
+      "type": "integer",
+      "description": "SK_ID_CURR of the customer; also the Kafka message key."
+    },
+    "payload": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "SK_ID_CURR",
+        "SK_ID_BUREAU",
+        "CREDIT_ACTIVE",
+        "CREDIT_CURRENCY",
+        "DAYS_CREDIT",
+        "CREDIT_DAY_OVERDUE",
+        "DAYS_CREDIT_ENDDATE",
+        "DAYS_ENDDATE_FACT",
+        "AMT_CREDIT_MAX_OVERDUE",
+        "CNT_CREDIT_PROLONG",
+        "AMT_CREDIT_SUM",
+        "AMT_CREDIT_SUM_DEBT",
+        "AMT_CREDIT_SUM_LIMIT",
+        "AMT_CREDIT_SUM_OVERDUE",
+        "CREDIT_TYPE",
+        "DAYS_CREDIT_UPDATE",
+        "AMT_ANNUITY"
+      ],
+      "properties": {
+        "SK_ID_CURR": {
+          "type": "integer",
+          "description": "ID of loan in our sample - one loan in our sample can have 0,1,2 or more related previous credits in credit bureau",
+          "x-note": "hashed"
+        },
+        "SK_ID_BUREAU": {
+          "type": "integer"
+        },
+        "CREDIT_ACTIVE": {
+          "type": "string",
+          "description": "Status of the Credit Bureau (CB) reported credits",
+          "x-observed-values": [
+            "Active",
+            "Bad debt",
+            "Closed",
+            "Sold"
+          ]
+        },
+        "CREDIT_CURRENCY": {
+          "type": "string",
+          "description": "Recoded currency of the Credit Bureau credit",
+          "x-note": "recoded",
+          "x-observed-values": [
+            "currency 1",
+            "currency 2",
+            "currency 3",
+            "currency 4"
+          ]
+        },
+        "DAYS_CREDIT": {
+          "type": "integer",
+          "description": "How many days before current application did client apply for Credit Bureau credit",
+          "x-note": "time only relative to the application"
+        },
+        "CREDIT_DAY_OVERDUE": {
+          "type": "integer",
+          "description": "Number of days past due on CB credit at the time of application for related loan in our sample"
+        },
+        "DAYS_CREDIT_ENDDATE": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Remaining duration of CB credit (in days) at the time of application in Home Credit",
+          "x-note": "time only relative to the application"
+        },
+        "DAYS_ENDDATE_FACT": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Days since CB credit ended at the time of application in Home Credit (only for closed credit)",
+          "x-note": "time only relative to the application"
+        },
+        "AMT_CREDIT_MAX_OVERDUE": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Maximal amount overdue on the Credit Bureau credit so far (at application date of loan in our sample)"
+        },
+        "CNT_CREDIT_PROLONG": {
+          "type": "integer",
+          "description": "How many times was the Credit Bureau credit prolonged"
+        },
+        "AMT_CREDIT_SUM": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Current credit amount for the Credit Bureau credit"
+        },
+        "AMT_CREDIT_SUM_DEBT": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Current debt on Credit Bureau credit"
+        },
+        "AMT_CREDIT_SUM_LIMIT": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Current credit limit of credit card reported in Credit Bureau"
+        },
+        "AMT_CREDIT_SUM_OVERDUE": {
+          "type": "number",
+          "description": "Current amount overdue on Credit Bureau credit"
+        },
+        "CREDIT_TYPE": {
+          "type": "string",
+          "description": "Type of Credit Bureau credit (Car, cash,...)",
+          "x-observed-values": [
+            "Another type of loan",
+            "Car loan",
+            "Cash loan (non-earmarked)",
+            "Consumer credit",
+            "Credit card",
+            "Interbank credit",
+            "Loan for business development",
+            "Loan for purchase of shares (margin lending)",
+            "Loan for the purchase of equipment",
+            "Loan for working capital replenishment",
+            "Microloan",
+            "Mobile operator loan",
+            "Mortgage",
+            "Real estate loan",
+            "Unknown type of loan"
+          ]
+        },
+        "DAYS_CREDIT_UPDATE": {
+          "type": "integer",
+          "description": "How many days before loan application did last information about the Credit Bureau credit come",
+          "x-note": "time only relative to the application"
+        },
+        "AMT_ANNUITY": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Annuity of the Credit Bureau credit"
+        }
+      }
+    }
+  }
+}

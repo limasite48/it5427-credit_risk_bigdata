@@ -1,0 +1,1107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:homecredit-bigdata:schema:hc.los.loan-application.v1",
+  "title": "loan_application.submitted (LOS)",
+  "description": "One event = one row of application_train.csv, application_test.csv (original column names and values are kept in payload). event_time: Submission time: random week (fixed seed) on the application's own WEEKDAY_APPR_PROCESS_START and HOUR_APPR_PROCESS_START.",
+  "x-kafka": {
+    "topic": "hc.los.loan-application.v1",
+    "key": "customer_id (UTF-8 string)",
+    "value": "JSON UTF-8",
+    "headers": [
+      "event_type",
+      "schema_version"
+    ]
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "event_id",
+    "event_type",
+    "schema_version",
+    "source_system",
+    "source_table",
+    "event_time",
+    "produced_at",
+    "customer_id",
+    "payload"
+  ],
+  "properties": {
+    "event_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{32}$",
+      "description": "BLAKE2b-128 of source_table + natural key. Deterministic -> use it for de-duplication."
+    },
+    "event_type": {
+      "const": "loan_application.submitted"
+    },
+    "schema_version": {
+      "type": "string",
+      "pattern": "^1\\.\\d+\\.\\d+$",
+      "description": "SemVer. A MAJOR change -> new topic (.v2)."
+    },
+    "source_system": {
+      "const": "LOS"
+    },
+    "source_table": {
+      "const": "application"
+    },
+    "event_time": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?(Z|[+-]\\d{2}:\\d{2})$",
+      "description": "Business time (simulated, +07:00). Submission time: random week (fixed seed) on the application's own WEEKDAY_APPR_PROCESS_START and HOUR_APPR_PROCESS_START."
+    },
+    "produced_at": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?(Z|[+-]\\d{2}:\\d{2})$",
+      "description": "Wall-clock time the producer sent the event."
+    },
+    "customer_id": {
+      "type": "integer",
+      "description": "SK_ID_CURR of the customer; also the Kafka message key."
+    },
+    "payload": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "SK_ID_CURR",
+        "NAME_CONTRACT_TYPE",
+        "CODE_GENDER",
+        "FLAG_OWN_CAR",
+        "FLAG_OWN_REALTY",
+        "CNT_CHILDREN",
+        "AMT_INCOME_TOTAL",
+        "AMT_CREDIT",
+        "AMT_ANNUITY",
+        "AMT_GOODS_PRICE",
+        "NAME_TYPE_SUITE",
+        "NAME_INCOME_TYPE",
+        "NAME_EDUCATION_TYPE",
+        "NAME_FAMILY_STATUS",
+        "NAME_HOUSING_TYPE",
+        "REGION_POPULATION_RELATIVE",
+        "DAYS_BIRTH",
+        "DAYS_EMPLOYED",
+        "DAYS_REGISTRATION",
+        "DAYS_ID_PUBLISH",
+        "OWN_CAR_AGE",
+        "FLAG_MOBIL",
+        "FLAG_EMP_PHONE",
+        "FLAG_WORK_PHONE",
+        "FLAG_CONT_MOBILE",
+        "FLAG_PHONE",
+        "FLAG_EMAIL",
+        "OCCUPATION_TYPE",
+        "CNT_FAM_MEMBERS",
+        "REGION_RATING_CLIENT",
+        "REGION_RATING_CLIENT_W_CITY",
+        "WEEKDAY_APPR_PROCESS_START",
+        "HOUR_APPR_PROCESS_START",
+        "REG_REGION_NOT_LIVE_REGION",
+        "REG_REGION_NOT_WORK_REGION",
+        "LIVE_REGION_NOT_WORK_REGION",
+        "REG_CITY_NOT_LIVE_CITY",
+        "REG_CITY_NOT_WORK_CITY",
+        "LIVE_CITY_NOT_WORK_CITY",
+        "ORGANIZATION_TYPE",
+        "EXT_SOURCE_1",
+        "EXT_SOURCE_2",
+        "EXT_SOURCE_3",
+        "APARTMENTS_AVG",
+        "BASEMENTAREA_AVG",
+        "YEARS_BEGINEXPLUATATION_AVG",
+        "YEARS_BUILD_AVG",
+        "COMMONAREA_AVG",
+        "ELEVATORS_AVG",
+        "ENTRANCES_AVG",
+        "FLOORSMAX_AVG",
+        "FLOORSMIN_AVG",
+        "LANDAREA_AVG",
+        "LIVINGAPARTMENTS_AVG",
+        "LIVINGAREA_AVG",
+        "NONLIVINGAPARTMENTS_AVG",
+        "NONLIVINGAREA_AVG",
+        "APARTMENTS_MODE",
+        "BASEMENTAREA_MODE",
+        "YEARS_BEGINEXPLUATATION_MODE",
+        "YEARS_BUILD_MODE",
+        "COMMONAREA_MODE",
+        "ELEVATORS_MODE",
+        "ENTRANCES_MODE",
+        "FLOORSMAX_MODE",
+        "FLOORSMIN_MODE",
+        "LANDAREA_MODE",
+        "LIVINGAPARTMENTS_MODE",
+        "LIVINGAREA_MODE",
+        "NONLIVINGAPARTMENTS_MODE",
+        "NONLIVINGAREA_MODE",
+        "APARTMENTS_MEDI",
+        "BASEMENTAREA_MEDI",
+        "YEARS_BEGINEXPLUATATION_MEDI",
+        "YEARS_BUILD_MEDI",
+        "COMMONAREA_MEDI",
+        "ELEVATORS_MEDI",
+        "ENTRANCES_MEDI",
+        "FLOORSMAX_MEDI",
+        "FLOORSMIN_MEDI",
+        "LANDAREA_MEDI",
+        "LIVINGAPARTMENTS_MEDI",
+        "LIVINGAREA_MEDI",
+        "NONLIVINGAPARTMENTS_MEDI",
+        "NONLIVINGAREA_MEDI",
+        "FONDKAPREMONT_MODE",
+        "HOUSETYPE_MODE",
+        "TOTALAREA_MODE",
+        "WALLSMATERIAL_MODE",
+        "EMERGENCYSTATE_MODE",
+        "OBS_30_CNT_SOCIAL_CIRCLE",
+        "DEF_30_CNT_SOCIAL_CIRCLE",
+        "OBS_60_CNT_SOCIAL_CIRCLE",
+        "DEF_60_CNT_SOCIAL_CIRCLE",
+        "DAYS_LAST_PHONE_CHANGE",
+        "FLAG_DOCUMENT_2",
+        "FLAG_DOCUMENT_3",
+        "FLAG_DOCUMENT_4",
+        "FLAG_DOCUMENT_5",
+        "FLAG_DOCUMENT_6",
+        "FLAG_DOCUMENT_7",
+        "FLAG_DOCUMENT_8",
+        "FLAG_DOCUMENT_9",
+        "FLAG_DOCUMENT_10",
+        "FLAG_DOCUMENT_11",
+        "FLAG_DOCUMENT_12",
+        "FLAG_DOCUMENT_13",
+        "FLAG_DOCUMENT_14",
+        "FLAG_DOCUMENT_15",
+        "FLAG_DOCUMENT_16",
+        "FLAG_DOCUMENT_17",
+        "FLAG_DOCUMENT_18",
+        "FLAG_DOCUMENT_19",
+        "FLAG_DOCUMENT_20",
+        "FLAG_DOCUMENT_21",
+        "AMT_REQ_CREDIT_BUREAU_HOUR",
+        "AMT_REQ_CREDIT_BUREAU_DAY",
+        "AMT_REQ_CREDIT_BUREAU_WEEK",
+        "AMT_REQ_CREDIT_BUREAU_MON",
+        "AMT_REQ_CREDIT_BUREAU_QRT",
+        "AMT_REQ_CREDIT_BUREAU_YEAR"
+      ],
+      "properties": {
+        "SK_ID_CURR": {
+          "type": "integer",
+          "description": "ID of loan in our sample"
+        },
+        "NAME_CONTRACT_TYPE": {
+          "type": "string",
+          "description": "Identification if loan is cash or revolving",
+          "x-observed-values": [
+            "Cash loans",
+            "Revolving loans"
+          ]
+        },
+        "CODE_GENDER": {
+          "type": "string",
+          "description": "Gender of the client",
+          "x-observed-values": [
+            "F",
+            "M",
+            "XNA"
+          ]
+        },
+        "FLAG_OWN_CAR": {
+          "type": "string",
+          "description": "Flag if the client owns a car",
+          "x-observed-values": [
+            "N",
+            "Y"
+          ]
+        },
+        "FLAG_OWN_REALTY": {
+          "type": "string",
+          "description": "Flag if client owns a house or flat",
+          "x-observed-values": [
+            "N",
+            "Y"
+          ]
+        },
+        "CNT_CHILDREN": {
+          "type": "integer",
+          "description": "Number of children the client has"
+        },
+        "AMT_INCOME_TOTAL": {
+          "type": "number",
+          "description": "Income of the client"
+        },
+        "AMT_CREDIT": {
+          "type": "number",
+          "description": "Credit amount of the loan"
+        },
+        "AMT_ANNUITY": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Loan annuity"
+        },
+        "AMT_GOODS_PRICE": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "For consumer loans it is the price of the goods for which the loan is given"
+        },
+        "NAME_TYPE_SUITE": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Who was accompanying client when he was applying for the loan",
+          "x-observed-values": [
+            "Children",
+            "Family",
+            "Group of people",
+            "Other_A",
+            "Other_B",
+            "Spouse, partner",
+            "Unaccompanied"
+          ]
+        },
+        "NAME_INCOME_TYPE": {
+          "type": "string",
+          "description": "Clients income type (businessman, working, maternity leave,…)",
+          "x-observed-values": [
+            "Businessman",
+            "Commercial associate",
+            "Maternity leave",
+            "Pensioner",
+            "State servant",
+            "Student",
+            "Unemployed",
+            "Working"
+          ]
+        },
+        "NAME_EDUCATION_TYPE": {
+          "type": "string",
+          "description": "Level of highest education the client achieved",
+          "x-observed-values": [
+            "Academic degree",
+            "Higher education",
+            "Incomplete higher",
+            "Lower secondary",
+            "Secondary / secondary special"
+          ]
+        },
+        "NAME_FAMILY_STATUS": {
+          "type": "string",
+          "description": "Family status of the client",
+          "x-observed-values": [
+            "Civil marriage",
+            "Married",
+            "Separated",
+            "Single / not married",
+            "Unknown",
+            "Widow"
+          ]
+        },
+        "NAME_HOUSING_TYPE": {
+          "type": "string",
+          "description": "What is the housing situation of the client (renting, living with parents, ...)",
+          "x-observed-values": [
+            "Co-op apartment",
+            "House / apartment",
+            "Municipal apartment",
+            "Office apartment",
+            "Rented apartment",
+            "With parents"
+          ]
+        },
+        "REGION_POPULATION_RELATIVE": {
+          "type": "number",
+          "description": "Normalized population of region where client lives (higher number means the client lives in more populated region)",
+          "x-note": "normalized"
+        },
+        "DAYS_BIRTH": {
+          "type": "integer",
+          "description": "Client's age in days at the time of application",
+          "x-note": "time only relative to the application"
+        },
+        "DAYS_EMPLOYED": {
+          "type": "integer",
+          "description": "How many days before the application the person started current employment",
+          "x-note": "time only relative to the application"
+        },
+        "DAYS_REGISTRATION": {
+          "type": "number",
+          "description": "How many days before the application did client change his registration",
+          "x-note": "time only relative to the application"
+        },
+        "DAYS_ID_PUBLISH": {
+          "type": "integer",
+          "description": "How many days before the application did client change the identity document with which he applied for the loan",
+          "x-note": "time only relative to the application"
+        },
+        "OWN_CAR_AGE": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Age of client's car"
+        },
+        "FLAG_MOBIL": {
+          "type": "integer",
+          "description": "Did client provide mobile phone (1=YES, 0=NO)"
+        },
+        "FLAG_EMP_PHONE": {
+          "type": "integer",
+          "description": "Did client provide work phone (1=YES, 0=NO)"
+        },
+        "FLAG_WORK_PHONE": {
+          "type": "integer",
+          "description": "Did client provide home phone (1=YES, 0=NO)"
+        },
+        "FLAG_CONT_MOBILE": {
+          "type": "integer",
+          "description": "Was mobile phone reachable (1=YES, 0=NO)"
+        },
+        "FLAG_PHONE": {
+          "type": "integer",
+          "description": "Did client provide home phone (1=YES, 0=NO)"
+        },
+        "FLAG_EMAIL": {
+          "type": "integer",
+          "description": "Did client provide email (1=YES, 0=NO)"
+        },
+        "OCCUPATION_TYPE": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "What kind of occupation does the client have",
+          "x-observed-values": [
+            "Accountants",
+            "Cleaning staff",
+            "Cooking staff",
+            "Core staff",
+            "Drivers",
+            "HR staff",
+            "High skill tech staff",
+            "IT staff",
+            "Laborers",
+            "Low-skill Laborers",
+            "Managers",
+            "Medicine staff",
+            "Private service staff",
+            "Realty agents",
+            "Sales staff",
+            "Secretaries",
+            "Security staff",
+            "Waiters/barmen staff"
+          ]
+        },
+        "CNT_FAM_MEMBERS": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "How many family members does client have"
+        },
+        "REGION_RATING_CLIENT": {
+          "type": "integer",
+          "description": "Our rating of the region where client lives (1,2,3)"
+        },
+        "REGION_RATING_CLIENT_W_CITY": {
+          "type": "integer",
+          "description": "Our rating of the region where client lives with taking city into account (1,2,3)"
+        },
+        "WEEKDAY_APPR_PROCESS_START": {
+          "type": "string",
+          "description": "On which day of the week did the client apply for the loan",
+          "x-observed-values": [
+            "FRIDAY",
+            "MONDAY",
+            "SATURDAY",
+            "SUNDAY",
+            "THURSDAY",
+            "TUESDAY",
+            "WEDNESDAY"
+          ]
+        },
+        "HOUR_APPR_PROCESS_START": {
+          "type": "integer",
+          "description": "Approximately at what hour did the client apply for the loan",
+          "x-note": "rounded"
+        },
+        "REG_REGION_NOT_LIVE_REGION": {
+          "type": "integer",
+          "description": "Flag if client's permanent address does not match contact address (1=different, 0=same, at region level)"
+        },
+        "REG_REGION_NOT_WORK_REGION": {
+          "type": "integer",
+          "description": "Flag if client's permanent address does not match work address (1=different, 0=same, at region level)"
+        },
+        "LIVE_REGION_NOT_WORK_REGION": {
+          "type": "integer",
+          "description": "Flag if client's contact address does not match work address (1=different, 0=same, at region level)"
+        },
+        "REG_CITY_NOT_LIVE_CITY": {
+          "type": "integer",
+          "description": "Flag if client's permanent address does not match contact address (1=different, 0=same, at city level)"
+        },
+        "REG_CITY_NOT_WORK_CITY": {
+          "type": "integer",
+          "description": "Flag if client's permanent address does not match work address (1=different, 0=same, at city level)"
+        },
+        "LIVE_CITY_NOT_WORK_CITY": {
+          "type": "integer",
+          "description": "Flag if client's contact address does not match work address (1=different, 0=same, at city level)"
+        },
+        "ORGANIZATION_TYPE": {
+          "type": "string",
+          "description": "Type of organization where client works",
+          "x-observed-values": [
+            "Advertising",
+            "Agriculture",
+            "Bank",
+            "Business Entity Type 1",
+            "Business Entity Type 2",
+            "Business Entity Type 3",
+            "Cleaning",
+            "Construction",
+            "Culture",
+            "Electricity",
+            "Emergency",
+            "Government",
+            "Hotel",
+            "Housing",
+            "Industry: type 1",
+            "Industry: type 10",
+            "Industry: type 11",
+            "Industry: type 12",
+            "Industry: type 13",
+            "Industry: type 2",
+            "Industry: type 3",
+            "Industry: type 4",
+            "Industry: type 5",
+            "Industry: type 6",
+            "Industry: type 7",
+            "Industry: type 8",
+            "Industry: type 9",
+            "Insurance",
+            "Kindergarten",
+            "Legal Services",
+            "Medicine",
+            "Military",
+            "Mobile",
+            "Other",
+            "Police",
+            "Postal",
+            "Realtor",
+            "Religion",
+            "Restaurant",
+            "School",
+            "Security",
+            "Security Ministries",
+            "Self-employed",
+            "Services",
+            "Telecom",
+            "Trade: type 1",
+            "Trade: type 2",
+            "Trade: type 3",
+            "Trade: type 4",
+            "Trade: type 5",
+            "Trade: type 6",
+            "Trade: type 7",
+            "Transport: type 1",
+            "Transport: type 2",
+            "Transport: type 3",
+            "Transport: type 4",
+            "University",
+            "XNA"
+          ]
+        },
+        "EXT_SOURCE_1": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Normalized score from external data source",
+          "x-note": "normalized"
+        },
+        "EXT_SOURCE_2": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Normalized score from external data source",
+          "x-note": "normalized"
+        },
+        "EXT_SOURCE_3": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Normalized score from external data source",
+          "x-note": "normalized"
+        },
+        "APARTMENTS_AVG": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+          "x-note": "normalized"
+        },
+        "BASEMENTAREA_AVG": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+          "x-note": "normalized"
+        },
+        "YEARS_BEGINEXPLUATATION_AVG": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+          "x-note": "normalized"
+        },
+        "YEARS_BUILD_AVG": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+          "x-note": "normalized"
+        },
+        "COMMONAREA_AVG": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+          "x-note": "normalized"
+        },
+        "ELEVATORS_AVG": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+          "x-note": "normalized"
+        },
+        "ENTRANCES_AVG": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+          "x-note": "normalized"
+        },
+        "FLOORSMAX_AVG": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+          "x-note": "normalized"
+        },
+        "FLOORSMIN_AVG": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+          "x-note": "normalized"
+        },
+        "LANDAREA_AVG": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+          "x-note": "normalized"
+        },
+        "LIVINGAPARTMENTS_AVG": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+          "x-note": "normalized"
+        },
+        "LIVINGAREA_AVG": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+          "x-note": "normalized"
+        },
+        "NONLIVINGAPARTMENTS_AVG": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+          "x-note": "normalized"
+        },
+        "NONLIVINGAREA_AVG": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+          "x-note": "normalized"
+        },
+        "APARTMENTS_MODE": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+          "x-note": "normalized"
+        },
+        "BASEMENTAREA_MODE": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+          "x-note": "normalized"
+        },
+        "YEARS_BEGINEXPLUATATION_MODE": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+          "x-note": "normalized"
+        },
+        "YEARS_BUILD_MODE": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+          "x-note": "normalized"
+        },
+        "COMMONAREA_MODE": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+          "x-note": "normalized"
+        },
+        "ELEVATORS_MODE": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+          "x-note": "normalized"
+        },
+        "ENTRANCES_MODE": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+          "x-note": "normalized"
+        },
+        "FLOORSMAX_MODE": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+          "x-note": "normalized"
+        },
+        "FLOORSMIN_MODE": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+          "x-note": "normalized"
+        },
+        "LANDAREA_MODE": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+          "x-note": "normalized"
+        },
+        "LIVINGAPARTMENTS_MODE": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+          "x-note": "normalized"
+        },
+        "LIVINGAREA_MODE": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+          "x-note": "normalized"
+        },
+        "NONLIVINGAPARTMENTS_MODE": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+          "x-note": "normalized"
+        },
+        "NONLIVINGAREA_MODE": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+          "x-note": "normalized"
+        },
+        "APARTMENTS_MEDI": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+          "x-note": "normalized"
+        },
+        "BASEMENTAREA_MEDI": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+          "x-note": "normalized"
+        },
+        "YEARS_BEGINEXPLUATATION_MEDI": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+          "x-note": "normalized"
+        },
+        "YEARS_BUILD_MEDI": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+          "x-note": "normalized"
+        },
+        "COMMONAREA_MEDI": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+          "x-note": "normalized"
+        },
+        "ELEVATORS_MEDI": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+          "x-note": "normalized"
+        },
+        "ENTRANCES_MEDI": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+          "x-note": "normalized"
+        },
+        "FLOORSMAX_MEDI": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+          "x-note": "normalized"
+        },
+        "FLOORSMIN_MEDI": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+          "x-note": "normalized"
+        },
+        "LANDAREA_MEDI": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+          "x-note": "normalized"
+        },
+        "LIVINGAPARTMENTS_MEDI": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+          "x-note": "normalized"
+        },
+        "LIVINGAREA_MEDI": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+          "x-note": "normalized"
+        },
+        "NONLIVINGAPARTMENTS_MEDI": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+          "x-note": "normalized"
+        },
+        "NONLIVINGAREA_MEDI": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+          "x-note": "normalized"
+        },
+        "FONDKAPREMONT_MODE": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+          "x-note": "normalized",
+          "x-observed-values": [
+            "not specified",
+            "org spec account",
+            "reg oper account",
+            "reg oper spec account"
+          ]
+        },
+        "HOUSETYPE_MODE": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+          "x-note": "normalized",
+          "x-observed-values": [
+            "block of flats",
+            "specific housing",
+            "terraced house"
+          ]
+        },
+        "TOTALAREA_MODE": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+          "x-note": "normalized"
+        },
+        "WALLSMATERIAL_MODE": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+          "x-note": "normalized",
+          "x-observed-values": [
+            "Block",
+            "Mixed",
+            "Monolithic",
+            "Others",
+            "Panel",
+            "Stone, brick",
+            "Wooden"
+          ]
+        },
+        "EMERGENCYSTATE_MODE": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor",
+          "x-note": "normalized",
+          "x-observed-values": [
+            "No",
+            "Yes"
+          ]
+        },
+        "OBS_30_CNT_SOCIAL_CIRCLE": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "How many observation of client's social surroundings with observable 30 DPD (days past due) default"
+        },
+        "DEF_30_CNT_SOCIAL_CIRCLE": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "How many observation of client's social surroundings defaulted on 30 DPD (days past due)"
+        },
+        "OBS_60_CNT_SOCIAL_CIRCLE": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "How many observation of client's social surroundings with observable 60 DPD (days past due) default"
+        },
+        "DEF_60_CNT_SOCIAL_CIRCLE": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "How many observation of client's social surroundings defaulted on 60 (days past due) DPD"
+        },
+        "DAYS_LAST_PHONE_CHANGE": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "How many days before application did client change phone"
+        },
+        "FLAG_DOCUMENT_2": {
+          "type": "integer",
+          "description": "Did client provide document 2"
+        },
+        "FLAG_DOCUMENT_3": {
+          "type": "integer",
+          "description": "Did client provide document 3"
+        },
+        "FLAG_DOCUMENT_4": {
+          "type": "integer",
+          "description": "Did client provide document 4"
+        },
+        "FLAG_DOCUMENT_5": {
+          "type": "integer",
+          "description": "Did client provide document 5"
+        },
+        "FLAG_DOCUMENT_6": {
+          "type": "integer",
+          "description": "Did client provide document 6"
+        },
+        "FLAG_DOCUMENT_7": {
+          "type": "integer",
+          "description": "Did client provide document 7"
+        },
+        "FLAG_DOCUMENT_8": {
+          "type": "integer",
+          "description": "Did client provide document 8"
+        },
+        "FLAG_DOCUMENT_9": {
+          "type": "integer",
+          "description": "Did client provide document 9"
+        },
+        "FLAG_DOCUMENT_10": {
+          "type": "integer",
+          "description": "Did client provide document 10"
+        },
+        "FLAG_DOCUMENT_11": {
+          "type": "integer",
+          "description": "Did client provide document 11"
+        },
+        "FLAG_DOCUMENT_12": {
+          "type": "integer",
+          "description": "Did client provide document 12"
+        },
+        "FLAG_DOCUMENT_13": {
+          "type": "integer",
+          "description": "Did client provide document 13"
+        },
+        "FLAG_DOCUMENT_14": {
+          "type": "integer",
+          "description": "Did client provide document 14"
+        },
+        "FLAG_DOCUMENT_15": {
+          "type": "integer",
+          "description": "Did client provide document 15"
+        },
+        "FLAG_DOCUMENT_16": {
+          "type": "integer",
+          "description": "Did client provide document 16"
+        },
+        "FLAG_DOCUMENT_17": {
+          "type": "integer",
+          "description": "Did client provide document 17"
+        },
+        "FLAG_DOCUMENT_18": {
+          "type": "integer",
+          "description": "Did client provide document 18"
+        },
+        "FLAG_DOCUMENT_19": {
+          "type": "integer",
+          "description": "Did client provide document 19"
+        },
+        "FLAG_DOCUMENT_20": {
+          "type": "integer",
+          "description": "Did client provide document 20"
+        },
+        "FLAG_DOCUMENT_21": {
+          "type": "integer",
+          "description": "Did client provide document 21"
+        },
+        "AMT_REQ_CREDIT_BUREAU_HOUR": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Number of enquiries to Credit Bureau about the client one hour before application"
+        },
+        "AMT_REQ_CREDIT_BUREAU_DAY": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Number of enquiries to Credit Bureau about the client one day before application (excluding one hour before application)"
+        },
+        "AMT_REQ_CREDIT_BUREAU_WEEK": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Number of enquiries to Credit Bureau about the client one week before application (excluding one day before application)"
+        },
+        "AMT_REQ_CREDIT_BUREAU_MON": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Number of enquiries to Credit Bureau about the client one month before application (excluding one week before application)"
+        },
+        "AMT_REQ_CREDIT_BUREAU_QRT": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Number of enquiries to Credit Bureau about the client 3 month before application (excluding one month before application)"
+        },
+        "AMT_REQ_CREDIT_BUREAU_YEAR": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Number of enquiries to Credit Bureau about the client one day year (excluding last 3 months before application)"
+        }
+      }
+    }
+  }
+}

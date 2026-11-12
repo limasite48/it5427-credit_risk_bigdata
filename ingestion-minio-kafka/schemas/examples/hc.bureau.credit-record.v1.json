@@ -1,0 +1,29 @@
+{
+  "event_id": "e6ed931f158153f601b66b8b3f85fddd",
+  "event_type": "bureau.credit_record.reported",
+  "schema_version": "1.0.0",
+  "source_system": "CREDIT_BUREAU",
+  "source_table": "bureau",
+  "event_time": "2025-12-01T03:54:10+07:00",
+  "produced_at": "2026-11-12T10:50:48.173+07:00",
+  "customer_id": 229706,
+  "payload": {
+    "SK_ID_CURR": 229706,
+    "SK_ID_BUREAU": 5232399,
+    "CREDIT_ACTIVE": "Active",
+    "CREDIT_CURRENCY": "currency 1",
+    "DAYS_CREDIT": -332,
+    "CREDIT_DAY_OVERDUE": 0,
+    "DAYS_CREDIT_ENDDATE": 33.0,
+    "DAYS_ENDDATE_FACT": null,
+    "AMT_CREDIT_MAX_OVERDUE": 0.0,
+    "CNT_CREDIT_PROLONG": 0,
+    "AMT_CREDIT_SUM": 231957.0,
+    "AMT_CREDIT_SUM_DEBT": 42012.0,
+    "AMT_CREDIT_SUM_LIMIT": null,
+    "AMT_CREDIT_SUM_OVERDUE": 0.0,
+    "CREDIT_TYPE": "Consumer credit",
+    "DAYS_CREDIT_UPDATE": -10,
+    "AMT_ANNUITY": null
+  }
+}
