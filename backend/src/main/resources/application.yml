@@ -1,0 +1,101 @@
+server:
+  port: ${BACKEND_PORT:8080}
+  max-http-request-header-size: 16KB
+  tomcat:
+    max-http-form-post-size: 256KB
+    max-swallow-size: 256KB
+
+spring:
+  application:
+    name: credit-risk-backend
+  http:
+    converters:
+      preferred-json-mapper: jackson2
+  jackson:
+    default-property-inclusion: non_null
+  mvc:
+    throw-exception-if-no-handler-found: true
+  web:
+    resources:
+      add-mappings: false
+  profiles:
+    default: local
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never
+      probes:
+        enabled: true
+
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false
+
+app:
+  data-dir: ${DATA_DIR:../outputs}
+  model-path: ${MODEL_PATH:../outputs/models/credit_risk_model.joblib}
+  scored-csv: ${SCORED_CSV:../outputs/scored_applications_sample.csv}
+  risk-summary: ${RISK_SUMMARY:../outputs/metrics/risk_summary.json}
+  demographics: ${DEMOGRAPHICS:../outputs/metrics/demographic_profiles.json}
+  roc-curve: ${ROC_CURVE:../outputs/figures/roc_curve.png}
+  model-evaluation: ${MODEL_EVALUATION:../outputs/metrics/model_evaluation.json}
+  supplementary-dir: ${SUPPLEMENTARY_DIR:../ingestion-minio-kafka/data/supplementary}
+  spark-reports-dir: ${SPARK_REPORTS_DIR:../apache-spark/reports}
+  ml-service-url: ${ML_SERVICE_URL:http://127.0.0.1:8000}
+  ml-service-token: ${ML_SERVICE_TOKEN}
+  cors-allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173,http://localhost:8088}
+  jwt:
+    secret: ${JWT_SECRET}
+    access-token-minutes: ${JWT_ACCESS_MINUTES:15}
+    refresh-token-days: ${JWT_REFRESH_DAYS:7}
+  auth:
+    login-max-attempts: ${LOGIN_MAX_ATTEMPTS:5}
+    login-lockout-seconds: ${LOGIN_LOCKOUT_SECONDS:60}
+    score-rate-limit-per-minute: ${SCORE_RATE_LIMIT:30}
+  demo-users:
+    admin-username: ${DEMO_ADMIN_USERNAME}
+    admin-password: ${DEMO_ADMIN_PASSWORD}
+    analyst-username: ${DEMO_ANALYST_USERNAME}
+    analyst-password: ${DEMO_ANALYST_PASSWORD}
+    underwriter-username: ${DEMO_UNDERWRITER_USERNAME}
+    underwriter-password: ${DEMO_UNDERWRITER_PASSWORD}
+
+logging:
+  level:
+    root: ${LOG_LEVEL:INFO}
+    edu.it5427.creditrisk: INFO
+    org.springframework.security: WARN
+  pattern:
+    console: "%d{ISO8601} %-5level [%thread] %logger{36} - %msg%n"
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false

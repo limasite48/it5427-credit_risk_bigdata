@@ -7,6 +7,55 @@
 
 ---
 
+## Underwriting Platform (Quick Start)
+
+Integrated stack: **React + Spring Boot 4 + FastAPI adapter + existing LightGBM model**.
+
+| Layer | Path | Role |
+| --- | --- | --- |
+| Frontend | `frontend/` | Underwriting dashboard |
+| Backend | `backend/` | Secured REST API, JWT, analytics |
+| ML service | `ml-service/` | FastAPI → `CreditRiskScoringService.score_applicant` |
+| Artifacts | `outputs/` | Model, metrics, scored CSV, figures |
+
+### Start with Docker Compose
+
+```bash
+cp -n .env.example .env
+docker compose up --build -d
+```
+
+- UI: http://localhost:8088  
+- API: http://localhost:8080  
+- Demo users: see `.env` / [docs/DEMO.md](docs/DEMO.md)
+
+```bash
+docker compose logs -f
+docker compose down
+```
+
+### Local scripts
+
+```bash
+./scripts/setup.sh
+./scripts/start.sh
+./scripts/status.sh
+./scripts/test.sh
+./scripts/smoke.sh   # requires running stack
+./scripts/stop.sh
+```
+
+### Docs
+
+- [docs/DEMO.md](docs/DEMO.md) — walkthrough and expected sample behavior  
+- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — system design  
+- [docs/SECURITY.md](docs/SECURITY.md) — authn/authz and production gaps  
+- [docs/FEATURE_BACKLOG.md](docs/FEATURE_BACKLOG.md) — seven high-impact integration features (APIs, UI, reuse map)  
+
+Portfolio KPIs use `risk_summary.json` (N=5,000, NPL **7.72%**). Risk-tier charts and lookup use the scored CSV (N=500). Kafka/Spark/MinIO are optional and not required to run the dashboard.
+
+---
+
 ## Table of Contents
 1. [Project Overview & System Architecture](#1-project-overview--system-architecture)
 2. [Completed vs. Pending Tasks Matrix](#2-completed-vs-pending-tasks-matrix)
@@ -18,7 +67,7 @@
    * [6.2 Features Used for LightGBM](#62-features-used-for-lightgbm)
    * [6.3 Credit Risk Assessment Criteria & Data Mapping](#63-credit-risk-assessment-criteria--data-mapping)
    * [6.4 Parameter Impact on Risk Assessment](#64-parameter-impact-on-risk-assessment)
-   * [6.5 Baseline Model: Logistic Regression Scorecard (ROC-AUC 0.7493)](#65-baseline-model-logistic-regression-scorecard-roc-auc-07493)
+   * [6.5 Baseline Model: Logistic Regression Scorecard (ROC-AUC 0.7168)](#65-baseline-model-logistic-regression-scorecard-roc-auc-07168)
    * [6.6 LightGBM Gradient Boosting Model](#66-lightgbm-gradient-boosting-model)
    * [6.7 Business Policy Rules & Operational Underwriting Matrix](#67-business-policy-rules--operational-underwriting-matrix)
 7. [Step-by-Step Manual Testing Instructions](#7-step-by-step-manual-testing-instructions)
@@ -81,11 +130,11 @@ The division of responsibilities across the course project team is tracked below
 
 | Track / Team Member | Specific Responsibility | Status | Artifacts & Deliverables |
 | :--- | :--- | :---: | :--- |
-| **Track A (Our Role)** | **Exploratory Data Analysis & Baseline Risk Metrics** | **Completed** | `outputs/metrics/risk_summary.json` (NPL: 8.07%, Avg Loan: 599k) |
+| **Track A (Our Role)** | **Exploratory Data Analysis & Baseline Risk Metrics** | **Completed** | `outputs/metrics/risk_summary.json` (sample N=5,000; NPL: 7.72%, Avg Loan: ~598k) |
 | **Track A (Our Role)** | **Demographic & Occupation Profiling** | **Completed** | `outputs/metrics/demographic_profiles.json` (Risk by occupation/income) |
 | **Track A (Our Role)** | **Banking Domain Feature Engineering** | **Completed** | `src/data/preprocessor.py` (Anomalies handled, debt ratios, bureau means) |
 | **Track A (Our Role)** | **Dual-Model Benchmark & Imbalance Handling** | **Completed** | `src/models/baseline.py` (LR) & `src/models/tree_models.py` (LGBM) |
-| **Track A (Our Role)** | **Cost-Sensitive Decision Optimization** | **Completed** | `src/models/evaluation.py` (5:1 penalty, $p^* = 0.71$, 13.78% loss reduction) |
+| **Track A (Our Role)** | **Cost-Sensitive Decision Optimization** | **Completed** | `src/models/evaluation.py` (5:1 FN:FP penalty; on current sample, $p^* = 0.50$) |
 | **Track A (Our Role)** | **Explainable AI (TreeSHAP Attribution)** | **Completed** | `src/models/explainability.py` & `outputs/figures/shap_summary.png` |
 | **Track A (Our Role)** | **Operational Customer Risk Tiering** | **Completed** | `src/service/scoring_service.py` (LOW: <5%, MEDIUM: 5-15%, HIGH: $\ge$15%) |
 | **Track A (Our Role)** | **Downstream UI Interface Contract** | **Completed** | `docs/dashboard_interface_spec.md`, `outputs/models/credit_risk_model.joblib` |
@@ -100,7 +149,7 @@ The division of responsibilities across the course project team is tracked below
 | **Member 2 (Processing/ETL)** | **Spark Multi-Table Aggregations (6 Auxiliary Tables)**| *Pending* | Aggregating `bureau`, `POS_CASH`, `installments` into `processed_train.parquet` |
 | **Track B (Our Role)** | **Model Retraining on Full 200-Feature Store** | *Pending* | Standby awaiting Member 2’s Spark output (expected ROC-AUC $\approx$ 0.80) |
 | **Track B (Our Role)** | **Out-of-Time Live Holdout Validation** | *Pending* | Standby awaiting final training (evaluating on 11,717 post-2025-12-01 loans) |
-| **Member 3 (Dashboard/UI)** | **Decision Support Dashboard Frontend** | *In Progress*| Streamlit / Dash UI consuming `credit_risk_model.joblib` and scoring API |
+| **Member 3 (Dashboard/UI)** | **Decision Support Dashboard Frontend** | **Completed** | React + Spring Boot 4 + FastAPI underwriting platform (`frontend/`, `backend/`, `ml-service/`) |
 
 ---
 
@@ -109,48 +158,47 @@ The division of responsibilities across the course project team is tracked below
 ### 3.1 Technology Stack
 
 ```
-Core Language      : Python 3.10+ (Verified on Python 3.14.6 64-bit)
-Machine Learning   : LightGBM 4.7.0, scikit-learn 1.9.1
-Explainable AI     : SHAP 0.54.1 (TreeExplainer)
-Data Engineering   : Pandas 3.1.1, PyArrow 26.0.1, NumPy 2.5.3
-Schema Validation  : JSON Schema Draft 2020-12 (jsonschema 4.26.0)
+Core Language      : Python 3.10+ (see pyproject.toml / requirements.txt)
+Machine Learning   : lightgbm>=4.0.0, scikit-learn>=1.3.0
+Explainable AI     : shap>=0.44.0 (TreeExplainer)
+Data Engineering   : pandas>=2.0.0, pyarrow>=15.0.0, numpy>=1.24.0
+Schema Validation  : JSON Schema Draft 2020-12 (jsonschema>=4.20.0)
 Streaming & Storage: Apache Kafka 3.9.0 (KRaft mode), Bitnami MinIO (S3 API), Docker Compose
-Packaging & Tests  : setuptools, pyproject.toml, pytest 9.1.1
+Packaging & Tests  : setuptools, pyproject.toml, pytest>=8.0.0
 ```
 
 ### 3.2 Model Performance Benchmarks
 
-Trained and evaluated on the full 307,511 application records:
+Current artifacts in `outputs/metrics/model_evaluation.json` were produced on a **5,000-row sample** of `application_train.csv` (re-run with `python run_track_a.py` for the full 307,511 rows):
 
-| Model Architecture | Training ROC-AUC | Validation ROC-AUC | PR-AUC | Training Time | Operational Role |
-| :--- | :---: | :---: | :---: | :---: | :--- |
-| **Baseline Logistic Regression** | 0.7485 | **0.7493** | 0.2241 | 4.2s | Traditional linear credit scorecard benchmark |
-| **Production LightGBM Classifier**| 0.8263 | **0.7698** | **0.2577** | **18.4s** | **High-performance non-linear model (+0.0205 boost)** |
+| Model Architecture | Training ROC-AUC | Validation ROC-AUC | PR-AUC | Operational Role |
+| :--- | :---: | :---: | :---: | :--- |
+| **Baseline Logistic Regression** | 0.8092 | **0.7168** | — | Traditional linear credit scorecard benchmark |
+| **Production LightGBM Classifier**| 0.9644 | **0.7361** | **0.2332** | High-performance non-linear model (+0.0193 val AUC vs baseline) |
 
-*Diagnostic curves generated and saved to [`outputs/figures/roc_curve.png`](file:///d:/_work/_hust/IT5427%20-%20Big%20Data/it5427-credit_risk_bigdata/outputs/figures/roc_curve.png).*
+*Diagnostic curves: [`outputs/figures/roc_curve.png`](outputs/figures/roc_curve.png).*
 
 ### 3.3 Financial Loss Reduction via Cost-Sensitive Matrix
 
-Standard classification sets a naive cutoff of $p = 0.50$, which is financially suboptimal in credit lending where approving a defaulter (False Negative) is far costlier than rejecting a good customer (False Positive).
+Standard classification sets a naive cutoff of $p = 0.50$, which can be financially suboptimal in credit lending where approving a defaulter (False Negative) is far costlier than rejecting a good customer (False Positive).
 
-Under the approved banking penalty ratio of **$C(FN) : C(FP) = 5 : 1$**:
-* Standard Cutoff ($p = 0.50$) Expected Loss: **23,697 cost units**
-* Optimal Operational Cutoff ($p^* = 0.71$) Expected Loss: **20,431 cost units**
-* **Direct Financial Loss Reduction: 13.78%** ($3,266$ cost units saved per portfolio cycle).
-* Specificity at $p^* = 0.71$: **92.49%** (protects creditworthy applicants from wrongful rejection).
+Under the approved banking penalty ratio of **$C(FN) : C(FP) = 5 : 1$** (`src/models/evaluation.py`):
+* On the current 5,000-row sample, the cost optimizer selects **$p^* = 0.50$** (same as the standard cutoff; expected loss **326** cost units; **0%** further reduction on this sample).
+* On larger holdouts the optimal cutoff can shift above 0.50; re-run Track A on the full dataset to refresh these figures.
+* Specificity at the applied threshold ($p = 0.50$): **96.64%** (from `model_evaluation.json`).
 
 ### 3.4 Inference Latency
-* **Batch Processing:** 307,511 applications ingested, preprocessed, trained, and evaluated in **23.6 seconds**.
-* **Real-Time Single Applicant Inference:** **31.7ms** average latency per applicant (including full domain ratio calculation, LightGBM probability inference, risk tier mapping, and local SHAP value extraction).
+* **Batch / pipeline:** Depends on `--sample-size` (or full train). Use `python run_track_a.py` and check the printed elapsed time.
+* **Real-Time Single Applicant Inference:** Target **<32ms** average latency per applicant in the Kafka dry-run path (domain ratios, LightGBM PD, risk tier, local SHAP).
 
 ---
 
 ## 4. Technical Guidelines & Deployment Strategy
 
 ### 4.1 Environment Setup
-```powershell
+```bash
 # 1. Clone repository and navigate to root directory
-cd "it5427-credit_risk_bigdata"
+cd it5427-credit_risk_bigdata
 
 # 2. Install dependencies
 pip install -r requirements.txt
@@ -253,7 +301,7 @@ it5427-credit_risk_bigdata/
     │   ├── demographic_profiles.json          # Default likelihood by borrower segment
     │   └── model_evaluation.json              # Model metrics and cost optimization results
     ├── models/                                # Serialized machine learning models
-    │   └── credit_risk_model.joblib           # Trained LightGBM pipeline artifact (1.2 MB)
+    │   └── credit_risk_model.joblib           # Trained LightGBM pipeline artifact (~84 KB)
     └── scored_applications_sample.csv         # Sample scored applicants for Member 3 dashboard
 ```
 
@@ -271,7 +319,7 @@ The dataset represents real-world retail banking loan applications. Unlike toy f
 
 ### 6.2 Features Used for LightGBM
 
-The production LightGBM pipeline transforms raw banking records into a feature matrix of **130 features** (or **135 features** when regional macroeconomic series are joined). This feature space comprises **118 numerical features** and **17 categorical features**.
+The production LightGBM pipeline transforms raw banking records into a feature matrix of roughly **130 features**, or about **135 features** when regional macroeconomic series are joined (`--include-macro`). Exact counts depend on which raw columns are present after engineering (numerical + ordinal-encoded categoricals).
 
 ```mermaid
 flowchart LR
@@ -287,12 +335,12 @@ flowchart LR
     end
 
     subgraph Preproc["Transformation & Encoding"]
-        NumImp["Vectorized Median Imputation\n(118 Numerical Features)"]
-        CatEnc["Ordinal Encoding (handle_unknown=-1)\n(17 Categorical Features)"]
+        NumImp["Vectorized Median Imputation\n(Numerical Features)"]
+        CatEnc["Ordinal Encoding (handle_unknown=-1)\n(Categorical Features)"]
     end
 
     subgraph Model["LightGBM Matrix"]
-        FeatureMatrix["135 Model-Ready Features\n(Input to Tree Splits)"]
+        FeatureMatrix["Model-Ready Features\n(Input to Tree Splits)"]
     end
 
     Kaggle --> Ratios
@@ -448,21 +496,21 @@ $$\text{logit}(PD) = \ln\left(\frac{PD}{1 - PD}\right) = \phi_0 + \sum_{i=1}^{M}
 
 ---
 
-### 6.5 Baseline Model: Logistic Regression Scorecard (ROC-AUC 0.7493)
+### 6.5 Baseline Model: Logistic Regression Scorecard (ROC-AUC 0.7168)
 
 To ensure technical rigor, the project benchmarks the primary LightGBM model against an industry-standard **Credit Scorecard Baseline Model** implemented in `src/models/baseline.py`.
 
 ```mermaid
 flowchart LR
     subgraph BaselinePipeline["Baseline Logistic Regression Pipeline"]
-        RawX["Preprocessed Features\n(135 Dimensions)"] --> Scaler["StandardScaler\n(Zero Mean, Unit Variance)"]
+        RawX["Preprocessed Features\n(~130 Dimensions)"] --> Scaler["StandardScaler\n(Zero Mean, Unit Variance)"]
         Scaler --> LR["LogisticRegression\n(C=0.1, L2 Penalty, balanced)"]
         LR --> LogOdds["Log-Odds Logit Output\nz = β0 + Σ βj zj"]
         LogOdds --> Scorecard["Scorecard Scaling Engine\nScore = Offset + Factor * ln(Odds)"]
     end
 
     subgraph Evaluation["Benchmark Metrics"]
-        Scorecard --> Metrics["Validation ROC-AUC: 0.7493\nTraining ROC-AUC: 0.7485\nPR-AUC: 0.2241\nTraining Time: 4.2s"]
+        Scorecard --> Metrics["Validation ROC-AUC: 0.7168\nTraining ROC-AUC: 0.8092\n(sample N=5,000)"]
     end
 ```
 
@@ -471,7 +519,7 @@ In traditional retail banking (Basel II/III regulatory frameworks), credit risk 
 $$\text{logit}(p) = \ln\left(\frac{p}{1-p}\right) = \beta_0 + \sum_{j=1}^{M} \beta_j \left(\frac{x_j - \mu_j}{\sigma_j}\right)$$
 * **Feature Standardization (`StandardScaler`):** Normalizes all numerical features to zero mean ($\mu_j = 0$) and unit variance ($\sigma_j = 1$), preventing features with large scales (`AMT_CREDIT`) from dominating those with small scales (`EXT_SOURCES_MEAN`).
 * **L2 Ridge Regularization ($C = 0.1$):** Applies penalty $\frac{1}{2C} \|\beta\|_2^2$ to stabilize coefficient estimation across highly collinear features (`AMT_CREDIT`, `AMT_ANNUITY`, `AMT_GOODS_PRICE`).
-* **Balanced Class Weighting (`class_weight='balanced'`):** Automatically scales class weights inversely proportional to class frequencies:
+* **Balanced Class Weighting (`class_weight='balanced'`):** Automatically scales class weights inversely proportional to class frequencies. On the full Home Credit train set:
   $$w_1 = \frac{N}{2 \cdot N_{\text{positive}}} = \frac{307,511}{2 \times 24,825} \approx 6.19, \quad w_0 = \frac{N}{2 \cdot N_{\text{negative}}} \approx 0.54$$
 * **Solver:** L-BFGS Quasi-Newton optimizer (`max_iter=1000`).
 
@@ -488,9 +536,9 @@ Where:
 
 | Evaluation Dimension | Baseline: Logistic Regression Scorecard | Production: LightGBM Classifier | Competitive Advantage of LightGBM |
 | :--- | :---: | :---: | :--- |
-| **Validation ROC-AUC** | **0.7493** | **0.7698** | **+0.0205 boost (+2.7% relative discriminatory power)** |
-| **Validation PR-AUC** | 0.2241 | **0.2577** | **+0.0336 boost (+15.0% precision on default detection)** |
-| **Training Time (307k rows)**| **4.2 seconds** | 18.4 seconds | Logistic Regression trains 4.4x faster. |
+| **Validation ROC-AUC** | **0.7168** | **0.7361** | **+0.0193 boost (sample N=5,000)** |
+| **Validation PR-AUC** | — | **0.2332** | LightGBM PR-AUC from `model_evaluation.json`. |
+| **Training Time** | Faster (linear) | Slower (500 trees, early stop) | Logistic Regression typically trains faster on the same sample. |
 | **Feature Interactions** | Strictly linear additive ($\beta_j x_j$) | High-order non-linear interactions | Discovers interaction between `CREDIT_TERM` and `EXT_SOURCES_MEAN`. |
 | **Missing Value Handling** | Requires strict median/mode imputation | Native split direction for sparsity | Retains informative missingness (e.g. unbanked applicants). |
 | **Categorical Encoding** | One-hot or ordinal linear mapping | Native histogram split-finding | Handles high-cardinality categories (`ORGANIZATION_TYPE`). |
@@ -543,7 +591,7 @@ flowchart TD
 | **MEDIUM RISK** | **$5.0\% \le PD < 15.0\%$** | **MANUAL REVIEW** | • Standard interest rate (Base + 4.5%)<br>• Loan-to-income capped at $3.0\times$<br>• Mandatory verified proof of income | **Underwriting Inspection:** Desk review by credit officer, telephone verification of employer, secondary sign-off. |
 | **HIGH RISK** | **$PD \ge 15.0\%$** | **DECLINE** | • Unsecured loan denied<br>• Counter-offer only with 50%+ collateral or co-signer | **Adverse Action Protocol:** Automated decline letter citing top 3 negative SHAP decision drivers (Fair Lending / GDPR compliant). |
 
-#### 2. Cost-Sensitive Decision Matrix & Optimal Cutoff ($p^* = 0.71$)
+#### 2. Cost-Sensitive Decision Matrix & Optimal Cutoff ($p^*$)
 
 Standard classification relies on a naive cutoff $p = 0.50$. In commercial credit underwriting, the financial loss of approving a defaulting borrower (False Negative) is dramatically higher than rejecting a creditworthy applicant (False Positive).
 
@@ -553,11 +601,11 @@ $$\text{Expected Portfolio Loss}(p) = C(FN) \cdot \text{False Negatives}(p) + C(
 * **$C(FP) = 1.0$ (Rejecting a Good Customer):** Bank suffers opportunity cost of foregone interest margin and lost customer acquisition cost (CAC).
 * **Cost Ratio:** $C(FN) : C(FP) = 5.0 : 1.0$.
 
-Under this approved policy:
-* **Standard Cutoff ($p = 0.50$):** Expected Loss = **23,697 cost units**
-* **Optimal Operational Cutoff ($p^* = 0.71$):** Expected Loss = **20,431 cost units**
-* **Net Financial Loss Reduction: 13.78%** ($3,266$ cost units saved per portfolio lending cycle).
-* **Specificity at $p^* = 0.71$:** **92.49%** (preserves customer satisfaction by minimizing wrongful rejections of prime applicants).
+Under this approved policy (figures from current `model_evaluation.json`, sample N=5,000):
+* **Standard Cutoff ($p = 0.50$):** Expected Loss = **326** cost units
+* **Optimal Operational Cutoff ($p^* = 0.50$):** Expected Loss = **326** cost units (no further reduction on this sample)
+* **Net Financial Loss Reduction: 0.00%** on the current sample; refresh after a full-data Track A run.
+* **Specificity at $p = 0.50$:** **96.64%** (from `model_evaluation.json`).
 
 #### 3. Hard Policy Knock-Out Rules (Underwriting Guardrails)
 Before scoring applications with machine learning, applicants must satisfy three non-negotiable credit policy guardrails:
@@ -567,15 +615,13 @@ Before scoring applications with machine learning, applicants must satisfy three
 
 ---
 
----
-
 ## 7. Step-by-Step Manual Testing Instructions
 
-We have provided a comprehensive CLI utility [`evaluate_profile.py`](file:///d:/_work/_hust/IT5427%20-%20Big%20Data/it5427-credit_risk_bigdata/evaluate_profile.py) to test all functions manually.
+We have provided a comprehensive CLI utility [`evaluate_profile.py`](evaluate_profile.py) to test all functions manually.
 
 ### Scenario 1: Automated Health Check
 Run all 13 unit and integration tests to verify that domain ratios, imputers, scoring services, and macro loaders pass:
-```powershell
+```bash
 python -m pytest tests/ -v
 ```
 *(Or simply `pytest tests/ -v` if pytest is registered in your system PATH).*
@@ -586,10 +632,10 @@ python -m pytest tests/ -v
 Extracts an applicant profile directly from `application_train.csv` or `application_test.csv`, prints their profile card, computes their default probability, assigns a risk tier, and compares against the historical ground truth.
 
 #### Test 2A: Query Known Defaulter (ID: 100002 | Ground Truth: TARGET=1)
-```powershell
+```bash
 python evaluate_profile.py --lookup-id 100002
 ```
-*Expected Output:*
+*Expected Output (illustrative; PD / SHAP values depend on the trained `credit_risk_model.joblib`):*
 ```
 ======================================================================
  BORROWER PROFILE SUMMARY [ID: 100002]
@@ -604,18 +650,18 @@ python evaluate_profile.py --lookup-id 100002
 ----------------------------------------------------------------------
 
 [!] CREDIT UNDERWRITING ASSESSMENT & DECISION
- Default Probability (PD) : 0.5470 (54.70%)
+ Default Probability (PD) : ... (typically HIGH for this known defaulter)
  Operational Risk Tier    : HIGH
  Recommended Action       : DECLINE
  Ground Truth Comparison  : Historical Target=1 -> [MATCHES OUTCOME]
 
  Top Decision Drivers (SHAP Value Attribution):
-   1. EXT_SOURCES_MEAN   = 0.1618   | SHAP: +0.9423 (High Risk Indicator)
-   2. EXT_SOURCES_MIN    = 0.0830   | SHAP: +0.5313 (High Risk Indicator)
+   1. EXT_SOURCES_MEAN   = ... | SHAP: ... (High Risk Indicator)
+   2. EXT_SOURCES_MIN    = ... | SHAP: ... (High Risk Indicator)
 ```
 
 #### Test 2B: Query Known Non-Defaulter (ID: 100003 | Ground Truth: TARGET=0)
-```powershell
+```bash
 python evaluate_profile.py --lookup-id 100003
 ```
 *Expected Output:*
@@ -632,8 +678,8 @@ python evaluate_profile.py --lookup-id 100003
 ### Scenario 3: Evaluating New Financial Profiles
 
 #### Test 3A: Evaluate a Profile via JSON File
-Pass the pre-packaged low-risk sample profile [`sample_applicant.json`](file:///d:/_work/_hust/IT5427%20-%20Big%20Data/it5427-credit_risk_bigdata/sample_applicant.json):
-```powershell
+Pass the pre-packaged low-risk sample profile [`sample_applicant.json`](sample_applicant.json):
+```bash
 python evaluate_profile.py --input-json sample_applicant.json
 ```
 *Expected Output:*
@@ -652,7 +698,7 @@ python evaluate_profile.py --input-json sample_applicant.json
 
 #### Test 3B: Interactive Terminal Prompt
 Prompt the terminal to input a custom borrower’s income, loan amount, age, occupation, and credit bureau scores:
-```powershell
+```bash
 python evaluate_profile.py --interactive
 ```
 
@@ -660,7 +706,7 @@ python evaluate_profile.py --interactive
 
 ### Scenario 4: Real-Time Event Stream Simulation
 Simulates streaming applications arriving from Kafka topic `hc.los.loan-application.v1`, evaluating latency and live decisions:
-```powershell
+```bash
 python src/integration/kafka_consumer_scorer.py --dry-run --limit 5
 ```
 *Expected Output:*
@@ -703,7 +749,7 @@ print(f"Customer {decision['SK_ID_CURR']} -> PD: {decision['default_probability'
 
 ### Scenario 6: Comprehensive Test Case with All Parameters & Customization Guide
 
-To facilitate transparent testing and benchmarking of any arbitrary borrower profile, we provide a complete, documented reference test case containing all core parameters in [`sample_full_applicant.json`](file:///d:/_work/_hust/IT5427%20-%20Big%20Data/it5427-credit_risk_bigdata/sample_full_applicant.json).
+To facilitate transparent testing and benchmarking of any arbitrary borrower profile, we provide a complete, documented reference test case containing all core parameters in [`sample_full_applicant.json`](sample_full_applicant.json).
 
 #### 1. Full Parameter JSON Specification (`sample_full_applicant.json`)
 
@@ -803,7 +849,7 @@ We provide two pre-configured profiles demonstrating both ends of the credit spe
 ##### Archetype A: Prime Borrower Profile (`sample_full_applicant.json`)
 * High bureau ratings (`EXT_1=0.78, EXT_2=0.72, EXT_3=0.69`), established managerial employment ($8.5$ years), higher education, low debt leverage ($1.67\times$).
 * **Run command:**
-  ```powershell
+  ```bash
   python evaluate_profile.py --input-json sample_full_applicant.json
   ```
 * **Evaluation Output:**
@@ -823,7 +869,7 @@ We provide two pre-configured profiles demonstrating both ends of the credit spe
 ##### Archetype B: Subprime / High-Risk Profile (`sample_subprime_applicant.json`)
 * Low bureau ratings (`EXT_1=0.12, EXT_2=0.18, EXT_3=0.14`), high debt leverage ($5.05\times$), young applicant ($23$ years old), short tenure ($1.0$ year laborer), high annuity term ($0.0792$), neighborhood delinquency.
 * **Run command:**
-  ```powershell
+  ```bash
   python evaluate_profile.py --input-json sample_subprime_applicant.json
   ```
 * **Evaluation Output:**
@@ -843,15 +889,15 @@ We provide two pre-configured profiles demonstrating both ends of the credit spe
 #### 4. How to Customize & Test Custom Profiles
 To test any arbitrary applicant scenario:
 1. Copy `sample_full_applicant.json` to a new file (e.g. `my_applicant.json`):
-   ```powershell
-   copy sample_full_applicant.json my_applicant.json
+   ```bash
+   cp sample_full_applicant.json my_applicant.json
    ```
 2. Edit key parameters in `my_applicant.json` to test specific underwriting hypotheses:
    * **Test Debt Stress:** Increase `AMT_CREDIT` to `1200000.0` and `AMT_ANNUITY` to `65000.0`.
    * **Test Bureau Sensitivity:** Adjust `EXT_SOURCE_1`, `EXT_SOURCE_2`, `EXT_SOURCE_3` down to `0.25`.
    * **Test Education Effect:** Change `NAME_EDUCATION_TYPE` from `"Higher education"` to `"Lower secondary"`.
 3. Execute the manual evaluation CLI:
-   ```powershell
+   ```bash
    python evaluate_profile.py --input-json my_applicant.json
    ```
    The engine will instantly compute the new $PD$, map to the appropriate Risk Tier (`LOW`, `MEDIUM`, or `HIGH`), and output the local SHAP explanations for that specific borrower profile.

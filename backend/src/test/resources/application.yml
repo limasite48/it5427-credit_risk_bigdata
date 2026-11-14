@@ -1,0 +1,40 @@
+spring:
+  profiles:
+    active: local
+  http:
+    converters:
+      preferred-json-mapper: jackson2
+
+app:
+  data-dir: ../outputs
+  model-path: ../outputs/models/credit_risk_model.joblib
+  scored-csv: ../outputs/scored_applications_sample.csv
+  risk-summary: ../outputs/metrics/risk_summary.json
+  demographics: ../outputs/metrics/demographic_profiles.json
+  roc-curve: ../outputs/figures/roc_curve.png
+  model-evaluation: ../outputs/metrics/model_evaluation.json
+  supplementary-dir: ../ingestion-minio-kafka/data/supplementary
+  spark-reports-dir: ../apache-spark/reports
+  ml-service-url: http://127.0.0.1:18000
+  ml-service-token: test-ml-token
+  cors-allowed-origins: http://localhost:5173,http://localhost:8088
+  jwt:
+    secret: test-jwt-secret-must-be-at-least-32-chars-long!!
+    access-token-minutes: 15
+    refresh-token-days: 7
+  auth:
+    login-max-attempts: 5
+    login-lockout-seconds: 60
+    score-rate-limit-per-minute: 30
+  demo-users:
+    admin-username: admin
+    admin-password: AdminDemo!234
+    analyst-username: analyst
+    analyst-password: AnalystDemo!234
+    underwriter-username: underwriter
+    underwriter-password: UnderwriterDemo!234
+
+management:
+  endpoint:
+    health:
+      show-details: never
