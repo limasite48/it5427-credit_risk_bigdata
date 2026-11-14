@@ -34,6 +34,7 @@ services:
       DATA_DIR: /app/outputs
       MODEL_PATH: /app/outputs/models/credit_risk_model.joblib
       SCORED_CSV: /app/outputs/scored_applications_sample.csv
+      GOLD_SCORED_CSV: /app/outputs/gold_scored_applications.csv
       RISK_SUMMARY: /app/outputs/metrics/risk_summary.json
       DEMOGRAPHICS: /app/outputs/metrics/demographic_profiles.json
       ROC_CURVE: /app/outputs/figures/roc_curve.png

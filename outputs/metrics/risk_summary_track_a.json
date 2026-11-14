@@ -1,0 +1,21 @@
+{
+  "portfolio_summary": {
+    "total_applications": 5000,
+    "defaults_count": 386,
+    "non_defaults_count": 4614,
+    "npl_default_ratio": 0.0772,
+    "npl_default_percent": "7.72%"
+  },
+  "financial_exposure": {
+    "average_loan_amount": 597634.44,
+    "median_loan_amount": 508495.5,
+    "average_income": 168036.42,
+    "median_income": 144000.0,
+    "average_annuity": 27047.64,
+    "average_credit_to_income_ratio": 3.95
+  },
+  "delinquency_indicators": {
+    "DEF_30_CNT_SOCIAL_CIRCLE_positive_rate": 0.115,
+    "DEF_60_CNT_SOCIAL_CIRCLE_positive_rate": 0.083
+  }
+}

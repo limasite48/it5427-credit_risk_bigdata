@@ -51,7 +51,8 @@ public final class DashboardDtos {
             Double income,
             Double creditAmount,
             String occupation,
-            String education
+            String education,
+            String scoreSource
     ) {}
 
     public record RiskDriver(

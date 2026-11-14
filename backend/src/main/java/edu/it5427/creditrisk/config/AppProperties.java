@@ -7,6 +7,7 @@ public record AppProperties(
         String dataDir,
         String modelPath,
         String scoredCsv,
+        String goldScoredCsv,
         String riskSummary,
         String demographics,
         String rocCurve,

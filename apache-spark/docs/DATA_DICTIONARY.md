@@ -31,53 +31,126 @@ Every Silver table also carries the lineage columns `_source_id, _origin, _inges
 | Column | Type | Source / formula | Meaning |
 |---|---|---|---|
 | sk_id_curr | bigint | Home Credit (original) | ID of loan in our sample |
-| name_contract_type | string | Home Credit (original) |  |
-| code_gender | string | Home Credit (original) |  |
-| flag_own_car | int | Home Credit (original) |  |
-| flag_own_realty | int | Home Credit (original) |  |
-| cnt_children | int | Home Credit (original) |  |
+| name_contract_type | string | Home Credit (original) | Identification if loan is cash or revolving |
+| code_gender | string | Home Credit (original) | Gender of the client |
+| flag_own_car | int | Home Credit (original) | Flag if the client owns a car |
+| flag_own_realty | int | Home Credit (original) | Flag if client owns a house or flat |
+| cnt_children | int | Home Credit (original) | Number of children the client has |
 | amt_income_total | double | Home Credit (original) | Income of the client |
 | amt_credit | double | Home Credit (original) | Credit amount of the loan |
 | amt_annuity | double | Home Credit (original) | Loan annuity |
-| amt_goods_price | double | Home Credit (original) | Price of the goods for which the loan is given |
-| name_type_suite | string | Home Credit (original) |  |
-| name_income_type | string | Home Credit (original) |  |
-| name_education_type | string | Home Credit (original) |  |
-| name_family_status | string | Home Credit (original) |  |
-| name_housing_type | string | Home Credit (original) |  |
-| region_population_relative | double | Home Credit (original) |  |
+| amt_goods_price | double | Home Credit (original) | For consumer loans it is the price of the goods for which the loan is given |
+| name_type_suite | string | Home Credit (original) | Who was accompanying client when he was applying for the loan |
+| name_income_type | string | Home Credit (original) | Clients income type (businessman, working, maternity leave,) |
+| name_education_type | string | Home Credit (original) | Level of highest education the client achieved |
+| name_family_status | string | Home Credit (original) | Family status of the client |
+| name_housing_type | string | Home Credit (original) | What is the housing situation of the client (renting, living with parents, ...) |
+| region_population_relative | double | Home Credit (original) | Normalized population of region where client lives (higher number means the client lives in more populated region) |
 | days_birth | double | Home Credit (original) | Client's age in days at the time of application |
 | days_employed | double | Home Credit (original) | How many days before the application the person started current employment |
-| days_registration | double | Home Credit (original) |  |
-| days_id_publish | double | Home Credit (original) |  |
-| own_car_age | double | Home Credit (original) |  |
-| flag_mobil | int | Home Credit (original) |  |
-| flag_emp_phone | int | Home Credit (original) |  |
-| flag_work_phone | int | Home Credit (original) |  |
-| flag_cont_mobile | int | Home Credit (original) |  |
-| flag_phone | int | Home Credit (original) |  |
-| flag_email | int | Home Credit (original) |  |
+| days_registration | double | Home Credit (original) | How many days before the application did client change his registration |
+| days_id_publish | double | Home Credit (original) | How many days before the application did client change the identity document with which he applied for the loan |
+| own_car_age | double | Home Credit (original) | Age of client's car |
+| flag_mobil | int | Home Credit (original) | Did client provide mobile phone (1=YES, 0=NO) |
+| flag_emp_phone | int | Home Credit (original) | Did client provide work phone (1=YES, 0=NO) |
+| flag_work_phone | int | Home Credit (original) | Did client provide home phone (1=YES, 0=NO) |
+| flag_cont_mobile | int | Home Credit (original) | Was mobile phone reachable (1=YES, 0=NO) |
+| flag_phone | int | Home Credit (original) | Did client provide home phone (1=YES, 0=NO) |
+| flag_email | int | Home Credit (original) | Did client provide email (1=YES, 0=NO) |
 | occupation_type | string | Home Credit (original) | What kind of occupation does the client have |
 | cnt_fam_members | double | Home Credit (original) | How many family members does client have |
-| region_rating_client | int | Home Credit (original) |  |
-| region_rating_client_w_city | int | Home Credit (original) |  |
-| weekday_appr_process_start | string | Home Credit (original) |  |
-| hour_appr_process_start | int | Home Credit (original) |  |
-| reg_region_not_live_region | int | Home Credit (original) |  |
-| organization_type | string | Home Credit (original) |  |
-| ext_source_1 | double | Home Credit (original) |  |
-| ext_source_2 | double | Home Credit (original) |  |
-| ext_source_3 | double | Home Credit (original) |  |
-| apartments_avg | double | Home Credit (original) |  |
-| years_build_avg | double | Home Credit (original) |  |
-| floorsmax_medi | double | Home Credit (original) |  |
-| totalarea_mode | double | Home Credit (original) |  |
-| emergencystate_mode | string | Home Credit (original) |  |
-| obs_30_cnt_social_circle | double | Home Credit (original) |  |
-| def_30_cnt_social_circle | double | Home Credit (original) |  |
-| days_last_phone_change | double | Home Credit (original) |  |
-| flag_document_3 | int | Home Credit (original) |  |
-| amt_req_credit_bureau_year | double | Home Credit (original) |  |
+| region_rating_client | int | Home Credit (original) | Our rating of the region where client lives (1,2,3) |
+| region_rating_client_w_city | int | Home Credit (original) | Our rating of the region where client lives with taking city into account (1,2,3) |
+| weekday_appr_process_start | string | Home Credit (original) | On which day of the week did the client apply for the loan |
+| hour_appr_process_start | int | Home Credit (original) | Approximately at what hour did the client apply for the loan |
+| reg_region_not_live_region | int | Home Credit (original) | Flag if client's permanent address does not match contact address (1=different, 0=same, at region level) |
+| reg_region_not_work_region | int | Home Credit (original) | Flag if client's permanent address does not match work address (1=different, 0=same, at region level) |
+| live_region_not_work_region | int | Home Credit (original) | Flag if client's contact address does not match work address (1=different, 0=same, at region level) |
+| reg_city_not_live_city | int | Home Credit (original) | Flag if client's permanent address does not match contact address (1=different, 0=same, at city level) |
+| reg_city_not_work_city | int | Home Credit (original) | Flag if client's permanent address does not match work address (1=different, 0=same, at city level) |
+| live_city_not_work_city | int | Home Credit (original) | Flag if client's contact address does not match work address (1=different, 0=same, at city level) |
+| organization_type | string | Home Credit (original) | Type of organization where client works |
+| ext_source_1 | double | Home Credit (original) | Normalized score from external data source |
+| ext_source_2 | double | Home Credit (original) | Normalized score from external data source |
+| ext_source_3 | double | Home Credit (original) | Normalized score from external data source |
+| apartments_avg | double | Home Credit (original) | Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common  |
+| basementarea_avg | double | Home Credit (original) | Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common  |
+| years_beginexpluatation_avg | double | Home Credit (original) | Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common  |
+| years_build_avg | double | Home Credit (original) | Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common  |
+| commonarea_avg | double | Home Credit (original) | Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common  |
+| elevators_avg | double | Home Credit (original) | Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common  |
+| entrances_avg | double | Home Credit (original) | Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common  |
+| floorsmax_avg | double | Home Credit (original) | Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common  |
+| floorsmin_avg | double | Home Credit (original) | Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common  |
+| landarea_avg | double | Home Credit (original) | Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common  |
+| livingapartments_avg | double | Home Credit (original) | Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common  |
+| livingarea_avg | double | Home Credit (original) | Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common  |
+| nonlivingapartments_avg | double | Home Credit (original) | Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common  |
+| nonlivingarea_avg | double | Home Credit (original) | Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common  |
+| apartments_mode | double | Home Credit (original) | Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common  |
+| basementarea_mode | double | Home Credit (original) | Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common  |
+| years_beginexpluatation_mode | double | Home Credit (original) | Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common  |
+| years_build_mode | double | Home Credit (original) | Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common  |
+| commonarea_mode | double | Home Credit (original) | Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common  |
+| elevators_mode | double | Home Credit (original) | Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common  |
+| entrances_mode | double | Home Credit (original) | Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common  |
+| floorsmax_mode | double | Home Credit (original) | Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common  |
+| floorsmin_mode | double | Home Credit (original) | Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common  |
+| landarea_mode | double | Home Credit (original) | Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common  |
+| livingapartments_mode | double | Home Credit (original) | Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common  |
+| livingarea_mode | double | Home Credit (original) | Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common  |
+| nonlivingapartments_mode | double | Home Credit (original) | Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common  |
+| nonlivingarea_mode | double | Home Credit (original) | Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common  |
+| apartments_medi | double | Home Credit (original) | Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common  |
+| basementarea_medi | double | Home Credit (original) | Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common  |
+| years_beginexpluatation_medi | double | Home Credit (original) | Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common  |
+| years_build_medi | double | Home Credit (original) | Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common  |
+| commonarea_medi | double | Home Credit (original) | Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common  |
+| elevators_medi | double | Home Credit (original) | Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common  |
+| entrances_medi | double | Home Credit (original) | Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common  |
+| floorsmax_medi | double | Home Credit (original) | Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common  |
+| floorsmin_medi | double | Home Credit (original) | Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common  |
+| landarea_medi | double | Home Credit (original) | Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common  |
+| livingapartments_medi | double | Home Credit (original) | Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common  |
+| livingarea_medi | double | Home Credit (original) | Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common  |
+| nonlivingapartments_medi | double | Home Credit (original) | Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common  |
+| nonlivingarea_medi | double | Home Credit (original) | Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common  |
+| fondkapremont_mode | string | Home Credit (original) | Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common  |
+| housetype_mode | string | Home Credit (original) | Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common  |
+| totalarea_mode | double | Home Credit (original) | Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common  |
+| wallsmaterial_mode | string | Home Credit (original) | Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common  |
+| emergencystate_mode | string | Home Credit (original) | Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common  |
+| obs_30_cnt_social_circle | double | Home Credit (original) | How many observation of client's social surroundings with observable 30 DPD (days past due) default |
+| def_30_cnt_social_circle | double | Home Credit (original) | How many observation of client's social surroundings defaulted on 30 DPD (days past due)  |
+| obs_60_cnt_social_circle | double | Home Credit (original) | How many observation of client's social surroundings with observable 60 DPD (days past due) default |
+| def_60_cnt_social_circle | double | Home Credit (original) | How many observation of client's social surroundings defaulted on 60 (days past due) DPD |
+| days_last_phone_change | double | Home Credit (original) | How many days before application did client change phone |
+| flag_document_2 | int | Home Credit (original) | Did client provide document 2 |
+| flag_document_3 | int | Home Credit (original) | Did client provide document 3 |
+| flag_document_4 | int | Home Credit (original) | Did client provide document 4 |
+| flag_document_5 | int | Home Credit (original) | Did client provide document 5 |
+| flag_document_6 | int | Home Credit (original) | Did client provide document 6 |
+| flag_document_7 | int | Home Credit (original) | Did client provide document 7 |
+| flag_document_8 | int | Home Credit (original) | Did client provide document 8 |
+| flag_document_9 | int | Home Credit (original) | Did client provide document 9 |
+| flag_document_10 | int | Home Credit (original) | Did client provide document 10 |
+| flag_document_11 | int | Home Credit (original) | Did client provide document 11 |
+| flag_document_12 | int | Home Credit (original) | Did client provide document 12 |
+| flag_document_13 | int | Home Credit (original) | Did client provide document 13 |
+| flag_document_14 | int | Home Credit (original) | Did client provide document 14 |
+| flag_document_15 | int | Home Credit (original) | Did client provide document 15 |
+| flag_document_16 | int | Home Credit (original) | Did client provide document 16 |
+| flag_document_17 | int | Home Credit (original) | Did client provide document 17 |
+| flag_document_18 | int | Home Credit (original) | Did client provide document 18 |
+| flag_document_19 | int | Home Credit (original) | Did client provide document 19 |
+| flag_document_20 | int | Home Credit (original) | Did client provide document 20 |
+| flag_document_21 | int | Home Credit (original) | Did client provide document 21 |
+| amt_req_credit_bureau_hour | double | Home Credit (original) | Number of enquiries to Credit Bureau about the client one hour before application |
+| amt_req_credit_bureau_day | double | Home Credit (original) | Number of enquiries to Credit Bureau about the client one day before application (excluding one hour before application) |
+| amt_req_credit_bureau_week | double | Home Credit (original) | Number of enquiries to Credit Bureau about the client one week before application (excluding one day before application) |
+| amt_req_credit_bureau_mon | double | Home Credit (original) | Number of enquiries to Credit Bureau about the client one month before application (excluding one week before application) |
+| amt_req_credit_bureau_qrt | double | Home Credit (original) | Number of enquiries to Credit Bureau about the client 3 month before application (excluding one month before application) |
+| amt_req_credit_bureau_year | double | Home Credit (original) | Number of enquiries to Credit Bureau about the client one day year (excluding last 3 months before application) |
 | days_employed_is_sentinel | boolean | Silver flag | original `DAYS_EMPLOYED` was 365243 (not applicable / open-ended); value set to NULL |
 | amt_income_total_outlier | boolean | Silver flag | `amt_income_total` at/above the configured outlier quantile (kept) |
 | amt_credit_outlier | boolean | Silver flag | `amt_credit` at/above the configured outlier quantile (kept) |
@@ -193,16 +266,16 @@ Every Silver table also carries the lineage columns `_source_id, _origin, _inges
 
 | Column | Type | Source / formula | Meaning |
 |---|---|---|---|
-| sk_id_prev | bigint | Home Credit (original) | ID of previous credit in Home credit related to loan in our sample |
+| sk_id_prev | bigint | Home Credit (original) | ID of previous credit in Home Credit related to loan in our sample. (One loan in our sample can have 0,1,2 or more previous loans in Home Credit) |
 | sk_id_curr | bigint | Home Credit (original) | ID of loan in our sample |
-| name_contract_type | string | Home Credit (original) |  |
-| name_contract_status | string | Home Credit (original) | Contract status (approved, cancelled, ...) of previous application |
-| amt_application | double | Home Credit (original) |  |
+| name_contract_type | string | Home Credit (original) | Identification if loan is cash or revolving |
+| name_contract_status | string | Home Credit (original) | Contract status during the month |
+| amt_application | double | Home Credit (original) | For how much credit did client ask on the previous application |
 | amt_credit | double | Home Credit (original) | Credit amount of the loan |
 | amt_annuity | double | Home Credit (original) | Loan annuity |
-| cnt_payment | double | Home Credit (original) |  |
+| cnt_payment | double | Home Credit (original) | Term of previous credit at application of the previous application |
 | days_decision | int | Home Credit (original) | Relative to current application when was the decision about previous application made |
-| name_client_type | string | Home Credit (original) |  |
+| name_client_type | string | Home Credit (original) | Was the client old or new client when applying for the previous application |
 | installment_count | bigint | installments_payments: `count(distinct installment = SK_ID_PREV+version+number)` | Installments due before the application. |
 | late_payment_count | bigint | installments_payments: `count(last payment day > due day)` | Installments paid late. |
 | late_payment_ratio | double | installments_payments: `late / installments` | Share of installments paid late. |
@@ -232,7 +305,7 @@ Every Silver table also carries the lineage columns `_source_id, _origin, _inges
 | Column | Type | Source / formula | Meaning |
 |---|---|---|---|
 | sk_id_curr | bigint | Home Credit (original) | ID of loan in our sample |
-| target | int | Home Credit (original) | Target variable (1 - client with payment difficulties, 0 - all other cases) |
+| target | int | Home Credit (original) | Target variable (1 - client with payment difficulties: he/she had late payment more than X days on at least one of the first Y installments of the loan in our s |
 
 ### gold/data_quality_report
 
@@ -249,72 +322,4 @@ Every Silver table also carries the lineage columns `_source_id, _origin, _inges
 | check_type | string | Home Credit (original) |  |
 | metric | string | Home Credit (original) |  |
 | value | double | Home Credit (original) |  |
-
-### gold/stream_customer_activity_delta
-
-- Grain: 1 row per SK_ID_CURR per micro-batch
-- Key: `sk_id_curr, batch_id`
-- Content: streaming aggregates (additive)
-
-| Column | Type | Source / formula | Meaning |
-|---|---|---|---|
-| sk_id_curr | bigint | Home Credit (original) | ID of loan in our sample |
-| events_total | bigint | pipeline | events in the micro-batch for the customer |
-| application_events | bigint | Home Credit (original) |  |
-| bureau_events | bigint | Home Credit (original) |  |
-| installment_events | bigint | Home Credit (original) |  |
-| credit_card_events | bigint | Home Credit (original) |  |
-| pos_cash_events | bigint | Home Credit (original) |  |
-| synthetic_events | bigint | Home Credit (original) |  |
-| installment_amount_due | double | Home Credit (original) |  |
-| installment_amount_paid | double | Home Credit (original) |  |
-| late_installment_events | bigint | Home Credit (original) |  |
-| max_pos_dpd | double | Home Credit (original) |  |
-| max_credit_card_dpd | double | Home Credit (original) |  |
-| bureau_debt_reported | double | Home Credit (original) |  |
-| last_event_time | timestamp | Home Credit (original) |  |
-| batch_id | int | pipeline | Structured Streaming micro-batch id |
-
-### gold/stream_customer_snapshot
-
-- Grain: 1 row per SK_ID_CURR seen in the stream
-- Key: `sk_id_curr`
-- Content: re-aggregation of the deltas
-
-| Column | Type | Source / formula | Meaning |
-|---|---|---|---|
-| sk_id_curr | bigint | Home Credit (original) | ID of loan in our sample |
-| events_total | bigint | pipeline | events in the micro-batch for the customer |
-| application_events | bigint | Home Credit (original) |  |
-| bureau_events | bigint | Home Credit (original) |  |
-| installment_events | bigint | Home Credit (original) |  |
-| credit_card_events | bigint | Home Credit (original) |  |
-| pos_cash_events | bigint | Home Credit (original) |  |
-| synthetic_events | bigint | Home Credit (original) |  |
-| installment_amount_due | double | Home Credit (original) |  |
-| installment_amount_paid | double | Home Credit (original) |  |
-| late_installment_events | bigint | Home Credit (original) |  |
-| bureau_debt_reported | double | Home Credit (original) |  |
-| max_pos_dpd | double | Home Credit (original) |  |
-| max_credit_card_dpd | double | Home Credit (original) |  |
-| last_event_time | timestamp | Home Credit (original) |  |
-| batches_seen | bigint | Home Credit (original) |  |
-| stream_late_payment_ratio | double | Home Credit (original) |  |
-
-### gold/stream_batch_metrics
-
-- Grain: 1 row per micro-batch
-- Key: `batch_id`
-- Content: events, latency, customers touched
-
-| Column | Type | Source / formula | Meaning |
-|---|---|---|---|
-| processed_at | string | Home Credit (original) |  |
-| events | bigint | Home Credit (original) |  |
-| by_source | string | Home Credit (original) |  |
-| customers_touched | bigint | Home Credit (original) |  |
-| avg_latency_s | double | Home Credit (original) |  |
-| max_latency_s | double | Home Credit (original) |  |
-| batch_seconds | double | Home Credit (original) |  |
-| batch_id | int | pipeline | Structured Streaming micro-batch id |
 

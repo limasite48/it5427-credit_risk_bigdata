@@ -160,9 +160,10 @@ public class PipelineInsightService {
 
         String note = fixtureRun
                 ? "These figures come from the Spark test fixture, not the full Home Credit extract. "
-                + "The underwriting model still scores the Track A application sample and does not yet consume the gold feature store."
-                : "Spark gold profiles are integrated into this view. "
-                + "The underwriting model still scores the Track A application sample until it is retrained on the gold feature store.";
+                + "The underwriting form still scores with the Track A application model."
+                : "These figures come from a real Home Credit subset in the Spark lake. "
+                + "Underwriting lookup uses the LightGBM trained on the gold profile when the id is in that subset. "
+                + "The manual form still scores with the Track A application model.";
 
         return new PipelineDtos.PipelineResponse(
                 datasetLabel,

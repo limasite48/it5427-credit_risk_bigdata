@@ -310,7 +310,9 @@ export function UnderwritingPage() {
         <Card>
           <CardHeader>
             <CardTitle>Application lookup</CardTitle>
-            <CardDescription>Search the scored CSV by SK_ID_CURR</CardDescription>
+            <CardDescription>
+              Track A sample, or a Gold-model score when the id was in the Home Credit subset
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="flex gap-2">
@@ -329,6 +331,7 @@ export function UnderwritingPage() {
                 <div className="mt-2 grid gap-1 text-xs text-navy-muted">
                   <div>PD: {formatPercent(lookupResult.predictedPd)}</div>
                   <div>Action: {lookupResult.actionRecommendation}</div>
+                  {lookupResult.scoreSource && <div>Score source: {lookupResult.scoreSource}</div>}
                   {lookupResult.occupation && <div>Occupation: {lookupResult.occupation}</div>}
                   {lookupResult.education && <div>Education: {lookupResult.education}</div>}
                 </div>

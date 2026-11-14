@@ -1,6 +1,6 @@
 # Data Quality Report
 
-- Generated: 2026-11-13T00:55:52+00:00
+- Generated: 2026-11-14T14:04:23+00:00
 - Dataset: **TEST FIXTURE (random values, NOT Home Credit)**
 
 > ⚠️ Numbers below were produced on the dataset named above. Re-run `python -m scripts.run_pipeline` on the real Kaggle files to regenerate this report with real figures.
@@ -24,15 +24,15 @@ Full detail: `reports/data_profiling/PROFILING_REPORT.md`.
 
 | Table | Rows in | Exact dups removed | PK dups quarantined | Required-null quarantined | Rows out | Reconciles |
 |---|---:|---:|---:|---:|---:|---|
-| application_train | 2,581 | 2 | 0 | 0 | 2,579 | ✅ |
-| application_test | 421 | 0 | 0 | 0 | 421 | ✅ |
-| bureau | 9,694 | 0 | 0 | 1 | 9,693 | ✅ |
-| bureau_balance | 295,046 | 0 | 0 | 0 | 295,046 | ✅ |
-| previous_application | 8,724 | 0 | 0 | 0 | 8,724 | ✅ |
-| installments_payments | 68,368 | 3 | 0 | 0 | 68,365 | ✅ |
-| POS_CASH_balance | 236,650 | 2 | 0 | 0 | 236,648 | ✅ |
-| credit_card_balance | 29,824 | 0 | 0 | 0 | 29,824 | ✅ |
-| synthetic_traffic_profile | 3,000 | 0 | 0 | 0 | 3,000 | ✅ |
+| application_train | 4,316 | 0 | 0 | 0 | 4,316 | ✅ |
+| application_test | 684 | 0 | 0 | 0 | 684 | ✅ |
+| bureau | 24,618 | 0 | 0 | 0 | 24,618 | ✅ |
+| bureau_balance | 352,119 | 0 | 0 | 0 | 352,119 | ✅ |
+| previous_application | 23,990 | 0 | 0 | 0 | 23,990 | ✅ |
+| installments_payments | 192,599 | 0 | 0 | 0 | 192,599 | ✅ |
+| POS_CASH_balance | 142,543 | 0 | 0 | 0 | 142,543 | ✅ |
+| credit_card_balance | 53,618 | 0 | 0 | 0 | 53,618 | ✅ |
+| synthetic_traffic_profile | 5,000 | 0 | 0 | 0 | 5,000 | ✅ |
 
 Duplicate rate = exact duplicates removed / rows in.
 
@@ -40,28 +40,29 @@ Duplicate rate = exact duplicates removed / rows in.
 
 | Table | Orphan rows | After application date | Negative values | Outliers | Business-key dups | 365243 sentinels |
 |---|---:|---:|---:|---:|---:|---:|
-| application_train | 0 | 0 | 0 | 8 | 0 | 462 |
-| application_test | 0 | 0 | 0 | 2 | 0 | 83 |
-| bureau | 4 | 1 | 0 | 28 | 0 | 0 |
-| bureau_balance | 3 | 0 | 0 | 0 | 0 | 0 |
-| previous_application | 0 | 0 | 0 | 0 | 0 | 6,949 |
-| installments_payments | 5 | 2 | 11 | 102 | 0 | 0 |
-| POS_CASH_balance | 0 | 0 | 0 | 0 | 0 | 0 |
-| credit_card_balance | 0 | 0 | 0 | 39 | 0 | 0 |
+| application_train | 0 | 0 | 0 | 18 | 0 | 813 |
+| application_test | 0 | 0 | 0 | 2 | 0 | 127 |
+| bureau | 0 | 0 | 0 | 68 | 0 | 0 |
+| bureau_balance | 0 | 0 | 0 | 0 | 0 | 0 |
+| previous_application | 0 | 0 | 0 | 0 | 0 | 21,612 |
+| installments_payments | 16,702 | 0 | 0 | 286 | 0 | 0 |
+| POS_CASH_balance | 4,485 | 0 | 0 | 0 | 0 | 0 |
+| credit_card_balance | 14,966 | 0 | 0 | 78 | 0 | 0 |
 | synthetic_traffic_profile | 0 | 0 | 0 | 0 | 0 | 0 |
 
-Semantic missing-value checks: `application_train` {'own_car_age_null_while_owns_car': 539, 'organization_xna_vs_days_employed_sentinel': 0}; `application_test` {'own_car_age_null_while_owns_car': 94, 'organization_xna_vs_days_employed_sentinel': 0}
+Semantic missing-value checks: `application_train` {'own_car_age_null_while_owns_car': 0, 'organization_xna_vs_days_employed_sentinel': 0}; `application_test` {'own_car_age_null_while_owns_car': 0, 'organization_xna_vs_days_employed_sentinel': 0}
 
 Cast failures: none
 
 ## 4. Missing values (Silver, top 8 per table)
 
-- **application_train**: years_build_avg 65.6%, own_car_age 64.9%, ext_source_1 56.1%, floorsmax_medi 49.8%, apartments_avg 48.7%, totalarea_mode 48.4%, emergencystate_mode 45.2%, occupation_type 30.6% (raw 30.7%)
-- **application_test**: years_build_avg 68.6%, own_car_age 67.9%, apartments_avg 56.8%, ext_source_1 56.3%, floorsmax_medi 52.3%, totalarea_mode 46.6%, emergencystate_mode 44.9%, occupation_type 32.1%
-- **bureau**: amt_annuity 69.8%, amt_credit_max_overdue 65.9%, days_enddate_fact 36.5%, amt_credit_sum_limit 33.7%, amt_credit_sum_debt 14.1%
-- **previous_application**: days_first_drawing 100.0% (raw 38.3%), rate_interest_privileged 99.7%, rate_interest_primary 99.4%, name_product_type 63.3% (raw 0.0%), rate_down_payment 54.1%, amt_down_payment 52.6%, name_type_suite 49.6%, days_last_due 47.2% (raw 38.3%)
-- **installments_payments**: days_entry_payment 1.0%, amt_payment 1.0%
-- **credit_card_balance**: amt_payment_current 20.2%
+- **application_train**: commonarea_avg 70.4%, commonarea_mode 70.4%, commonarea_medi 70.4%, nonlivingapartments_avg 70.3%, nonlivingapartments_mode 70.3%, nonlivingapartments_medi 70.3%, livingapartments_avg 69.0%, livingapartments_mode 69.0%
+- **application_test**: own_car_age 68.7%, commonarea_avg 67.5%, commonarea_mode 67.5%, commonarea_medi 67.5%, nonlivingapartments_avg 67.0%, nonlivingapartments_mode 67.0%, nonlivingapartments_medi 67.0%, livingapartments_avg 65.5%
+- **bureau**: amt_annuity 70.4%, amt_credit_max_overdue 65.3%, days_enddate_fact 37.0%, amt_credit_sum_limit 34.9%, amt_credit_sum_debt 15.2%, days_credit_enddate 6.5%, amt_credit_sum 0.0%
+- **previous_application**: rate_interest_primary 99.7%, rate_interest_privileged 99.7%, days_first_drawing 96.3% (raw 40.7%), name_product_type 63.0% (raw 0.0%), name_goods_category 58.1% (raw 0.0%), amt_down_payment 55.1%, rate_down_payment 55.1%, days_termination 54.3% (raw 40.7%)
+- **installments_payments**: days_entry_payment 0.0%, amt_payment 0.0%
+- **POS_CASH_balance**: cnt_instalment 0.3%, cnt_instalment_future 0.3%
+- **credit_card_balance**: amt_payment_current 19.3%, amt_drawings_atm_current 19.1%, amt_drawings_other_current 19.1%, amt_drawings_pos_current 19.1%, cnt_drawings_atm_current 19.1%, cnt_drawings_other_current 19.1%, cnt_drawings_pos_current 19.1%, amt_inst_min_regularity 7.6%
 
 Differences between raw and Silver missing rates come from documented conversions (365243 → NULL, `XNA` → NULL). No column was dropped.
 
@@ -69,35 +70,35 @@ Differences between raw and Silver missing rates come from documented conversion
 
 | Check | Result | Details |
 |---|---|---|
-| application base (train+test): one row per sk_id_curr | ✅ pass | {"rows": 3000, "distinct_keys": 3000} |
+| application base (train+test): one row per sk_id_curr | ✅ pass | {"rows": 5000, "distinct_keys": 5000} |
 | leakage: no child row dated after application is used | ✅ pass | {} |
-| previous_application base: one row per sk_id_prev | ✅ pass | {"rows": 8724, "distinct_keys": 8724} |
-| aggregate installments@loan: one row per sk_id_prev | ✅ pass | {"rows": 4793, "distinct_keys": 4793} |
-| join installments@loan: row count unchanged | ✅ pass | {"before": 8724, "after": 8724} |
-| aggregate pos@loan: one row per sk_id_prev | ✅ pass | {"rows": 4795, "distinct_keys": 4795} |
-| join pos@loan: row count unchanged | ✅ pass | {"before": 8724, "after": 8724} |
-| aggregate credit_card@loan: one row per sk_id_prev | ✅ pass | {"rows": 592, "distinct_keys": 592} |
-| join credit_card@loan: row count unchanged | ✅ pass | {"before": 8724, "after": 8724} |
-| gold.loan_credit_features: one row per sk_id_prev | ✅ pass | {"rows": 8724, "distinct_keys": 8724} |
-| aggregate bureau: one row per sk_id_curr | ✅ pass | {"rows": 2576, "distinct_keys": 2576} |
-| join bureau: row count unchanged | ✅ pass | {"before": 3000, "after": 3000} |
-| aggregate bureau_balance: one row per sk_id_curr | ✅ pass | {"rows": 2294, "distinct_keys": 2294} |
-| join bureau_balance: row count unchanged | ✅ pass | {"before": 3000, "after": 3000} |
-| aggregate previous_application: one row per sk_id_curr | ✅ pass | {"rows": 2856, "distinct_keys": 2856} |
-| join previous_application: row count unchanged | ✅ pass | {"before": 3000, "after": 3000} |
-| aggregate installments: one row per sk_id_curr | ✅ pass | {"rows": 2368, "distinct_keys": 2368} |
-| join installments: row count unchanged | ✅ pass | {"before": 3000, "after": 3000} |
-| aggregate pos_cash: one row per sk_id_curr | ✅ pass | {"rows": 2368, "distinct_keys": 2368} |
-| join pos_cash: row count unchanged | ✅ pass | {"before": 3000, "after": 3000} |
-| aggregate credit_card: one row per sk_id_curr | ✅ pass | {"rows": 535, "distinct_keys": 535} |
-| join credit_card: row count unchanged | ✅ pass | {"before": 3000, "after": 3000} |
-| aggregate synthetic_traffic (SYNTHETIC): one row per sk_id_curr | ✅ pass | {"rows": 3000, "distinct_keys": 3000} |
-| join synthetic_traffic (SYNTHETIC): row count unchanged | ✅ pass | {"before": 3000, "after": 3000} |
-| gold.customer_credit_features: one row per sk_id_curr | ✅ pass | {"rows": 3000, "distinct_keys": 3000} |
-| customer_credit_features covers every application | ✅ pass | {"customers": 3000, "applications": 3000} |
-| join application+customer_features: row count unchanged | ✅ pass | {"before": 3000, "after": 3000} |
-| gold.integrated_credit_profile: one row per sk_id_curr | ✅ pass | {"rows": 3000, "distinct_keys": 3000} |
-| integrated profile has exactly one row per application | ✅ pass | {"profile": 3000, "applications": 3000} |
+| previous_application base: one row per sk_id_prev | ✅ pass | {"rows": 23990, "distinct_keys": 23990} |
+| aggregate installments@loan: one row per sk_id_prev | ✅ pass | {"rows": 13690, "distinct_keys": 13690} |
+| join installments@loan: row count unchanged | ✅ pass | {"before": 23990, "after": 23990} |
+| aggregate pos@loan: one row per sk_id_prev | ✅ pass | {"rows": 12831, "distinct_keys": 12831} |
+| join pos@loan: row count unchanged | ✅ pass | {"before": 23990, "after": 23990} |
+| aggregate credit_card@loan: one row per sk_id_prev | ✅ pass | {"rows": 1331, "distinct_keys": 1331} |
+| join credit_card@loan: row count unchanged | ✅ pass | {"before": 23990, "after": 23990} |
+| gold.loan_credit_features: one row per sk_id_prev | ✅ pass | {"rows": 23990, "distinct_keys": 23990} |
+| aggregate bureau: one row per sk_id_curr | ✅ pass | {"rows": 4296, "distinct_keys": 4296} |
+| join bureau: row count unchanged | ✅ pass | {"before": 5000, "after": 5000} |
+| aggregate bureau_balance: one row per sk_id_curr | ✅ pass | {"rows": 1917, "distinct_keys": 1917} |
+| join bureau_balance: row count unchanged | ✅ pass | {"before": 5000, "after": 5000} |
+| aggregate previous_application: one row per sk_id_curr | ✅ pass | {"rows": 4762, "distinct_keys": 4762} |
+| join previous_application: row count unchanged | ✅ pass | {"before": 5000, "after": 5000} |
+| aggregate installments: one row per sk_id_curr | ✅ pass | {"rows": 4730, "distinct_keys": 4730} |
+| join installments: row count unchanged | ✅ pass | {"before": 5000, "after": 5000} |
+| aggregate pos_cash: one row per sk_id_curr | ✅ pass | {"rows": 4692, "distinct_keys": 4692} |
+| join pos_cash: row count unchanged | ✅ pass | {"before": 5000, "after": 5000} |
+| aggregate credit_card: one row per sk_id_curr | ✅ pass | {"rows": 1325, "distinct_keys": 1325} |
+| join credit_card: row count unchanged | ✅ pass | {"before": 5000, "after": 5000} |
+| aggregate synthetic_traffic (SYNTHETIC): one row per sk_id_curr | ✅ pass | {"rows": 5000, "distinct_keys": 5000} |
+| join synthetic_traffic (SYNTHETIC): row count unchanged | ✅ pass | {"before": 5000, "after": 5000} |
+| gold.customer_credit_features: one row per sk_id_curr | ✅ pass | {"rows": 5000, "distinct_keys": 5000} |
+| customer_credit_features covers every application | ✅ pass | {"customers": 5000, "applications": 5000} |
+| join application+customer_features: row count unchanged | ✅ pass | {"before": 5000, "after": 5000} |
+| gold.integrated_credit_profile: one row per sk_id_curr | ✅ pass | {"rows": 5000, "distinct_keys": 5000} |
+| integrated profile has exactly one row per application | ✅ pass | {"profile": 5000, "applications": 5000} |
 | TARGET not present in any feature table | ✅ pass | {"columns": []} |
 | training_labels only for train split | ✅ pass | {} |
 
@@ -105,11 +106,11 @@ Rows excluded before aggregation (leakage / integrity):
 
 | Table | Silver rows | Used | Excluded after-application | Excluded total |
 |---|---:|---:|---:|---:|
-| bureau | 9,693 | 9,688 | 1 | 5 |
-| bureau_balance | 295,046 | 295,043 | 0 | 3 |
-| previous_application | 8,724 | 8,724 | 0 | 0 |
-| installments_payments | 68,365 | 68,358 | 2 | 7 |
-| POS_CASH_balance | 236,648 | 236,648 | 0 | 0 |
-| credit_card_balance | 29,824 | 29,824 | 0 | 0 |
+| bureau | 24,618 | 24,618 | 0 | 0 |
+| bureau_balance | 352,119 | 352,119 | 0 | 0 |
+| previous_application | 23,990 | 23,990 | 0 | 0 |
+| installments_payments | 192,599 | 175,897 | 0 | 16,702 |
+| POS_CASH_balance | 142,543 | 138,058 | 0 | 4,485 |
+| credit_card_balance | 53,618 | 38,652 | 0 | 14,966 |
 
-Outputs: {'loan_credit_features': 8724, 'customer_credit_features': 3000, 'integrated_credit_profile': 3000, 'training_labels': 2579}; features in integrated profile: 102.
+Outputs: {'loan_credit_features': 23990, 'customer_credit_features': 5000, 'integrated_credit_profile': 5000, 'training_labels': 4316}; features in integrated profile: 175.

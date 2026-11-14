@@ -1,0 +1,30 @@
+{
+  "model_type": "LightGBM_GoldProfile",
+  "rows_labeled": 4316,
+  "feature_count": 131,
+  "train_roc_auc": 0.9947,
+  "val_roc_auc": 0.7331,
+  "best_iteration": 20,
+  "top_10_features": {
+    "ext_source_2": 40,
+    "annuity_to_income": 23,
+    "amt_goods_price": 22,
+    "previous_avg_credit": 21,
+    "days_last_phone_change": 18,
+    "days_id_publish": 18,
+    "late_payment_ratio": 18,
+    "days_employed": 17,
+    "days_birth": 17,
+    "days_registration": 17
+  },
+  "demo": {
+    "rows_labeled": 4316,
+    "validation_rows": 1079,
+    "val_roc_auc": 0.7331,
+    "train_roc_auc": 0.9947,
+    "low_example": 277603,
+    "high_example": 298157,
+    "low_pd": 0.0312,
+    "high_pd": 0.5631
+  }
+}

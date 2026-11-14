@@ -77,6 +77,7 @@ export interface ApplicationResponse {
   creditAmount?: number | null
   occupation?: string | null
   education?: string | null
+  scoreSource?: string | null
 }
 
 export type ApplicantPayload = Record<string, string | number | null>

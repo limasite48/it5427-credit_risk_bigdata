@@ -33,6 +33,22 @@ public class ApplicationLookupService {
     public synchronized void refresh() {
         index.clear();
         Path csvPath = Path.of(props.scoredCsv()).toAbsolutePath().normalize();
+        loadCsv(csvPath, "track-a", true);
+        if (props.goldScoredCsv() != null && !props.goldScoredCsv().isBlank()) {
+            Path goldPath = Path.of(props.goldScoredCsv()).toAbsolutePath().normalize();
+            if (Files.isRegularFile(goldPath)) {
+                loadCsv(goldPath, "gold", false);
+            }
+        }
+    }
+
+    private void loadCsv(Path csvPath, String defaultSource, boolean required) {
+        if (!Files.isRegularFile(csvPath)) {
+            if (required) {
+                throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Application index unavailable");
+            }
+            return;
+        }
         try (BufferedReader reader = Files.newBufferedReader(csvPath)) {
             String header = reader.readLine();
             if (header == null) {
@@ -59,12 +75,18 @@ public class ApplicationLookupService {
                 Double credit = optionalDouble(parts, colIndex, "AMT_CREDIT");
                 String occupation = optionalString(parts, colIndex, "OCCUPATION_TYPE");
                 String education = optionalString(parts, colIndex, "NAME_EDUCATION_TYPE");
+                String source = optionalString(parts, colIndex, "SCORE_SOURCE");
+                if (source == null || source.isBlank()) {
+                    source = defaultSource;
+                }
                 index.put(id, new DashboardDtos.ApplicationResponse(
-                        id, pd, tier, action, income, credit, occupation, education
+                        id, pd, tier, action, income, credit, occupation, education, source
                 ));
             }
-        } catch (IOException | NumberFormatException e) {
-            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Application index unavailable");
+        } catch (IOException | NumberFormatException | IllegalStateException e) {
+            if (required) {
+                throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Application index unavailable");
+            }
         }
     }
 

@@ -3,29 +3,29 @@
     "table": "application_train",
     "source_id": "loan_application_system",
     "origin": "ORIGINAL",
-    "bronze_uri": "/home/claude/credit-risk-bigdata/data/bronze/original/loan_application_system/application_train/ingest_id=20261113T005446_404dabfa/application_train.csv",
-    "ingest_id": "20261113T005446_404dabfa",
-    "rows_in": 2581,
-    "columns_in": 49,
+    "bronze_uri": "/Users/huylq/it5427-credit_risk_bigdata/apache-spark/data/bronze/original/loan_application_system/application_train/ingest_id=20261114T140333_b4319e79/application_train.csv",
+    "ingest_id": "20261114T140333_b4319e79",
+    "rows_in": 4316,
+    "columns_in": 122,
     "schema": {
       "unregistered_columns": [],
       "registered_but_absent": []
     },
     "cast_failures": {},
     "quarantined_required_null": 0,
-    "exact_duplicates_removed": 2,
+    "exact_duplicates_removed": 0,
     "pk_duplicates_quarantined": 0,
-    "rows_out": 2579,
+    "rows_out": 4316,
     "flags": {
       "_invalid_negative": 0,
       "_after_application": 0,
-      "amt_income_total_outlier": 4,
-      "amt_credit_outlier": 4,
-      "days_employed_is_sentinel": 462
+      "amt_income_total_outlier": 11,
+      "amt_credit_outlier": 7,
+      "days_employed_is_sentinel": 813
     },
     "outlier_thresholds": {
-      "amt_income_total": 659250.0,
-      "amt_credit": 3064500.0
+      "amt_income_total": 900000.0,
+      "amt_credit": 2410380.0
     },
     "missing": {
       "sk_id_curr": {
@@ -48,9 +48,9 @@
       },
       "code_gender": {
         "before": 0,
-        "after": 2,
+        "after": 0,
         "before_pct": 0.0,
-        "after_pct": 0.078
+        "after_pct": 0.0
       },
       "flag_own_car": {
         "before": 0,
@@ -89,16 +89,16 @@
         "after_pct": 0.0
       },
       "amt_goods_price": {
-        "before": 3,
-        "after": 3,
-        "before_pct": 0.116,
-        "after_pct": 0.116
+        "before": 1,
+        "after": 1,
+        "before_pct": 0.023,
+        "after_pct": 0.023
       },
       "name_type_suite": {
-        "before": 19,
-        "after": 19,
-        "before_pct": 0.736,
-        "after_pct": 0.737
+        "before": 24,
+        "after": 24,
+        "before_pct": 0.556,
+        "after_pct": 0.556
       },
       "name_income_type": {
         "before": 0,
@@ -138,9 +138,9 @@
       },
       "days_employed": {
         "before": 0,
-        "after": 462,
+        "after": 813,
         "before_pct": 0.0,
-        "after_pct": 17.914
+        "after_pct": 18.837
       },
       "days_registration": {
         "before": 0,
@@ -155,10 +155,10 @@
         "after_pct": 0.0
       },
       "own_car_age": {
-        "before": 1675,
-        "after": 1673,
-        "before_pct": 64.897,
-        "after_pct": 64.87
+        "before": 2832,
+        "after": 2832,
+        "before_pct": 65.616,
+        "after_pct": 65.616
       },
       "flag_mobil": {
         "before": 0,
@@ -197,10 +197,10 @@
         "after_pct": 0.0
       },
       "occupation_type": {
-        "before": 792,
-        "after": 790,
-        "before_pct": 30.686,
-        "after_pct": 30.632
+        "before": 1357,
+        "after": 1357,
+        "before_pct": 31.441,
+        "after_pct": 31.441
       },
       "cnt_fam_members": {
         "before": 0,
@@ -238,6 +238,36 @@
         "before_pct": 0.0,
         "after_pct": 0.0
       },
+      "reg_region_not_work_region": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "live_region_not_work_region": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "reg_city_not_live_city": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "reg_city_not_work_city": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "live_city_not_work_city": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
       "organization_type": {
         "before": 0,
         "after": 0,
@@ -245,66 +275,336 @@
         "after_pct": 0.0
       },
       "ext_source_1": {
-        "before": 1447,
-        "after": 1446,
-        "before_pct": 56.064,
-        "after_pct": 56.068
+        "before": 2399,
+        "after": 2399,
+        "before_pct": 55.584,
+        "after_pct": 55.584
       },
       "ext_source_2": {
-        "before": 3,
-        "after": 3,
-        "before_pct": 0.116,
-        "after_pct": 0.116
+        "before": 8,
+        "after": 8,
+        "before_pct": 0.185,
+        "after_pct": 0.185
       },
       "ext_source_3": {
-        "before": 504,
-        "after": 504,
-        "before_pct": 19.527,
-        "after_pct": 19.542
+        "before": 877,
+        "after": 877,
+        "before_pct": 20.32,
+        "after_pct": 20.32
       },
       "apartments_avg": {
-        "before": 1256,
-        "after": 1255,
-        "before_pct": 48.663,
-        "after_pct": 48.662
+        "before": 2184,
+        "after": 2184,
+        "before_pct": 50.602,
+        "after_pct": 50.602
+      },
+      "basementarea_avg": {
+        "before": 2531,
+        "after": 2531,
+        "before_pct": 58.642,
+        "after_pct": 58.642
+      },
+      "years_beginexpluatation_avg": {
+        "before": 2110,
+        "after": 2110,
+        "before_pct": 48.888,
+        "after_pct": 48.888
       },
       "years_build_avg": {
-        "before": 1692,
-        "after": 1691,
-        "before_pct": 65.556,
-        "after_pct": 65.568
+        "before": 2895,
+        "after": 2895,
+        "before_pct": 67.076,
+        "after_pct": 67.076
+      },
+      "commonarea_avg": {
+        "before": 3038,
+        "after": 3038,
+        "before_pct": 70.389,
+        "after_pct": 70.389
+      },
+      "elevators_avg": {
+        "before": 2326,
+        "after": 2326,
+        "before_pct": 53.892,
+        "after_pct": 53.892
+      },
+      "entrances_avg": {
+        "before": 2173,
+        "after": 2173,
+        "before_pct": 50.348,
+        "after_pct": 50.348
+      },
+      "floorsmax_avg": {
+        "before": 2152,
+        "after": 2152,
+        "before_pct": 49.861,
+        "after_pct": 49.861
+      },
+      "floorsmin_avg": {
+        "before": 2952,
+        "after": 2952,
+        "before_pct": 68.397,
+        "after_pct": 68.397
+      },
+      "landarea_avg": {
+        "before": 2564,
+        "after": 2564,
+        "before_pct": 59.407,
+        "after_pct": 59.407
+      },
+      "livingapartments_avg": {
+        "before": 2977,
+        "after": 2977,
+        "before_pct": 68.976,
+        "after_pct": 68.976
+      },
+      "livingarea_avg": {
+        "before": 2165,
+        "after": 2165,
+        "before_pct": 50.162,
+        "after_pct": 50.162
+      },
+      "nonlivingapartments_avg": {
+        "before": 3034,
+        "after": 3034,
+        "before_pct": 70.297,
+        "after_pct": 70.297
+      },
+      "nonlivingarea_avg": {
+        "before": 2401,
+        "after": 2401,
+        "before_pct": 55.63,
+        "after_pct": 55.63
+      },
+      "apartments_mode": {
+        "before": 2184,
+        "after": 2184,
+        "before_pct": 50.602,
+        "after_pct": 50.602
+      },
+      "basementarea_mode": {
+        "before": 2531,
+        "after": 2531,
+        "before_pct": 58.642,
+        "after_pct": 58.642
+      },
+      "years_beginexpluatation_mode": {
+        "before": 2110,
+        "after": 2110,
+        "before_pct": 48.888,
+        "after_pct": 48.888
+      },
+      "years_build_mode": {
+        "before": 2895,
+        "after": 2895,
+        "before_pct": 67.076,
+        "after_pct": 67.076
+      },
+      "commonarea_mode": {
+        "before": 3038,
+        "after": 3038,
+        "before_pct": 70.389,
+        "after_pct": 70.389
+      },
+      "elevators_mode": {
+        "before": 2326,
+        "after": 2326,
+        "before_pct": 53.892,
+        "after_pct": 53.892
+      },
+      "entrances_mode": {
+        "before": 2173,
+        "after": 2173,
+        "before_pct": 50.348,
+        "after_pct": 50.348
+      },
+      "floorsmax_mode": {
+        "before": 2152,
+        "after": 2152,
+        "before_pct": 49.861,
+        "after_pct": 49.861
+      },
+      "floorsmin_mode": {
+        "before": 2952,
+        "after": 2952,
+        "before_pct": 68.397,
+        "after_pct": 68.397
+      },
+      "landarea_mode": {
+        "before": 2564,
+        "after": 2564,
+        "before_pct": 59.407,
+        "after_pct": 59.407
+      },
+      "livingapartments_mode": {
+        "before": 2977,
+        "after": 2977,
+        "before_pct": 68.976,
+        "after_pct": 68.976
+      },
+      "livingarea_mode": {
+        "before": 2165,
+        "after": 2165,
+        "before_pct": 50.162,
+        "after_pct": 50.162
+      },
+      "nonlivingapartments_mode": {
+        "before": 3034,
+        "after": 3034,
+        "before_pct": 70.297,
+        "after_pct": 70.297
+      },
+      "nonlivingarea_mode": {
+        "before": 2401,
+        "after": 2401,
+        "before_pct": 55.63,
+        "after_pct": 55.63
+      },
+      "apartments_medi": {
+        "before": 2184,
+        "after": 2184,
+        "before_pct": 50.602,
+        "after_pct": 50.602
+      },
+      "basementarea_medi": {
+        "before": 2531,
+        "after": 2531,
+        "before_pct": 58.642,
+        "after_pct": 58.642
+      },
+      "years_beginexpluatation_medi": {
+        "before": 2110,
+        "after": 2110,
+        "before_pct": 48.888,
+        "after_pct": 48.888
+      },
+      "years_build_medi": {
+        "before": 2895,
+        "after": 2895,
+        "before_pct": 67.076,
+        "after_pct": 67.076
+      },
+      "commonarea_medi": {
+        "before": 3038,
+        "after": 3038,
+        "before_pct": 70.389,
+        "after_pct": 70.389
+      },
+      "elevators_medi": {
+        "before": 2326,
+        "after": 2326,
+        "before_pct": 53.892,
+        "after_pct": 53.892
+      },
+      "entrances_medi": {
+        "before": 2173,
+        "after": 2173,
+        "before_pct": 50.348,
+        "after_pct": 50.348
       },
       "floorsmax_medi": {
-        "before": 1284,
-        "after": 1284,
-        "before_pct": 49.748,
-        "after_pct": 49.787
+        "before": 2152,
+        "after": 2152,
+        "before_pct": 49.861,
+        "after_pct": 49.861
+      },
+      "floorsmin_medi": {
+        "before": 2952,
+        "after": 2952,
+        "before_pct": 68.397,
+        "after_pct": 68.397
+      },
+      "landarea_medi": {
+        "before": 2564,
+        "after": 2564,
+        "before_pct": 59.407,
+        "after_pct": 59.407
+      },
+      "livingapartments_medi": {
+        "before": 2977,
+        "after": 2977,
+        "before_pct": 68.976,
+        "after_pct": 68.976
+      },
+      "livingarea_medi": {
+        "before": 2165,
+        "after": 2165,
+        "before_pct": 50.162,
+        "after_pct": 50.162
+      },
+      "nonlivingapartments_medi": {
+        "before": 3034,
+        "after": 3034,
+        "before_pct": 70.297,
+        "after_pct": 70.297
+      },
+      "nonlivingarea_medi": {
+        "before": 2401,
+        "after": 2401,
+        "before_pct": 55.63,
+        "after_pct": 55.63
+      },
+      "fondkapremont_mode": {
+        "before": 2977,
+        "after": 2977,
+        "before_pct": 68.976,
+        "after_pct": 68.976
+      },
+      "housetype_mode": {
+        "before": 2172,
+        "after": 2172,
+        "before_pct": 50.324,
+        "after_pct": 50.324
       },
       "totalarea_mode": {
-        "before": 1251,
-        "after": 1249,
-        "before_pct": 48.47,
-        "after_pct": 48.43
+        "before": 2089,
+        "after": 2089,
+        "before_pct": 48.401,
+        "after_pct": 48.401
+      },
+      "wallsmaterial_mode": {
+        "before": 2211,
+        "after": 2211,
+        "before_pct": 51.228,
+        "after_pct": 51.228
       },
       "emergencystate_mode": {
-        "before": 1165,
-        "after": 1165,
-        "before_pct": 45.138,
-        "after_pct": 45.173
+        "before": 2053,
+        "after": 2053,
+        "before_pct": 47.567,
+        "after_pct": 47.567
       },
       "obs_30_cnt_social_circle": {
-        "before": 4,
-        "after": 4,
-        "before_pct": 0.155,
-        "after_pct": 0.155
+        "before": 12,
+        "after": 12,
+        "before_pct": 0.278,
+        "after_pct": 0.278
       },
       "def_30_cnt_social_circle": {
-        "before": 9,
-        "after": 9,
-        "before_pct": 0.349,
-        "after_pct": 0.349
+        "before": 12,
+        "after": 12,
+        "before_pct": 0.278,
+        "after_pct": 0.278
+      },
+      "obs_60_cnt_social_circle": {
+        "before": 12,
+        "after": 12,
+        "before_pct": 0.278,
+        "after_pct": 0.278
+      },
+      "def_60_cnt_social_circle": {
+        "before": 12,
+        "after": 12,
+        "before_pct": 0.278,
+        "after_pct": 0.278
       },
       "days_last_phone_change": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "flag_document_2": {
         "before": 0,
         "after": 0,
         "before_pct": 0.0,
@@ -316,30 +616,168 @@
         "before_pct": 0.0,
         "after_pct": 0.0
       },
+      "flag_document_4": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "flag_document_5": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "flag_document_6": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "flag_document_7": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "flag_document_8": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "flag_document_9": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "flag_document_10": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "flag_document_11": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "flag_document_12": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "flag_document_13": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "flag_document_14": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "flag_document_15": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "flag_document_16": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "flag_document_17": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "flag_document_18": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "flag_document_19": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "flag_document_20": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "flag_document_21": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "amt_req_credit_bureau_hour": {
+        "before": 592,
+        "after": 592,
+        "before_pct": 13.716,
+        "after_pct": 13.716
+      },
+      "amt_req_credit_bureau_day": {
+        "before": 592,
+        "after": 592,
+        "before_pct": 13.716,
+        "after_pct": 13.716
+      },
+      "amt_req_credit_bureau_week": {
+        "before": 592,
+        "after": 592,
+        "before_pct": 13.716,
+        "after_pct": 13.716
+      },
+      "amt_req_credit_bureau_mon": {
+        "before": 592,
+        "after": 592,
+        "before_pct": 13.716,
+        "after_pct": 13.716
+      },
+      "amt_req_credit_bureau_qrt": {
+        "before": 592,
+        "after": 592,
+        "before_pct": 13.716,
+        "after_pct": 13.716
+      },
       "amt_req_credit_bureau_year": {
-        "before": 356,
-        "after": 355,
-        "before_pct": 13.793,
-        "after_pct": 13.765
+        "before": 592,
+        "after": 592,
+        "before_pct": 13.716,
+        "after_pct": 13.716
       }
     },
     "semantic_checks": {
-      "own_car_age_null_while_owns_car": 539,
+      "own_car_age_null_while_owns_car": 0,
       "organization_xna_vs_days_employed_sentinel": 0
     },
-    "silver_uri": "/home/claude/credit-risk-bigdata/data/silver/application_train",
+    "silver_uri": "/Users/huylq/it5427-credit_risk_bigdata/apache-spark/data/silver/application_train",
     "rows_quarantined": 0,
-    "seconds": 7.37,
+    "seconds": 8.29,
     "reconciliation_ok": true
   },
   {
     "table": "application_test",
     "source_id": "loan_application_system",
     "origin": "ORIGINAL",
-    "bronze_uri": "/home/claude/credit-risk-bigdata/data/bronze/original/loan_application_system/application_test/ingest_id=20261113T005446_bbf0cbf2/application_test.csv",
-    "ingest_id": "20261113T005446_bbf0cbf2",
-    "rows_in": 421,
-    "columns_in": 48,
+    "bronze_uri": "/Users/huylq/it5427-credit_risk_bigdata/apache-spark/data/bronze/original/loan_application_system/application_test/ingest_id=20261114T140333_c4c4ea2a/application_test.csv",
+    "ingest_id": "20261114T140333_c4c4ea2a",
+    "rows_in": 684,
+    "columns_in": 121,
     "schema": {
       "unregistered_columns": [],
       "registered_but_absent": []
@@ -348,17 +786,17 @@
     "quarantined_required_null": 0,
     "exact_duplicates_removed": 0,
     "pk_duplicates_quarantined": 0,
-    "rows_out": 421,
+    "rows_out": 684,
     "flags": {
       "_invalid_negative": 0,
       "_after_application": 0,
       "amt_income_total_outlier": 1,
       "amt_credit_outlier": 1,
-      "days_employed_is_sentinel": 83
+      "days_employed_is_sentinel": 127
     },
     "outlier_thresholds": {
-      "amt_income_total": 705150.0,
-      "amt_credit": 2920500.0
+      "amt_income_total": 1350000.0,
+      "amt_credit": 2032407.0
     },
     "missing": {
       "sk_id_curr": {
@@ -410,10 +848,10 @@
         "after_pct": 0.0
       },
       "amt_annuity": {
-        "before": 0,
-        "after": 0,
-        "before_pct": 0.0,
-        "after_pct": 0.0
+        "before": 1,
+        "after": 1,
+        "before_pct": 0.146,
+        "after_pct": 0.146
       },
       "amt_goods_price": {
         "before": 0,
@@ -422,10 +860,10 @@
         "after_pct": 0.0
       },
       "name_type_suite": {
-        "before": 0,
-        "after": 0,
-        "before_pct": 0.0,
-        "after_pct": 0.0
+        "before": 10,
+        "after": 10,
+        "before_pct": 1.462,
+        "after_pct": 1.462
       },
       "name_income_type": {
         "before": 0,
@@ -465,9 +903,9 @@
       },
       "days_employed": {
         "before": 0,
-        "after": 83,
+        "after": 127,
         "before_pct": 0.0,
-        "after_pct": 19.715
+        "after_pct": 18.567
       },
       "days_registration": {
         "before": 0,
@@ -482,10 +920,10 @@
         "after_pct": 0.0
       },
       "own_car_age": {
-        "before": 286,
-        "after": 286,
-        "before_pct": 67.933,
-        "after_pct": 67.933
+        "before": 470,
+        "after": 470,
+        "before_pct": 68.713,
+        "after_pct": 68.713
       },
       "flag_mobil": {
         "before": 0,
@@ -524,10 +962,10 @@
         "after_pct": 0.0
       },
       "occupation_type": {
-        "before": 135,
-        "after": 135,
-        "before_pct": 32.067,
-        "after_pct": 32.067
+        "before": 224,
+        "after": 224,
+        "before_pct": 32.749,
+        "after_pct": 32.749
       },
       "cnt_fam_members": {
         "before": 0,
@@ -565,6 +1003,36 @@
         "before_pct": 0.0,
         "after_pct": 0.0
       },
+      "reg_region_not_work_region": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "live_region_not_work_region": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "reg_city_not_live_city": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "reg_city_not_work_city": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "live_city_not_work_city": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
       "organization_type": {
         "before": 0,
         "after": 0,
@@ -572,66 +1040,336 @@
         "after_pct": 0.0
       },
       "ext_source_1": {
-        "before": 237,
-        "after": 237,
-        "before_pct": 56.295,
-        "after_pct": 56.295
+        "before": 277,
+        "after": 277,
+        "before_pct": 40.497,
+        "after_pct": 40.497
       },
       "ext_source_2": {
-        "before": 2,
-        "after": 2,
-        "before_pct": 0.475,
-        "after_pct": 0.475
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
       },
       "ext_source_3": {
-        "before": 88,
-        "after": 88,
-        "before_pct": 20.903,
-        "after_pct": 20.903
+        "before": 115,
+        "after": 115,
+        "before_pct": 16.813,
+        "after_pct": 16.813
       },
       "apartments_avg": {
-        "before": 239,
-        "after": 239,
-        "before_pct": 56.77,
-        "after_pct": 56.77
+        "before": 317,
+        "after": 317,
+        "before_pct": 46.345,
+        "after_pct": 46.345
+      },
+      "basementarea_avg": {
+        "before": 362,
+        "after": 362,
+        "before_pct": 52.924,
+        "after_pct": 52.924
+      },
+      "years_beginexpluatation_avg": {
+        "before": 305,
+        "after": 305,
+        "before_pct": 44.591,
+        "after_pct": 44.591
       },
       "years_build_avg": {
-        "before": 289,
-        "after": 289,
-        "before_pct": 68.646,
-        "after_pct": 68.646
+        "before": 429,
+        "after": 429,
+        "before_pct": 62.719,
+        "after_pct": 62.719
+      },
+      "commonarea_avg": {
+        "before": 462,
+        "after": 462,
+        "before_pct": 67.544,
+        "after_pct": 67.544
+      },
+      "elevators_avg": {
+        "before": 337,
+        "after": 337,
+        "before_pct": 49.269,
+        "after_pct": 49.269
+      },
+      "entrances_avg": {
+        "before": 309,
+        "after": 309,
+        "before_pct": 45.175,
+        "after_pct": 45.175
+      },
+      "floorsmax_avg": {
+        "before": 311,
+        "after": 311,
+        "before_pct": 45.468,
+        "after_pct": 45.468
+      },
+      "floorsmin_avg": {
+        "before": 442,
+        "after": 442,
+        "before_pct": 64.62,
+        "after_pct": 64.62
+      },
+      "landarea_avg": {
+        "before": 373,
+        "after": 373,
+        "before_pct": 54.532,
+        "after_pct": 54.532
+      },
+      "livingapartments_avg": {
+        "before": 448,
+        "after": 448,
+        "before_pct": 65.497,
+        "after_pct": 65.497
+      },
+      "livingarea_avg": {
+        "before": 309,
+        "after": 309,
+        "before_pct": 45.175,
+        "after_pct": 45.175
+      },
+      "nonlivingapartments_avg": {
+        "before": 458,
+        "after": 458,
+        "before_pct": 66.959,
+        "after_pct": 66.959
+      },
+      "nonlivingarea_avg": {
+        "before": 350,
+        "after": 350,
+        "before_pct": 51.17,
+        "after_pct": 51.17
+      },
+      "apartments_mode": {
+        "before": 317,
+        "after": 317,
+        "before_pct": 46.345,
+        "after_pct": 46.345
+      },
+      "basementarea_mode": {
+        "before": 362,
+        "after": 362,
+        "before_pct": 52.924,
+        "after_pct": 52.924
+      },
+      "years_beginexpluatation_mode": {
+        "before": 305,
+        "after": 305,
+        "before_pct": 44.591,
+        "after_pct": 44.591
+      },
+      "years_build_mode": {
+        "before": 429,
+        "after": 429,
+        "before_pct": 62.719,
+        "after_pct": 62.719
+      },
+      "commonarea_mode": {
+        "before": 462,
+        "after": 462,
+        "before_pct": 67.544,
+        "after_pct": 67.544
+      },
+      "elevators_mode": {
+        "before": 337,
+        "after": 337,
+        "before_pct": 49.269,
+        "after_pct": 49.269
+      },
+      "entrances_mode": {
+        "before": 309,
+        "after": 309,
+        "before_pct": 45.175,
+        "after_pct": 45.175
+      },
+      "floorsmax_mode": {
+        "before": 311,
+        "after": 311,
+        "before_pct": 45.468,
+        "after_pct": 45.468
+      },
+      "floorsmin_mode": {
+        "before": 442,
+        "after": 442,
+        "before_pct": 64.62,
+        "after_pct": 64.62
+      },
+      "landarea_mode": {
+        "before": 373,
+        "after": 373,
+        "before_pct": 54.532,
+        "after_pct": 54.532
+      },
+      "livingapartments_mode": {
+        "before": 448,
+        "after": 448,
+        "before_pct": 65.497,
+        "after_pct": 65.497
+      },
+      "livingarea_mode": {
+        "before": 309,
+        "after": 309,
+        "before_pct": 45.175,
+        "after_pct": 45.175
+      },
+      "nonlivingapartments_mode": {
+        "before": 458,
+        "after": 458,
+        "before_pct": 66.959,
+        "after_pct": 66.959
+      },
+      "nonlivingarea_mode": {
+        "before": 350,
+        "after": 350,
+        "before_pct": 51.17,
+        "after_pct": 51.17
+      },
+      "apartments_medi": {
+        "before": 317,
+        "after": 317,
+        "before_pct": 46.345,
+        "after_pct": 46.345
+      },
+      "basementarea_medi": {
+        "before": 362,
+        "after": 362,
+        "before_pct": 52.924,
+        "after_pct": 52.924
+      },
+      "years_beginexpluatation_medi": {
+        "before": 305,
+        "after": 305,
+        "before_pct": 44.591,
+        "after_pct": 44.591
+      },
+      "years_build_medi": {
+        "before": 429,
+        "after": 429,
+        "before_pct": 62.719,
+        "after_pct": 62.719
+      },
+      "commonarea_medi": {
+        "before": 462,
+        "after": 462,
+        "before_pct": 67.544,
+        "after_pct": 67.544
+      },
+      "elevators_medi": {
+        "before": 337,
+        "after": 337,
+        "before_pct": 49.269,
+        "after_pct": 49.269
+      },
+      "entrances_medi": {
+        "before": 309,
+        "after": 309,
+        "before_pct": 45.175,
+        "after_pct": 45.175
       },
       "floorsmax_medi": {
-        "before": 220,
-        "after": 220,
-        "before_pct": 52.257,
-        "after_pct": 52.257
+        "before": 311,
+        "after": 311,
+        "before_pct": 45.468,
+        "after_pct": 45.468
+      },
+      "floorsmin_medi": {
+        "before": 442,
+        "after": 442,
+        "before_pct": 64.62,
+        "after_pct": 64.62
+      },
+      "landarea_medi": {
+        "before": 373,
+        "after": 373,
+        "before_pct": 54.532,
+        "after_pct": 54.532
+      },
+      "livingapartments_medi": {
+        "before": 448,
+        "after": 448,
+        "before_pct": 65.497,
+        "after_pct": 65.497
+      },
+      "livingarea_medi": {
+        "before": 309,
+        "after": 309,
+        "before_pct": 45.175,
+        "after_pct": 45.175
+      },
+      "nonlivingapartments_medi": {
+        "before": 458,
+        "after": 458,
+        "before_pct": 66.959,
+        "after_pct": 66.959
+      },
+      "nonlivingarea_medi": {
+        "before": 350,
+        "after": 350,
+        "before_pct": 51.17,
+        "after_pct": 51.17
+      },
+      "fondkapremont_mode": {
+        "before": 440,
+        "after": 440,
+        "before_pct": 64.327,
+        "after_pct": 64.327
+      },
+      "housetype_mode": {
+        "before": 312,
+        "after": 312,
+        "before_pct": 45.614,
+        "after_pct": 45.614
       },
       "totalarea_mode": {
-        "before": 196,
-        "after": 196,
-        "before_pct": 46.556,
-        "after_pct": 46.556
+        "before": 302,
+        "after": 302,
+        "before_pct": 44.152,
+        "after_pct": 44.152
+      },
+      "wallsmaterial_mode": {
+        "before": 315,
+        "after": 315,
+        "before_pct": 46.053,
+        "after_pct": 46.053
       },
       "emergencystate_mode": {
-        "before": 189,
-        "after": 189,
-        "before_pct": 44.893,
-        "after_pct": 44.893
+        "before": 292,
+        "after": 292,
+        "before_pct": 42.69,
+        "after_pct": 42.69
       },
       "obs_30_cnt_social_circle": {
-        "before": 4,
-        "after": 4,
-        "before_pct": 0.95,
-        "after_pct": 0.95
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
       },
       "def_30_cnt_social_circle": {
-        "before": 1,
-        "after": 1,
-        "before_pct": 0.238,
-        "after_pct": 0.238
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "obs_60_cnt_social_circle": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "def_60_cnt_social_circle": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
       },
       "days_last_phone_change": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "flag_document_2": {
         "before": 0,
         "after": 0,
         "before_pct": 0.0,
@@ -643,55 +1381,193 @@
         "before_pct": 0.0,
         "after_pct": 0.0
       },
+      "flag_document_4": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "flag_document_5": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "flag_document_6": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "flag_document_7": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "flag_document_8": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "flag_document_9": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "flag_document_10": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "flag_document_11": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "flag_document_12": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "flag_document_13": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "flag_document_14": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "flag_document_15": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "flag_document_16": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "flag_document_17": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "flag_document_18": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "flag_document_19": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "flag_document_20": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "flag_document_21": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "amt_req_credit_bureau_hour": {
+        "before": 72,
+        "after": 72,
+        "before_pct": 10.526,
+        "after_pct": 10.526
+      },
+      "amt_req_credit_bureau_day": {
+        "before": 72,
+        "after": 72,
+        "before_pct": 10.526,
+        "after_pct": 10.526
+      },
+      "amt_req_credit_bureau_week": {
+        "before": 72,
+        "after": 72,
+        "before_pct": 10.526,
+        "after_pct": 10.526
+      },
+      "amt_req_credit_bureau_mon": {
+        "before": 72,
+        "after": 72,
+        "before_pct": 10.526,
+        "after_pct": 10.526
+      },
+      "amt_req_credit_bureau_qrt": {
+        "before": 72,
+        "after": 72,
+        "before_pct": 10.526,
+        "after_pct": 10.526
+      },
       "amt_req_credit_bureau_year": {
-        "before": 63,
-        "after": 63,
-        "before_pct": 14.964,
-        "after_pct": 14.964
+        "before": 72,
+        "after": 72,
+        "before_pct": 10.526,
+        "after_pct": 10.526
       }
     },
     "semantic_checks": {
-      "own_car_age_null_while_owns_car": 94,
+      "own_car_age_null_while_owns_car": 0,
       "organization_xna_vs_days_employed_sentinel": 0
     },
-    "silver_uri": "/home/claude/credit-risk-bigdata/data/silver/application_test",
+    "silver_uri": "/Users/huylq/it5427-credit_risk_bigdata/apache-spark/data/silver/application_test",
     "rows_quarantined": 0,
-    "seconds": 6.11,
+    "seconds": 3.53,
     "reconciliation_ok": true
   },
   {
     "table": "bureau",
     "source_id": "external_credit_bureau",
     "origin": "ORIGINAL",
-    "bronze_uri": "/home/claude/credit-risk-bigdata/data/bronze/original/external_credit_bureau/bureau/ingest_id=20261113T005446_fad675b5/bureau.csv",
-    "ingest_id": "20261113T005446_fad675b5",
-    "rows_in": 9694,
+    "bronze_uri": "/Users/huylq/it5427-credit_risk_bigdata/apache-spark/data/bronze/original/external_credit_bureau/bureau/ingest_id=20261114T140333_5ce5f163/bureau.csv",
+    "ingest_id": "20261114T140333_5ce5f163",
+    "rows_in": 24618,
     "columns_in": 17,
     "schema": {
       "unregistered_columns": [],
       "registered_but_absent": []
     },
     "cast_failures": {},
-    "quarantined_required_null": 1,
+    "quarantined_required_null": 0,
     "exact_duplicates_removed": 0,
     "pk_duplicates_quarantined": 0,
-    "rows_out": 9693,
+    "rows_out": 24618,
     "flags": {
       "_invalid_negative": 0,
-      "_after_application": 1,
-      "_orphan_application": 4,
-      "amt_credit_sum_outlier": 15,
-      "amt_credit_sum_debt_outlier": 13
+      "_after_application": 0,
+      "_orphan_application": 0,
+      "amt_credit_sum_outlier": 37,
+      "amt_credit_sum_debt_outlier": 31
     },
     "outlier_thresholds": {
-      "amt_credit_sum": 3247300.0,
-      "amt_credit_sum_debt": 1533348.69
+      "amt_credit_sum": 9675000.0,
+      "amt_credit_sum_debt": 8062672.5
     },
     "missing": {
       "sk_id_curr": {
-        "before": 1,
+        "before": 0,
         "after": 0,
-        "before_pct": 0.01,
+        "before_pct": 0.0,
         "after_pct": 0.0
       },
       "sk_id_bureau": {
@@ -725,22 +1601,22 @@
         "after_pct": 0.0
       },
       "days_credit_enddate": {
-        "before": 0,
-        "after": 0,
-        "before_pct": 0.0,
-        "after_pct": 0.0
+        "before": 1591,
+        "after": 1591,
+        "before_pct": 6.463,
+        "after_pct": 6.463
       },
       "days_enddate_fact": {
-        "before": 3542,
-        "after": 3542,
-        "before_pct": 36.538,
-        "after_pct": 36.542
+        "before": 9116,
+        "after": 9116,
+        "before_pct": 37.03,
+        "after_pct": 37.03
       },
       "amt_credit_max_overdue": {
-        "before": 6386,
-        "after": 6386,
-        "before_pct": 65.876,
-        "after_pct": 65.883
+        "before": 16081,
+        "after": 16081,
+        "before_pct": 65.322,
+        "after_pct": 65.322
       },
       "cnt_credit_prolong": {
         "before": 0,
@@ -749,22 +1625,22 @@
         "after_pct": 0.0
       },
       "amt_credit_sum": {
-        "before": 0,
-        "after": 0,
-        "before_pct": 0.0,
-        "after_pct": 0.0
+        "before": 1,
+        "after": 1,
+        "before_pct": 0.004,
+        "after_pct": 0.004
       },
       "amt_credit_sum_debt": {
-        "before": 1366,
-        "after": 1366,
-        "before_pct": 14.091,
-        "after_pct": 14.093
+        "before": 3741,
+        "after": 3741,
+        "before_pct": 15.196,
+        "after_pct": 15.196
       },
       "amt_credit_sum_limit": {
-        "before": 3265,
-        "after": 3264,
-        "before_pct": 33.681,
-        "after_pct": 33.674
+        "before": 8580,
+        "after": 8580,
+        "before_pct": 34.853,
+        "after_pct": 34.853
       },
       "amt_credit_sum_overdue": {
         "before": 0,
@@ -785,24 +1661,24 @@
         "after_pct": 0.0
       },
       "amt_annuity": {
-        "before": 6769,
-        "after": 6768,
-        "before_pct": 69.827,
-        "after_pct": 69.824
+        "before": 17329,
+        "after": 17329,
+        "before_pct": 70.392,
+        "after_pct": 70.392
       }
     },
-    "silver_uri": "/home/claude/credit-risk-bigdata/data/silver/bureau",
-    "rows_quarantined": 1,
-    "seconds": 4.87,
+    "silver_uri": "/Users/huylq/it5427-credit_risk_bigdata/apache-spark/data/silver/bureau",
+    "rows_quarantined": 0,
+    "seconds": 2.36,
     "reconciliation_ok": true
   },
   {
     "table": "bureau_balance",
     "source_id": "external_credit_bureau",
     "origin": "ORIGINAL",
-    "bronze_uri": "/home/claude/credit-risk-bigdata/data/bronze/original/external_credit_bureau/bureau_balance/ingest_id=20261113T005446_c59c190b/bureau_balance.csv",
-    "ingest_id": "20261113T005446_c59c190b",
-    "rows_in": 295046,
+    "bronze_uri": "/Users/huylq/it5427-credit_risk_bigdata/apache-spark/data/bronze/original/external_credit_bureau/bureau_balance/ingest_id=20261114T140333_826316da/bureau_balance.csv",
+    "ingest_id": "20261114T140333_826316da",
+    "rows_in": 352119,
     "columns_in": 3,
     "schema": {
       "unregistered_columns": [],
@@ -812,11 +1688,11 @@
     "quarantined_required_null": 0,
     "exact_duplicates_removed": 0,
     "pk_duplicates_quarantined": 0,
-    "rows_out": 295046,
+    "rows_out": 352119,
     "flags": {
       "_invalid_negative": 0,
       "_after_application": 0,
-      "_orphan_bureau": 3
+      "_orphan_bureau": 0
     },
     "outlier_thresholds": {},
     "missing": {
@@ -839,18 +1715,18 @@
         "after_pct": 0.0
       }
     },
-    "silver_uri": "/home/claude/credit-risk-bigdata/data/silver/bureau_balance",
+    "silver_uri": "/Users/huylq/it5427-credit_risk_bigdata/apache-spark/data/silver/bureau_balance",
     "rows_quarantined": 0,
-    "seconds": 7.9,
+    "seconds": 3.76,
     "reconciliation_ok": true
   },
   {
     "table": "previous_application",
     "source_id": "previous_loan_system",
     "origin": "ORIGINAL",
-    "bronze_uri": "/home/claude/credit-risk-bigdata/data/bronze/original/previous_loan_system/previous_application/ingest_id=20261113T005447_d34c9a1d/previous_application.csv",
-    "ingest_id": "20261113T005447_d34c9a1d",
-    "rows_in": 8724,
+    "bronze_uri": "/Users/huylq/it5427-credit_risk_bigdata/apache-spark/data/bronze/original/previous_loan_system/previous_application/ingest_id=20261114T140333_270d001b/previous_application.csv",
+    "ingest_id": "20261114T140333_270d001b",
+    "rows_in": 23990,
     "columns_in": 37,
     "schema": {
       "unregistered_columns": [],
@@ -860,16 +1736,16 @@
     "quarantined_required_null": 0,
     "exact_duplicates_removed": 0,
     "pk_duplicates_quarantined": 0,
-    "rows_out": 8724,
+    "rows_out": 23990,
     "flags": {
       "_invalid_negative": 0,
       "_after_application": 0,
       "_orphan_application": 0,
-      "days_first_drawing_is_sentinel": 5387,
-      "days_first_due_is_sentinel": 0,
-      "days_last_due_1st_version_is_sentinel": 0,
-      "days_last_due_is_sentinel": 781,
-      "days_termination_is_sentinel": 781
+      "days_first_drawing_is_sentinel": 13341,
+      "days_first_due_is_sentinel": 589,
+      "days_last_due_1st_version_is_sentinel": 1342,
+      "days_last_due_is_sentinel": 3066,
+      "days_termination_is_sentinel": 3274
     },
     "outlier_thresholds": {},
     "missing": {
@@ -887,15 +1763,15 @@
       },
       "name_contract_type": {
         "before": 0,
-        "after": 7,
+        "after": 5,
         "before_pct": 0.0,
-        "after_pct": 0.08
+        "after_pct": 0.021
       },
       "amt_annuity": {
-        "before": 3337,
-        "after": 3337,
-        "before_pct": 38.251,
-        "after_pct": 38.251
+        "before": 5429,
+        "after": 5429,
+        "before_pct": 22.63,
+        "after_pct": 22.63
       },
       "amt_application": {
         "before": 0,
@@ -910,16 +1786,16 @@
         "after_pct": 0.0
       },
       "amt_down_payment": {
-        "before": 4589,
-        "after": 4589,
-        "before_pct": 52.602,
-        "after_pct": 52.602
+        "before": 13213,
+        "after": 13213,
+        "before_pct": 55.077,
+        "after_pct": 55.077
       },
       "amt_goods_price": {
-        "before": 1993,
-        "after": 1993,
-        "before_pct": 22.845,
-        "after_pct": 22.845
+        "before": 5661,
+        "after": 5661,
+        "before_pct": 23.597,
+        "after_pct": 23.597
       },
       "weekday_appr_process_start": {
         "before": 0,
@@ -946,28 +1822,28 @@
         "after_pct": 0.0
       },
       "rate_down_payment": {
-        "before": 4722,
-        "after": 4722,
-        "before_pct": 54.127,
-        "after_pct": 54.127
+        "before": 13213,
+        "after": 13213,
+        "before_pct": 55.077,
+        "after_pct": 55.077
       },
       "rate_interest_primary": {
-        "before": 8675,
-        "after": 8675,
-        "before_pct": 99.438,
-        "after_pct": 99.438
+        "before": 23908,
+        "after": 23908,
+        "before_pct": 99.658,
+        "after_pct": 99.658
       },
       "rate_interest_privileged": {
-        "before": 8698,
-        "after": 8698,
-        "before_pct": 99.702,
-        "after_pct": 99.702
+        "before": 23908,
+        "after": 23908,
+        "before_pct": 99.658,
+        "after_pct": 99.658
       },
       "name_cash_loan_purpose": {
         "before": 0,
-        "after": 1286,
+        "after": 10010,
         "before_pct": 0.0,
-        "after_pct": 14.741
+        "after_pct": 41.726
       },
       "name_contract_status": {
         "before": 0,
@@ -983,45 +1859,45 @@
       },
       "name_payment_type": {
         "before": 0,
-        "after": 3370,
+        "after": 9141,
         "before_pct": 0.0,
-        "after_pct": 38.629
+        "after_pct": 38.103
       },
       "code_reject_reason": {
         "before": 0,
-        "after": 385,
+        "after": 81,
         "before_pct": 0.0,
-        "after_pct": 4.413
+        "after_pct": 0.338
       },
       "name_type_suite": {
-        "before": 4329,
-        "after": 4329,
-        "before_pct": 49.622,
-        "after_pct": 49.622
+        "before": 11854,
+        "after": 11854,
+        "before_pct": 49.412,
+        "after_pct": 49.412
       },
       "name_client_type": {
         "before": 0,
-        "after": 0,
+        "after": 28,
         "before_pct": 0.0,
-        "after_pct": 0.0
+        "after_pct": 0.117
       },
       "name_goods_category": {
         "before": 0,
-        "after": 2138,
+        "after": 13947,
         "before_pct": 0.0,
-        "after_pct": 24.507
+        "after_pct": 58.137
       },
       "name_portfolio": {
         "before": 0,
-        "after": 7,
+        "after": 5429,
         "before_pct": 0.0,
-        "after_pct": 0.08
+        "after_pct": 22.63
       },
       "name_product_type": {
         "before": 0,
-        "after": 5522,
+        "after": 15106,
         "before_pct": 0.0,
-        "after_pct": 63.297
+        "after_pct": 62.968
       },
       "channel_type": {
         "before": 0,
@@ -1037,77 +1913,77 @@
       },
       "name_seller_industry": {
         "before": 0,
-        "after": 2920,
+        "after": 12634,
         "before_pct": 0.0,
-        "after_pct": 33.471
+        "after_pct": 52.664
       },
       "cnt_payment": {
-        "before": 3337,
-        "after": 3337,
-        "before_pct": 38.251,
-        "after_pct": 38.251
+        "before": 5429,
+        "after": 5429,
+        "before_pct": 22.63,
+        "after_pct": 22.63
       },
       "name_yield_group": {
         "before": 0,
-        "after": 2124,
+        "after": 7528,
         "before_pct": 0.0,
-        "after_pct": 24.347
+        "after_pct": 31.38
       },
       "product_combination": {
-        "before": 0,
-        "after": 0,
-        "before_pct": 0.0,
-        "after_pct": 0.0
+        "before": 5,
+        "after": 5,
+        "before_pct": 0.021,
+        "after_pct": 0.021
       },
       "days_first_drawing": {
-        "before": 3337,
-        "after": 8724,
-        "before_pct": 38.251,
-        "after_pct": 100.0
+        "before": 9755,
+        "after": 23096,
+        "before_pct": 40.663,
+        "after_pct": 96.273
       },
       "days_first_due": {
-        "before": 3337,
-        "after": 3337,
-        "before_pct": 38.251,
-        "after_pct": 38.251
+        "before": 9755,
+        "after": 10344,
+        "before_pct": 40.663,
+        "after_pct": 43.118
       },
       "days_last_due_1st_version": {
-        "before": 3337,
-        "after": 3337,
-        "before_pct": 38.251,
-        "after_pct": 38.251
+        "before": 9755,
+        "after": 11097,
+        "before_pct": 40.663,
+        "after_pct": 46.257
       },
       "days_last_due": {
-        "before": 3337,
-        "after": 4118,
-        "before_pct": 38.251,
-        "after_pct": 47.203
+        "before": 9755,
+        "after": 12821,
+        "before_pct": 40.663,
+        "after_pct": 53.443
       },
       "days_termination": {
-        "before": 3337,
-        "after": 4118,
-        "before_pct": 38.251,
-        "after_pct": 47.203
+        "before": 9755,
+        "after": 13029,
+        "before_pct": 40.663,
+        "after_pct": 54.31
       },
       "nflag_insured_on_approval": {
-        "before": 3337,
-        "after": 3337,
-        "before_pct": 38.251,
-        "after_pct": 38.251
+        "before": 9755,
+        "after": 9755,
+        "before_pct": 40.663,
+        "after_pct": 40.663
       }
     },
-    "silver_uri": "/home/claude/credit-risk-bigdata/data/silver/previous_application",
+    "silver_uri": "/Users/huylq/it5427-credit_risk_bigdata/apache-spark/data/silver/previous_application",
     "rows_quarantined": 0,
-    "seconds": 4.56,
+    "seconds": 2.8,
     "reconciliation_ok": true
   },
   {
     "table": "installments_payments",
     "source_id": "installment_payment_system",
     "origin": "ORIGINAL",
-    "bronze_uri": "/home/claude/credit-risk-bigdata/data/bronze/original/installment_payment_system/installments_payments/ingest_id=20261113T005447_090e4cda/installments_payments.csv",
-    "ingest_id": "20261113T005447_090e4cda",
-    "rows_in": 68368,
+    "bronze_uri": "/Users/huylq/it5427-credit_risk_bigdata/apache-spark/data/bronze/original/installment_payment_system/installments_payments/ingest_id=20261114T140333_2f21402b/installments_payments.csv",
+    "ingest_id": "20261114T140333_2f21402b",
+    "rows_in": 192599,
     "columns_in": 8,
     "schema": {
       "unregistered_columns": [],
@@ -1115,19 +1991,19 @@
     },
     "cast_failures": {},
     "quarantined_required_null": 0,
-    "exact_duplicates_removed": 3,
+    "exact_duplicates_removed": 0,
     "pk_duplicates_quarantined": 0,
-    "rows_out": 68365,
+    "rows_out": 192599,
     "flags": {
-      "_invalid_negative": 11,
-      "_after_application": 2,
-      "_orphan_previous_application": 5,
+      "_invalid_negative": 0,
+      "_after_application": 0,
+      "_orphan_previous_application": 16702,
       "_orphan_application": 0,
-      "amt_payment_outlier": 102,
+      "amt_payment_outlier": 286,
       "_dup_business_key": 0
     },
     "outlier_thresholds": {
-      "amt_payment": 193578.68
+      "amt_payment": 747234.0
     },
     "missing": {
       "sk_id_prev": {
@@ -1161,10 +2037,10 @@
         "after_pct": 0.0
       },
       "days_entry_payment": {
-        "before": 669,
-        "after": 669,
-        "before_pct": 0.979,
-        "after_pct": 0.979
+        "before": 53,
+        "after": 53,
+        "before_pct": 0.028,
+        "after_pct": 0.028
       },
       "amt_instalment": {
         "before": 0,
@@ -1173,24 +2049,24 @@
         "after_pct": 0.0
       },
       "amt_payment": {
-        "before": 669,
-        "after": 669,
-        "before_pct": 0.979,
-        "after_pct": 0.979
+        "before": 53,
+        "after": 53,
+        "before_pct": 0.028,
+        "after_pct": 0.028
       }
     },
-    "silver_uri": "/home/claude/credit-risk-bigdata/data/silver/installments_payments",
+    "silver_uri": "/Users/huylq/it5427-credit_risk_bigdata/apache-spark/data/silver/installments_payments",
     "rows_quarantined": 0,
-    "seconds": 4.66,
+    "seconds": 3.1,
     "reconciliation_ok": true
   },
   {
     "table": "POS_CASH_balance",
     "source_id": "pos_cash_system",
     "origin": "ORIGINAL",
-    "bronze_uri": "/home/claude/credit-risk-bigdata/data/bronze/original/pos_cash_system/POS_CASH_balance/ingest_id=20261113T005447_cd2e2e69/POS_CASH_balance.csv",
-    "ingest_id": "20261113T005447_cd2e2e69",
-    "rows_in": 236650,
+    "bronze_uri": "/Users/huylq/it5427-credit_risk_bigdata/apache-spark/data/bronze/original/pos_cash_system/POS_CASH_balance/ingest_id=20261114T140333_ffc8b7a2/POS_CASH_balance.csv",
+    "ingest_id": "20261114T140333_ffc8b7a2",
+    "rows_in": 142543,
     "columns_in": 8,
     "schema": {
       "unregistered_columns": [],
@@ -1198,13 +2074,13 @@
     },
     "cast_failures": {},
     "quarantined_required_null": 0,
-    "exact_duplicates_removed": 2,
+    "exact_duplicates_removed": 0,
     "pk_duplicates_quarantined": 0,
-    "rows_out": 236648,
+    "rows_out": 142543,
     "flags": {
       "_invalid_negative": 0,
       "_after_application": 0,
-      "_orphan_previous_application": 0,
+      "_orphan_previous_application": 4485,
       "_orphan_application": 0,
       "_dup_business_key": 0
     },
@@ -1229,16 +2105,16 @@
         "after_pct": 0.0
       },
       "cnt_instalment": {
-        "before": 0,
-        "after": 0,
-        "before_pct": 0.0,
-        "after_pct": 0.0
+        "before": 376,
+        "after": 376,
+        "before_pct": 0.264,
+        "after_pct": 0.264
       },
       "cnt_instalment_future": {
-        "before": 0,
-        "after": 0,
-        "before_pct": 0.0,
-        "after_pct": 0.0
+        "before": 373,
+        "after": 373,
+        "before_pct": 0.262,
+        "after_pct": 0.262
       },
       "name_contract_status": {
         "before": 0,
@@ -1259,18 +2135,18 @@
         "after_pct": 0.0
       }
     },
-    "silver_uri": "/home/claude/credit-risk-bigdata/data/silver/POS_CASH_balance",
+    "silver_uri": "/Users/huylq/it5427-credit_risk_bigdata/apache-spark/data/silver/POS_CASH_balance",
     "rows_quarantined": 0,
-    "seconds": 6.9,
+    "seconds": 2.64,
     "reconciliation_ok": true
   },
   {
     "table": "credit_card_balance",
     "source_id": "credit_card_system",
     "origin": "ORIGINAL",
-    "bronze_uri": "/home/claude/credit-risk-bigdata/data/bronze/original/credit_card_system/credit_card_balance/ingest_id=20261113T005447_f2b67852/credit_card_balance.csv",
-    "ingest_id": "20261113T005447_f2b67852",
-    "rows_in": 29824,
+    "bronze_uri": "/Users/huylq/it5427-credit_risk_bigdata/apache-spark/data/bronze/original/credit_card_system/credit_card_balance/ingest_id=20261114T140333_b5a53506/credit_card_balance.csv",
+    "ingest_id": "20261114T140333_b5a53506",
+    "rows_in": 53618,
     "columns_in": 23,
     "schema": {
       "unregistered_columns": [],
@@ -1280,17 +2156,17 @@
     "quarantined_required_null": 0,
     "exact_duplicates_removed": 0,
     "pk_duplicates_quarantined": 0,
-    "rows_out": 29824,
+    "rows_out": 53618,
     "flags": {
       "_invalid_negative": 0,
       "_after_application": 0,
-      "_orphan_previous_application": 0,
+      "_orphan_previous_application": 14966,
       "_orphan_application": 0,
-      "amt_balance_outlier": 39,
+      "amt_balance_outlier": 78,
       "_dup_business_key": 0
     },
     "outlier_thresholds": {
-      "amt_balance": 280815.11
+      "amt_balance": 796392.27
     },
     "missing": {
       "sk_id_prev": {
@@ -1324,10 +2200,10 @@
         "after_pct": 0.0
       },
       "amt_drawings_atm_current": {
-        "before": 0,
-        "after": 0,
-        "before_pct": 0.0,
-        "after_pct": 0.0
+        "before": 10260,
+        "after": 10260,
+        "before_pct": 19.135,
+        "after_pct": 19.135
       },
       "amt_drawings_current": {
         "before": 0,
@@ -1336,28 +2212,28 @@
         "after_pct": 0.0
       },
       "amt_drawings_other_current": {
-        "before": 0,
-        "after": 0,
-        "before_pct": 0.0,
-        "after_pct": 0.0
+        "before": 10260,
+        "after": 10260,
+        "before_pct": 19.135,
+        "after_pct": 19.135
       },
       "amt_drawings_pos_current": {
-        "before": 0,
-        "after": 0,
-        "before_pct": 0.0,
-        "after_pct": 0.0
+        "before": 10260,
+        "after": 10260,
+        "before_pct": 19.135,
+        "after_pct": 19.135
       },
       "amt_inst_min_regularity": {
-        "before": 0,
-        "after": 0,
-        "before_pct": 0.0,
-        "after_pct": 0.0
+        "before": 4062,
+        "after": 4062,
+        "before_pct": 7.576,
+        "after_pct": 7.576
       },
       "amt_payment_current": {
-        "before": 6028,
-        "after": 6028,
-        "before_pct": 20.212,
-        "after_pct": 20.212
+        "before": 10363,
+        "after": 10363,
+        "before_pct": 19.327,
+        "after_pct": 19.327
       },
       "amt_payment_total_current": {
         "before": 0,
@@ -1384,10 +2260,10 @@
         "after_pct": 0.0
       },
       "cnt_drawings_atm_current": {
-        "before": 0,
-        "after": 0,
-        "before_pct": 0.0,
-        "after_pct": 0.0
+        "before": 10260,
+        "after": 10260,
+        "before_pct": 19.135,
+        "after_pct": 19.135
       },
       "cnt_drawings_current": {
         "before": 0,
@@ -1396,22 +2272,22 @@
         "after_pct": 0.0
       },
       "cnt_drawings_other_current": {
-        "before": 0,
-        "after": 0,
-        "before_pct": 0.0,
-        "after_pct": 0.0
+        "before": 10260,
+        "after": 10260,
+        "before_pct": 19.135,
+        "after_pct": 19.135
       },
       "cnt_drawings_pos_current": {
-        "before": 0,
-        "after": 0,
-        "before_pct": 0.0,
-        "after_pct": 0.0
+        "before": 10260,
+        "after": 10260,
+        "before_pct": 19.135,
+        "after_pct": 19.135
       },
       "cnt_instalment_mature_cum": {
-        "before": 0,
-        "after": 0,
-        "before_pct": 0.0,
-        "after_pct": 0.0
+        "before": 4062,
+        "after": 4062,
+        "before_pct": 7.576,
+        "after_pct": 7.576
       },
       "name_contract_status": {
         "before": 0,
@@ -1432,18 +2308,18 @@
         "after_pct": 0.0
       }
     },
-    "silver_uri": "/home/claude/credit-risk-bigdata/data/silver/credit_card_balance",
+    "silver_uri": "/Users/huylq/it5427-credit_risk_bigdata/apache-spark/data/silver/credit_card_balance",
     "rows_quarantined": 0,
-    "seconds": 5.37,
+    "seconds": 2.92,
     "reconciliation_ok": true
   },
   {
     "table": "synthetic_traffic_profile",
     "source_id": "synthetic_customer_behavior",
     "origin": "SYNTHETIC",
-    "bronze_uri": "/home/claude/credit-risk-bigdata/data/bronze/synthetic/synthetic_customer_behavior/synthetic_traffic_profile/ingest_id=20261113T005447_4820b6ac/synthetic_traffic_profile.csv",
-    "ingest_id": "20261113T005447_4820b6ac",
-    "rows_in": 3000,
+    "bronze_uri": "/Users/huylq/it5427-credit_risk_bigdata/apache-spark/data/bronze/synthetic/synthetic_customer_behavior/synthetic_traffic_profile/ingest_id=20261114T140333_e8896ad5/synthetic_traffic_profile.csv",
+    "ingest_id": "20261114T140333_e8896ad5",
+    "rows_in": 5000,
     "columns_in": 9,
     "schema": {
       "unregistered_columns": [],
@@ -1453,7 +2329,7 @@
     "quarantined_required_null": 0,
     "exact_duplicates_removed": 0,
     "pk_duplicates_quarantined": 0,
-    "rows_out": 3000,
+    "rows_out": 5000,
     "flags": {
       "_invalid_negative": 0,
       "_after_application": 0,
@@ -1516,9 +2392,9 @@
         "after_pct": 0.0
       }
     },
-    "silver_uri": "/home/claude/credit-risk-bigdata/data/silver/synthetic_traffic_profile",
+    "silver_uri": "/Users/huylq/it5427-credit_risk_bigdata/apache-spark/data/silver/synthetic_traffic_profile",
     "rows_quarantined": 0,
-    "seconds": 2.52,
+    "seconds": 1.01,
     "reconciliation_ok": true
   }
 ]

@@ -1,0 +1,10 @@
+{
+  "rows_labeled": 4316,
+  "validation_rows": 1079,
+  "val_roc_auc": 0.7331,
+  "train_roc_auc": 0.9947,
+  "low_example": 277603,
+  "high_example": 298157,
+  "low_pd": 0.0312,
+  "high_pd": 0.5631
+}

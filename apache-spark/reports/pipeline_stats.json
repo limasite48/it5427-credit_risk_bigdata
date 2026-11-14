@@ -1,261 +1,170 @@
 {
-  "started_at": "2026-11-13T00:53:56+00:00",
-  "raw_dir": "/home/claude/credit-risk-bigdata/data/fixture/raw",
-  "dataset_label": "TEST FIXTURE (random values, NOT Home Credit)",
-  "synthetic": 3000,
+  "started_at": "2026-11-14T14:03:44+00:00",
+  "raw_dir": "/Users/huylq/it5427-credit_risk_bigdata/apache-spark/data/dev_subset/raw",
+  "dataset_label": "SUBSET of real Home Credit files",
+  "synthetic": 5000,
   "ingestion": [
     {
       "table": "application_train",
       "source_id": "loan_application_system",
-      "status": "SUCCESS",
-      "rows": 2581,
-      "size_bytes": 756663,
-      "seconds": 0.036
+      "status": "SKIPPED_ALREADY_INGESTED",
+      "rows": 4316,
+      "size_bytes": 2328934,
+      "seconds": 0.002
     },
     {
       "table": "application_test",
       "source_id": "loan_application_system",
-      "status": "SUCCESS",
-      "rows": 421,
-      "size_bytes": 122949,
-      "seconds": 0.01
+      "status": "SKIPPED_ALREADY_INGESTED",
+      "rows": 684,
+      "size_bytes": 380498,
+      "seconds": 0.0
     },
     {
       "table": "bureau",
       "source_id": "external_credit_bureau",
-      "status": "SUCCESS",
-      "rows": 9694,
-      "size_bytes": 971520,
-      "seconds": 0.043
+      "status": "SKIPPED_ALREADY_INGESTED",
+      "rows": 24618,
+      "size_bytes": 2438117,
+      "seconds": 0.001
     },
     {
       "table": "bureau_balance",
       "source_id": "external_credit_bureau",
-      "status": "SUCCESS",
-      "rows": 295046,
-      "size_bytes": 4067725,
-      "seconds": 0.242
+      "status": "SKIPPED_ALREADY_INGESTED",
+      "rows": 352119,
+      "size_bytes": 4836489,
+      "seconds": 0.003
     },
     {
       "table": "previous_application",
       "source_id": "previous_loan_system",
-      "status": "SUCCESS",
-      "rows": 8724,
-      "size_bytes": 2114392,
-      "seconds": 0.07
+      "status": "SKIPPED_ALREADY_INGESTED",
+      "rows": 23990,
+      "size_bytes": 5798277,
+      "seconds": 0.003
     },
     {
       "table": "installments_payments",
       "source_id": "installment_payment_system",
-      "status": "SUCCESS",
-      "rows": 68368,
-      "size_bytes": 3626837,
-      "seconds": 0.127
+      "status": "SKIPPED_ALREADY_INGESTED",
+      "rows": 192599,
+      "size_bytes": 10242426,
+      "seconds": 0.005
     },
     {
       "table": "POS_CASH_balance",
       "source_id": "pos_cash_system",
-      "status": "SUCCESS",
-      "rows": 236650,
-      "size_bytes": 9686231,
-      "seconds": 0.346
+      "status": "SKIPPED_ALREADY_INGESTED",
+      "rows": 142543,
+      "size_bytes": 5597208,
+      "seconds": 0.003
     },
     {
       "table": "credit_card_balance",
       "source_id": "credit_card_system",
-      "status": "SUCCESS",
-      "rows": 29824,
-      "size_bytes": 3778838,
-      "seconds": 0.187
+      "status": "SKIPPED_ALREADY_INGESTED",
+      "rows": 53618,
+      "size_bytes": 5932554,
+      "seconds": 0.003
     },
     {
       "table": "synthetic_traffic_profile",
       "source_id": "synthetic_customer_behavior",
-      "status": "SUCCESS",
-      "rows": 3000,
-      "size_bytes": 193826,
-      "seconds": 0.016
+      "status": "SKIPPED_ALREADY_INGESTED",
+      "rows": 5000,
+      "size_bytes": 322813,
+      "seconds": 0.0
     }
   ],
   "gold": {
     "rows": {
-      "loan_credit_features": 8724,
-      "customer_credit_features": 3000,
-      "integrated_credit_profile": 3000,
-      "training_labels": 2579
+      "loan_credit_features": 23990,
+      "customer_credit_features": 5000,
+      "integrated_credit_profile": 5000,
+      "training_labels": 4316
     },
-    "feature_count": 102,
+    "feature_count": 175,
     "customer_feature_count": 39,
-    "seconds": 14.68,
+    "seconds": 6.33,
     "outputs": {
-      "loan_credit_features": "/home/claude/credit-risk-bigdata/data/gold/loan_credit_features",
-      "customer_credit_features": "/home/claude/credit-risk-bigdata/data/gold/customer_credit_features",
-      "integrated_credit_profile": "/home/claude/credit-risk-bigdata/data/gold/integrated_credit_profile",
-      "training_labels": "/home/claude/credit-risk-bigdata/data/gold/training_labels"
+      "loan_credit_features": "/Users/huylq/it5427-credit_risk_bigdata/apache-spark/data/gold/loan_credit_features",
+      "customer_credit_features": "/Users/huylq/it5427-credit_risk_bigdata/apache-spark/data/gold/customer_credit_features",
+      "integrated_credit_profile": "/Users/huylq/it5427-credit_risk_bigdata/apache-spark/data/gold/integrated_credit_profile",
+      "training_labels": "/Users/huylq/it5427-credit_risk_bigdata/apache-spark/data/gold/training_labels"
     }
-  },
-  "minio_sync": [
-    {
-      "layer": "bronze",
-      "bucket": "bronze",
-      "uploaded": 27,
-      "skipped_unchanged": 0,
-      "deleted": 0,
-      "bytes_uploaded": 25339606,
-      "seconds": 0.36
-    },
-    {
-      "layer": "silver",
-      "bucket": "silver",
-      "uploaded": 36,
-      "skipped_unchanged": 0,
-      "deleted": 0,
-      "bytes_uploaded": 4116664,
-      "seconds": 0.28
-    },
-    {
-      "layer": "gold",
-      "bucket": "gold",
-      "uploaded": 11,
-      "skipped_unchanged": 0,
-      "deleted": 0,
-      "bytes_uploaded": 1440101,
-      "seconds": 0.08
-    }
-  ],
-  "producer": {
-    "sent": 2000,
-    "seconds": 1.66,
-    "events_per_sec": 1202.7,
-    "per_source": {
-      "installment_payment_system": {
-        "sent": 527,
-        "duplicates_injected": 23,
-        "late_injected": 9,
-        "malformed_injected": 8
-      },
-      "credit_card_system": {
-        "sent": 526,
-        "duplicates_injected": 29,
-        "late_injected": 15,
-        "malformed_injected": 5
-      },
-      "pos_cash_system": {
-        "sent": 526,
-        "duplicates_injected": 23,
-        "late_injected": 15,
-        "malformed_injected": 6
-      },
-      "loan_application_system": {
-        "sent": 421,
-        "duplicates_injected": 21,
-        "late_injected": 6,
-        "malformed_injected": 4
-      }
-    },
-    "offsets": {
-      "installment_payment_system": 527,
-      "credit_card_system": 526,
-      "pos_cash_system": 526,
-      "loan_application_system": 421
-    },
-    "sink": "file",
-    "finished_at": "2026-11-13T00:55:57+00:00"
-  },
-  "stream": {
-    "micro_batches": 3,
-    "input_rows": 2119,
-    "quarantined_rows": 23,
-    "valid_rows": 2096,
-    "events_written": 1982,
-    "duplicates_dropped": 96,
-    "late_rows_dropped": 18,
-    "seconds": 10.72,
-    "dropped_total": 114,
-    "finished_at": "2026-11-13T00:56:08+00:00",
-    "source": "file"
-  },
-  "stream_snapshot": {
-    "customers": 441,
-    "events_total": 1982,
-    "batches": 3
   },
   "timings_seconds": {
-    "profiling": 49.95,
-    "synthetic_generation": 0.15,
-    "ingestion_bronze": 1.08,
-    "cleaning_silver": 50.27,
-    "integration_gold": 15.49,
-    "minio_sync": 0.79,
-    "stream_producer": 1.69,
-    "stream_processing": 11.63,
-    "stream_snapshot": 1.04,
-    "data_dictionary": 0.5
+    "synthetic_generation": 0.11,
+    "ingestion_bronze": 0.03,
+    "cleaning_silver": 31.64,
+    "integration_gold": 6.94,
+    "data_dictionary": 0.17
   },
   "silver": [
     {
       "table": "application_train",
-      "rows_in": 2581,
-      "rows_out": 2579,
+      "rows_in": 4316,
+      "rows_out": 4316,
       "rows_quarantined": 0,
-      "exact_duplicates_removed": 2
+      "exact_duplicates_removed": 0
     },
     {
       "table": "application_test",
-      "rows_in": 421,
-      "rows_out": 421,
+      "rows_in": 684,
+      "rows_out": 684,
       "rows_quarantined": 0,
       "exact_duplicates_removed": 0
     },
     {
       "table": "bureau",
-      "rows_in": 9694,
-      "rows_out": 9693,
-      "rows_quarantined": 1,
+      "rows_in": 24618,
+      "rows_out": 24618,
+      "rows_quarantined": 0,
       "exact_duplicates_removed": 0
     },
     {
       "table": "bureau_balance",
-      "rows_in": 295046,
-      "rows_out": 295046,
+      "rows_in": 352119,
+      "rows_out": 352119,
       "rows_quarantined": 0,
       "exact_duplicates_removed": 0
     },
     {
       "table": "previous_application",
-      "rows_in": 8724,
-      "rows_out": 8724,
+      "rows_in": 23990,
+      "rows_out": 23990,
       "rows_quarantined": 0,
       "exact_duplicates_removed": 0
     },
     {
       "table": "installments_payments",
-      "rows_in": 68368,
-      "rows_out": 68365,
+      "rows_in": 192599,
+      "rows_out": 192599,
       "rows_quarantined": 0,
-      "exact_duplicates_removed": 3
+      "exact_duplicates_removed": 0
     },
     {
       "table": "POS_CASH_balance",
-      "rows_in": 236650,
-      "rows_out": 236648,
+      "rows_in": 142543,
+      "rows_out": 142543,
       "rows_quarantined": 0,
-      "exact_duplicates_removed": 2
+      "exact_duplicates_removed": 0
     },
     {
       "table": "credit_card_balance",
-      "rows_in": 29824,
-      "rows_out": 29824,
+      "rows_in": 53618,
+      "rows_out": 53618,
       "rows_quarantined": 0,
       "exact_duplicates_removed": 0
     },
     {
       "table": "synthetic_traffic_profile",
-      "rows_in": 3000,
-      "rows_out": 3000,
+      "rows_in": 5000,
+      "rows_out": 5000,
       "rows_quarantined": 0,
       "exact_duplicates_removed": 0
     }
   ],
-  "finished_at": "2026-11-13T00:56:10+00:00"
+  "finished_at": "2026-11-14T14:04:23+00:00"
 }

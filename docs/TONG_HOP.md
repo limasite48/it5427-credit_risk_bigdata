@@ -16,8 +16,9 @@ Nguồn CSV / macro / sự kiện
 
 Dashboard hiện đọc hai nhóm kết quả đã có sẵn trong repo:
 
-- Model Track A trong `outputs/` (mẫu 5.000 hồ sơ application).
-- Báo cáo lakehouse Spark trong `apache-spark/reports/` (lần chạy fixture, không phải full Home Credit).
+- Model Track A trong `outputs/` (mẫu 5.000 hồ sơ application, dùng cho Overview và ô nhập tay).
+- Báo cáo Spark trong `apache-spark/reports/` (subset Home Credit thật, 5.000 khách, không phải full khoảng 307.511 hồ sơ).
+- Điểm Gold trong `outputs/gold_scored_applications.csv` (tra cứu theo `SK_ID_CURR` trên Underwriting).
 
 Ghi chú đăng nhập (mặc định trong `.env.example`; nếu `.env` đã sửa thì dùng giá trị trong `.env`):
 
@@ -70,25 +71,24 @@ Bảng Gold:
 | `training_labels` | Nhãn TARGET, chỉ tập train |
 | `data_quality_report` | Kết quả kiểm tra chất lượng |
 
-Báo cáo đã commit (lần chạy **test fixture**, giá trị ngẫu nhiên, không phải Home Credit đầy đủ):
+Báo cáo hiện tại là subset **Home Credit thật** (14/11/2026), không phải fixture và chưa phải full data:
 
 | Chỉ số | Giá trị |
 | --- | ---: |
-| Dòng Bronze | 654.308 |
-| Dung lượng Bronze | 25,3 MB |
-| Dòng Silver giữ lại | 654.300 |
-| Hồ sơ Gold (`integrated_credit_profile`) | 3.000 |
-| Khoản vay cũ (`loan_credit_features`) | 8.724 |
-| Nhãn train | 2.579 |
-| Số cột feature | 102 |
+| Dòng Bronze | 799.487 |
+| Dung lượng Bronze | 37,9 MB |
+| Dòng Silver giữ lại | 799.487 |
+| Hồ sơ Gold (`integrated_credit_profile`) | 5.000 |
+| Khoản vay cũ (`loan_credit_features`) | 23.990 |
+| Nhãn train | 4.316 |
+| Số cột feature | 175 |
 | Kiểm tra Gold | 31/31 đạt |
-| Streaming (file replay) | 2.000 event gửi đi, 1.982 event ghi, 441 khách trong snapshot |
 
 Feature Gold gồm cột hồ sơ, tổng hợp bureau (số khoản, dư nợ, quá hạn), khoản vay cũ, trả góp trễ, POS DPD, utilization thẻ, vi phạm giao thông, và các tỷ lệ như `debt_to_income`, `loan_to_income`.
 
 ### 1.3. Model (Track A)
 
-Train trên **mẫu 5.000 dòng** của `application_train.csv`, chưa phải full khoảng 307.511 hồ sơ, và chưa train lại trên feature store Gold.
+Track A train trên **mẫu 5.000 dòng** của `application_train.csv`. Ngoài ra đã có LightGBM thứ hai train trên bảng Gold của subset 5.000 khách (validation AUC **0,7331**), dùng khi tra cứu mã trong `outputs/gold_scored_applications.csv`. Full khoảng 307.511 hồ sơ vẫn chưa chạy.
 
 | Model | Validation ROC-AUC | Vai trò |
 | --- | ---: | --- |
@@ -97,7 +97,7 @@ Train trên **mẫu 5.000 dòng** của `application_train.csv`, chưa phải fu
 
 - Ngưỡng chi phí giả định: từ chối nhầm người tốt rẻ hơn duyệt nhầm người vỡ nợ, tỷ lệ phạt **FN:FP = 5:1**. Trên mẫu hiện tại, ngưỡng chọn được vẫn là PD = 0,50.
 - Mức rủi ro: **LOW** &lt; 5%, **MEDIUM** 5–15%, **HIGH** ≥ 15%.
-- KPI danh mục trong `outputs/metrics/risk_summary.json`: NPL **7,72%**, 5.000 hồ sơ.
+- KPI đang hiện trên Overview lấy từ tập Gold đã gán nhãn: **4.316** hồ sơ train, NPL **8,11%** (350 hồ sơ vỡ nợ). Bản Track A cũ (NPL 7,72% trên một mẫu 5.000 khác) được giữ ở `outputs/metrics/risk_summary_track_a.json`.
 - Biểu đồ mức rủi ro và tra cứu hồ sơ dùng `outputs/scored_applications_sample.csv`: **500** dòng đã chấm.
 
 Hai hồ sơ mẫu đã đo trên model thật:
@@ -227,10 +227,11 @@ Image backend copy sẵn `outputs/`, bảng macro, và `apache-spark/reports/`. 
 | Model (chỉ local) | http://127.0.0.1:8000 |
 | Swagger (profile `local`) | http://127.0.0.1:8080/swagger-ui.html |
 
-Log nằm ở `.run/logs/`. Tắt cả ba tiến trình:
+Log nằm ở `.run/logs/`. Tắt cả ba tiến trình (model, API, giao diện), kể cả tiến trình con của Maven/npm và tiến trình còn chiếm cổng:
 
 ```bash
 ./scripts/stop.sh
+./scripts/terminate.sh   # tắt ngay bằng SIGKILL
 ```
 
 `start.sh` tự trỏ `SPARK_REPORTS_DIR` tới `apache-spark/reports`, nên trang Data Pipeline đọc đúng báo cáo Spark.
@@ -267,10 +268,10 @@ Ba vai trò trên đều xem được các trang dashboard, gồm Data Pipeline.
 
 Đăng nhập bằng `underwriter` nếu muốn vừa xem báo cáo vừa chấm hồ sơ.
 
-1. **Overview.** NPL **7,72%**, 5.000 hồ sơ, biểu đồ mức rủi ro trên 500 hồ sơ đã chấm, đường ROC (LightGBM validation AUC **0,7361**). Ô **Spark integration** dẫn sang Data Pipeline.
+1. **Overview.** NPL **8,11%** trên **4.316** hồ sơ train của cùng subset Gold. Biểu đồ mức rủi ro là **1.079** hồ sơ validation của model Gold (không dùng điểm in-sample). Đường ROC vẫn là Track A (validation AUC **0,7361**).
 2. **Segment Risk.** So sánh tỷ lệ nợ theo nghề, thu nhập, học vấn và nhóm `EXT_SOURCE_2`.
 3. **Macro & Regions.** Hồ sơ đã chấm được nối với bảng vùng. Có thể tăng thất nghiệp (điểm phần trăm) và CPI rồi xem tỷ lệ mức HIGH thay đổi. Đây là phép tính lại trên PD hiện có, không train lại model.
-4. **Data Pipeline.** Số Bronze **654.308** dòng, Gold **3.000** khách, **102** feature, **31/31** kiểm tra đạt, thời gian từng stage, bảng làm sạch, và thống kê streaming. Banner màu vàng ghi rõ đây là **test fixture**, không phải full Home Credit.
+4. **Data Pipeline.** Bronze **799.487** dòng, Gold **5.000** khách, **175** cột, **31/31** kiểm tra đạt. Nhãn ghi subset Home Credit thật, chưa phải full data.
 5. **Underwriting.**
    - **Load Full Applicant** → **Assess Applicant**: kỳ vọng mức LOW, Auto-Approve.
    - **Load Subprime Applicant** → **Assess Applicant**: kỳ vọng mức HIGH, Decline.
@@ -282,15 +283,15 @@ Số PD có thể lệch nhẹ so với bảng ở mục 1.3 nếu model hoặc 
 
 Dashboard là màn hình ra quyết định. Năm trang trả lời năm câu hỏi: sổ vay rủi ro đến mức nào, rủi ro nằm ở nhóm nào, kinh tế vùng có làm xấu thêm không, đường dữ liệu đa nguồn có đáng tin không, và một hồ sơ cụ thể nên duyệt hay từ chối.
 
-**Overview — sổ vay.** Trên mẫu 5.000 hồ sơ có **386** hồ sơ vỡ nợ, tỷ lệ **7,72%**. Khoản vay trung bình khoảng **598.000**, thu nhập trung bình khoảng **168.000**, dư nợ gấp khoảng **3,95 lần** thu nhập một năm. Trung bình khoản vay cao hơn trung vị (508.000): một nhóm vay lớn kéo mặt bằng lên. Trong 500 hồ sơ đã chấm, **246** hồ sơ ở mức HIGH (PD từ 15%). LightGBM đạt validation AUC **0,7361**, cao hơn hồi quy logistic **0,7168**. Ở ngưỡng 0,50 model ít từ chối nhầm người tốt (độ đặc hiệu **96,64%**) nhưng chỉ bắt khoảng **23%** người thực sự vỡ nợ. Tín hiệu mạnh nhất là `EXT_SOURCE`, thời gian đi làm và thời điểm đăng ký giấy tờ.
+**Overview — sổ vay của subset Gold.** Trên 4.316 hồ sơ train có **350** hồ sơ vỡ nợ, tỷ lệ **8,11%**. Khoản vay trung bình khoảng **598.000**, trung vị **517.000**, thu nhập trung bình khoảng **171.000**. Dư nợ gấp khoảng **3,9 lần** thu nhập một năm. Biểu đồ mức rủi ro chỉ lấy **1.079** hồ sơ validation: **640** mức HIGH, **407** MEDIUM, **32** LOW. Model Gold có validation AUC **0,7331**. Điểm in-sample không đưa lên biểu đồ vì train AUC gần 1.
 
-**Segment Risk — rủi ro không đều.** So với mặt bằng 7,72%: nhóm `EXT_SOURCE_2` thấp nhất vỡ nợ **15,35%**, nhóm cao nhất **3,41%** (gấp khoảng 4,5 lần). Lao động trình độ thấp **13,64%**, nhân viên vệ sinh **12,12%**, trung học cơ sở **12,28%**, lao động phổ thông **9,87%**, người đang đi làm **9,40%**, nam **9,59%** so với nữ **6,76%**. Đại học **4,00%**, kế toán **4,79%**, công chức **3,49%**. Nhóm rất ít người (IT, HR, thất nghiệp) có tỷ lệ 0% vì mẫu quá nhỏ, không kết luận được.
+**Segment Risk — cùng 4.316 hồ sơ.** So với mặt bằng 8,11%: nhóm `EXT_SOURCE_2` thấp nhất vỡ nợ **15,66%**, nhóm cao nhất **2,55%**. Nhân viên vệ sinh **16,90%** (71 người), lao động phổ thông **11,18%**, nhân viên bán hàng **11,00%**. Người đang đi làm **10,18%**, cộng tác viên thương mại **7,74%**, hưu trí **4,43%**, công chức **3,75%**. Trung học phổ thông **9,18%**, đại học **4,86%**. Nhóm một vài người (thất nghiệp, doanh nhân, học vị) có tỷ lệ 0% hoặc 100% vì mẫu quá nhỏ.
 
 **Macro & Regions — kịch bản vùng xấu đi.** Mỗi hồ sơ đã chấm được gắn thất nghiệp, GDP và CPI của vùng. Cùng kiểu khách, vùng khác nhau thì tỷ lệ mức HIGH khác nhau. Phép thử sốc dùng công thức cố định: PD nhân với `1 + 0,06 × điểm phần trăm thất nghiệp + 0,04 × điểm phần trăm CPI`. Đây là kịch bản giả định, không phải số vỡ nợ đã xảy ra, và không train lại model.
 
-**Data Pipeline — chất lượng đường tích hợp, không nói ai sẽ vỡ nợ.** 654.308 dòng Bronze, 3.000 hồ sơ Gold, 102 đặc trưng và 31/31 kiểm tra đạt có nghĩa là bảy nguồn đã gom thành một dòng mỗi khách, bản trùng bị loại, và nhãn `TARGET` không lọt vào bảng đặc trưng. Đây là lần chạy fixture (dữ liệu giả lập), không mô tả 5.000 khách Home Credit, và các đặc trưng này chưa đi vào PD trên trang Underwriting.
+**Data Pipeline — chất lượng đường tích hợp.** 799.487 dòng Bronze được gom thành 5.000 hồ sơ Gold, 175 cột, 31/31 kiểm tra đạt. `TARGET` không nằm trên bảng feature. Đây là subset Home Credit thật (5.000 khách), chưa phải full data. Điểm từ bảng này hiện khi tra cứu mã Gold trên Underwriting, không hiện ở ô nhập tay.
 
-**Underwriting — một quyết định.** Hồ sơ mẫu đầy đủ ra PD khoảng **4,2%**, mức LOW, tự duyệt. Hồ sơ dưới chuẩn ra PD khoảng **54,7%**, mức HIGH, từ chối. Mã `101676` trong file đã chấm nằm ở mức HIGH. Nhân viên không xem từng bảng bureau hay trả góp; họ xem một PD, một mức rủi ro, một hành động, và các yếu tố đang kéo rủi ro lên hoặc xuống.
+**Underwriting — một quyết định.** Form nhập tay vẫn chấm bằng model Track A: hồ sơ mẫu đầy đủ ra PD khoảng **4,2%**, mức LOW, tự duyệt; hồ sơ dưới chuẩn ra PD khoảng **54,7%**, mức HIGH, từ chối. Tra cứu mã trong subset Gold dùng model Gold: `277603` mức LOW, `298157` mức HIGH.
 
 ---
 
@@ -334,7 +335,46 @@ python -m pytest
 
 ---
 
-## 7. Kiểm thử dashboard
+## 7. Tích hợp Gold và phần còn lại
+
+Đã chạy trên tập con thật, ngày 2026-11-14. CSV gốc nằm ở `_data` (liên kết tới `~/Desktop/_data`, không commit). Spark đọc `apache-spark/data/dev_subset/raw` (5.000 `SK_ID_CURR`: 4.316 train, 684 test, kèm bureau, trả góp, POS, thẻ). Gold có **5.000** hồ sơ tích hợp và **4.316** nhãn. Kiểm tra join đều đạt, `TARGET` không nằm trên bảng feature.
+
+Model LightGBM train trên bảng Gold: validation AUC **0,7331** (train AUC 0,9947 là số trong mẫu, không dùng để báo cáo). Feature quan trọng có cả cột hồ sơ và cột tích hợp (`ext_source_2`, `previous_avg_credit`, `late_payment_ratio`).
+
+Tra cứu trên Underwriting, nguồn `gold-validation`:
+
+| Mã | PD | Mức |
+| --- | ---: | --- |
+| `277603` | 0,0312 | LOW, Auto-Approve |
+| `298157` | 0,5631 | HIGH, Decline |
+
+File điểm: `outputs/gold_scored_applications.csv`. Artifact: `outputs/models/gold_credit_risk_model.joblib`. Ô nhập tay vẫn dùng model Track A, vì form không có lịch sử bureau hay trả góp.
+
+Chưa làm: chạy full khoảng 307.511 hồ sơ. Subset này là bản demo đầu-cuối, không thay số NPL 7,72% trên Overview.
+
+Đường đã khép trên subset:
+
+```text
+_data/*.csv
+  → subset 5.000 khách
+  → Bronze / Silver / Gold
+  → LightGBM đọc gold/integrated_credit_profile + training_labels
+  → tra SK_ID_CURR trên Underwriting
+```
+
+Chạy lại từ đầu, trong `apache-spark/`, cần Java 17 hoặc 21 (dashboard vẫn cần Java 25):
+
+```bash
+python -m scripts.make_dev_subset --src ../_data --out data/dev_subset/raw --customers 5000
+JAVA_HOME=<jdk-21> ../.venv/bin/python -m scripts.run_pipeline --raw-dir data/dev_subset/raw --skip-profiling
+cd .. && .venv/bin/python scripts/train_gold_model.py
+```
+
+Rồi khởi động lại backend để nạp `outputs/gold_scored_applications.csv` và `apache-spark/reports/`.
+
+---
+
+## 8. Kiểm thử dashboard
 
 Ở thư mục gốc, khi đã setup:
 
@@ -352,18 +392,18 @@ Khi dashboard đang chạy:
 
 ---
 
-## 8. Giới hạn cần nói khi bảo vệ
+## 9. Giới hạn cần nói khi bảo vệ
 
-- Model chấm trên mẫu **5.000** hồ sơ application. Feature bureau / trả góp / thẻ của Spark chưa được đưa vào lần train này.
-- Số trên **Data Pipeline** là lần chạy fixture (3.000 khách, giá trị ngẫu nhiên). Full Home Credit cần CSV Kaggle và chạy lại `run_pipeline`.
-- Tỷ lệ NPL 7,72% là tỷ lệ `TARGET` trên mẫu Track A. Tỷ lệ trả chậm trên dashboard segment vẫn dựa trên hồ sơ application, chưa đếm kỳ trễ từ `installments_payments`.
+- Overview và ô nhập tay vẫn là model Track A trên mẫu application 5.000 dòng. Model Gold (validation AUC 0,7331) chỉ dùng khi tra cứu mã có trong `outputs/gold_scored_applications.csv`.
+- Data Pipeline là subset 5.000 khách Home Credit thật (799.487 dòng Bronze, 5.000 hồ sơ Gold), chưa phải full khoảng 307.511 hồ sơ.
+- Tỷ lệ NPL 7,72% là tỷ lệ `TARGET` trên mẫu Track A. Tỷ lệ trên trang Segment vẫn từ hồ sơ application, chưa đếm kỳ trễ từ `installments_payments`.
 - Kafka và MinIO không nằm trong đường demo của dashboard. Streaming trên trang Data Pipeline là số của lần replay ghi trong báo cáo.
 - Chưa có báo cáo Word/PDF và slide thuyết trình trong repo.
 - Delta Lake có trong thiết kế (`CRB_LAKE_FORMAT=delta`) nhưng lần chạy đã lưu dùng Parquet.
 
 ---
 
-## 9. Sự cố thường gặp
+## 10. Sự cố thường gặp
 
 | Hiện tượng | Cách xử lý |
 | --- | --- |

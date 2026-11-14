@@ -145,10 +145,10 @@ class ApiIntegrationTest {
         String token = login("analyst", "AnalystDemo!234");
         mockMvc.perform(get("/api/dashboard/overview").header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.totalApplications").value(5000))
-                .andExpect(jsonPath("$.nplRate").value(0.0772))
-                .andExpect(jsonPath("$.scoredSampleSize").value(500))
-                .andExpect(jsonPath("$.riskDistribution.high").value(246));
+                .andExpect(jsonPath("$.totalApplications").value(4316))
+                .andExpect(jsonPath("$.nplRate").value(0.0811))
+                .andExpect(jsonPath("$.scoredSampleSize").value(1079))
+                .andExpect(jsonPath("$.riskDistribution.high").value(640));
 
         mockMvc.perform(get("/api/dashboard/segments").header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
@@ -161,10 +161,11 @@ class ApiIntegrationTest {
     @Test
     void applicationLookupHitAndMiss() throws Exception {
         String token = login("underwriter", "UnderwriterDemo!234");
-        mockMvc.perform(get("/api/applications/101676").header("Authorization", "Bearer " + token))
+        mockMvc.perform(get("/api/applications/298157").header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.applicationId").value(101676))
-                .andExpect(jsonPath("$.riskTier").value("HIGH"));
+                .andExpect(jsonPath("$.applicationId").value(298157))
+                .andExpect(jsonPath("$.riskTier").value("HIGH"))
+                .andExpect(jsonPath("$.scoreSource").value("gold-validation"));
 
         mockMvc.perform(get("/api/applications/999999999").header("Authorization", "Bearer " + token))
                 .andExpect(status().isNotFound());
@@ -266,8 +267,8 @@ class ApiIntegrationTest {
         String token = login("analyst", "AnalystDemo!234");
         mockMvc.perform(get("/api/insights/regions").header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.scoredSampleSize").value(500))
-                .andExpect(jsonPath("$.matchedWithMacro").value(500))
+                .andExpect(jsonPath("$.scoredSampleSize").value(1079))
+                .andExpect(jsonPath("$.matchedWithMacro").value(1079))
                 .andExpect(jsonPath("$.byRegionRating").isArray())
                 .andExpect(jsonPath("$.byUnemploymentQuintile").isArray())
                 .andExpect(jsonPath("$.insights.highestRiskRating").isNotEmpty());
@@ -279,7 +280,7 @@ class ApiIntegrationTest {
                                 {"unemploymentDeltaPp": 2.0, "cpiShockPct": 3.0}
                                 """))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.applicantsInScope").value(500))
+                .andExpect(jsonPath("$.applicantsInScope").value(1079))
                 .andExpect(jsonPath("$.stressedHighRate").isNumber())
                 .andExpect(jsonPath("$.methodology").isNotEmpty());
     }
@@ -292,16 +293,15 @@ class ApiIntegrationTest {
         String token = login("analyst", "AnalystDemo!234");
         mockMvc.perform(get("/api/insights/pipeline").header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.fixtureRun").value(true))
-                .andExpect(jsonPath("$.bronzeRows").value(654308))
-                .andExpect(jsonPath("$.goldCustomers").value(3000))
-                .andExpect(jsonPath("$.goldLoans").value(8724))
-                .andExpect(jsonPath("$.featureCount").value(102))
+                .andExpect(jsonPath("$.fixtureRun").value(false))
+                .andExpect(jsonPath("$.bronzeRows").value(799487))
+                .andExpect(jsonPath("$.goldCustomers").value(5000))
+                .andExpect(jsonPath("$.goldLoans").value(23990))
+                .andExpect(jsonPath("$.featureCount").value(175))
                 .andExpect(jsonPath("$.checksPassed").value(31))
                 .andExpect(jsonPath("$.checksTotal").value(31))
                 .andExpect(jsonPath("$.sources").isArray())
                 .andExpect(jsonPath("$.featureGroups[?(@.name == 'Bureau')].count", hasItem(11)))
-                .andExpect(jsonPath("$.stream.eventsWritten").value(1982))
                 .andExpect(jsonPath("$.note").isNotEmpty());
     }
 }

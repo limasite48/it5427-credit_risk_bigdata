@@ -9,6 +9,7 @@ app:
   data-dir: ../outputs
   model-path: ../outputs/models/credit_risk_model.joblib
   scored-csv: ../outputs/scored_applications_sample.csv
+  gold-scored-csv: ../outputs/gold_scored_applications.csv
   risk-summary: ../outputs/metrics/risk_summary.json
   demographics: ../outputs/metrics/demographic_profiles.json
   roc-curve: ../outputs/figures/roc_curve.png

@@ -42,6 +42,7 @@ app:
   data-dir: ${DATA_DIR:../outputs}
   model-path: ${MODEL_PATH:../outputs/models/credit_risk_model.joblib}
   scored-csv: ${SCORED_CSV:../outputs/scored_applications_sample.csv}
+  gold-scored-csv: ${GOLD_SCORED_CSV:../outputs/gold_scored_applications.csv}
   risk-summary: ${RISK_SUMMARY:../outputs/metrics/risk_summary.json}
   demographics: ${DEMOGRAPHICS:../outputs/metrics/demographic_profiles.json}
   roc-curve: ${ROC_CURVE:../outputs/figures/roc_curve.png}

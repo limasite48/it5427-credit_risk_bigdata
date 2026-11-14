@@ -1,4 +1,6 @@
+_data
 _data/
+apache-spark/data/
 side_quest.md
 __pycache__/
 *.py[cod]

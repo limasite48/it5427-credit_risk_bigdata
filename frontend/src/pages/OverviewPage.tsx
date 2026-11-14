@@ -207,7 +207,10 @@ export function OverviewPage() {
         <Card>
           <CardHeader>
             <CardTitle>Default vs repaid</CardTitle>
-            <CardDescription>Outcome counts from the 5,000-row risk summary</CardDescription>
+            <CardDescription>
+              Outcome counts from the integrated subset ({formatNumber(data.totalApplications)} labeled
+              applications)
+            </CardDescription>
           </CardHeader>
           <CardContent className="h-72">
             <ResponsiveContainer width="100%" height="100%">

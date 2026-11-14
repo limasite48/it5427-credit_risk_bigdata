@@ -104,16 +104,94 @@ is_running() {
   return 1
 }
 
-stop_pid() {
+# Kill a process and every child. Leaves are signaled first so a parent
+# such as Maven or npm cannot leave the real server running.
+kill_tree() {
+  local pid="$1"
+  local sig="${2:-TERM}"
+  local child
+  if [[ -z "${pid}" ]] || ! [[ "${pid}" =~ ^[0-9]+$ ]]; then
+    return 0
+  fi
+  if ! kill -0 "${pid}" 2>/dev/null; then
+    return 0
+  fi
+  while IFS= read -r child; do
+    [[ -n "${child}" ]] && kill_tree "${child}" "${sig}"
+  done < <(pgrep -P "${pid}" 2>/dev/null || true)
+  kill "-${sig}" "${pid}" 2>/dev/null || true
+}
+
+port_listen_pids() {
+  local port="$1"
+  if command -v lsof >/dev/null 2>&1; then
+    lsof -nP -iTCP:"${port}" -sTCP:LISTEN -t 2>/dev/null || true
+  fi
+}
+
+assert_port_free() {
+  local port="$1"
+  local name="$2"
+  local pids
+  pids="$(port_listen_pids "${port}" | tr '\n' ' ' | sed 's/[[:space:]]*$//')"
+  if [[ -n "${pids}" ]]; then
+    echo "${name} port ${port} is already in use (pid ${pids})." >&2
+    echo "Run ./scripts/stop.sh or ./scripts/terminate.sh first." >&2
+    exit 1
+  fi
+}
+
+# Stop one platform service. With force=1 the tree is SIGKILL'd immediately.
+# Listeners on the service port are included, even when they were not started
+# by this script and therefore have no pid file.
+stop_service() {
   local name="$1"
-  local pid
+  local port="$2"
+  local force="${3:-0}"
+  local pid lp
+
   pid="$(read_pid "${name}" || true)"
-  if [[ -n "${pid}" ]] && kill -0 "${pid}" 2>/dev/null; then
-    kill "${pid}" 2>/dev/null || true
-    sleep 1
-    if kill -0 "${pid}" 2>/dev/null; then
-      kill -9 "${pid}" 2>/dev/null || true
+  if [[ -n "${pid}" ]]; then
+    echo "Stopping ${name} (pid ${pid})"
+    if [[ "${force}" == "1" ]]; then
+      kill_tree "${pid}" KILL
+    else
+      kill_tree "${pid}" TERM
+      sleep 1
+      if kill -0 "${pid}" 2>/dev/null; then
+        kill_tree "${pid}" KILL
+      fi
     fi
   fi
+
+  while IFS= read -r lp; do
+    [[ -z "${lp}" ]] && continue
+    echo "Releasing ${name} port ${port} (pid ${lp})"
+    if [[ "${force}" == "1" ]]; then
+      kill_tree "${lp}" KILL
+    else
+      kill_tree "${lp}" TERM
+    fi
+  done < <(port_listen_pids "${port}")
+
+  sleep 1
+  while IFS= read -r lp; do
+    [[ -z "${lp}" ]] && continue
+    kill_tree "${lp}" KILL
+  done < <(port_listen_pids "${port}")
+
   rm -f "${PID_DIR}/${name}.pid"
+}
+
+# Replace the helper with the service itself and put it in a new session,
+# so stop/terminate can signal that session without killing this script.
+spawn_detached() {
+  local name="$1"
+  local logfile="$2"
+  shift 2
+  local launcher="${PYTHON_BIN:-python3}"
+  "${launcher}" -c 'import os, sys; os.setsid(); os.execvp(sys.argv[1], sys.argv[1:])' "$@" \
+    >"${logfile}" 2>&1 &
+  write_pid "${name}" "$!"
+  disown "$!" 2>/dev/null || disown || true
 }
