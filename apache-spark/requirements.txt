@@ -1,0 +1,12 @@
+# Runtime (tested with Python 3.13, OpenJDK 21)
+pyspark==3.5.3
+pandas>=2.2
+numpy>=1.26
+pyarrow>=15
+pyyaml>=6
+boto3>=1.34          # MinIO / S3 client
+kafka-python-ng>=2.2 # Kafka producer (only needed with --sink kafka)
+tzdata               # time zones for Spark -> pandas conversion
+# Tests
+pytest>=8
+moto[server]>=5      # optional: local S3-compatible server to test MinIO sync without Docker

@@ -1,0 +1,1524 @@
+[
+  {
+    "table": "application_train",
+    "source_id": "loan_application_system",
+    "origin": "ORIGINAL",
+    "bronze_uri": "/home/claude/credit-risk-bigdata/data/bronze/original/loan_application_system/application_train/ingest_id=20261113T005446_404dabfa/application_train.csv",
+    "ingest_id": "20261113T005446_404dabfa",
+    "rows_in": 2581,
+    "columns_in": 49,
+    "schema": {
+      "unregistered_columns": [],
+      "registered_but_absent": []
+    },
+    "cast_failures": {},
+    "quarantined_required_null": 0,
+    "exact_duplicates_removed": 2,
+    "pk_duplicates_quarantined": 0,
+    "rows_out": 2579,
+    "flags": {
+      "_invalid_negative": 0,
+      "_after_application": 0,
+      "amt_income_total_outlier": 4,
+      "amt_credit_outlier": 4,
+      "days_employed_is_sentinel": 462
+    },
+    "outlier_thresholds": {
+      "amt_income_total": 659250.0,
+      "amt_credit": 3064500.0
+    },
+    "missing": {
+      "sk_id_curr": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "target": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "name_contract_type": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "code_gender": {
+        "before": 0,
+        "after": 2,
+        "before_pct": 0.0,
+        "after_pct": 0.078
+      },
+      "flag_own_car": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "flag_own_realty": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "cnt_children": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "amt_income_total": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "amt_credit": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "amt_annuity": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "amt_goods_price": {
+        "before": 3,
+        "after": 3,
+        "before_pct": 0.116,
+        "after_pct": 0.116
+      },
+      "name_type_suite": {
+        "before": 19,
+        "after": 19,
+        "before_pct": 0.736,
+        "after_pct": 0.737
+      },
+      "name_income_type": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "name_education_type": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "name_family_status": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "name_housing_type": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "region_population_relative": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "days_birth": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "days_employed": {
+        "before": 0,
+        "after": 462,
+        "before_pct": 0.0,
+        "after_pct": 17.914
+      },
+      "days_registration": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "days_id_publish": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "own_car_age": {
+        "before": 1675,
+        "after": 1673,
+        "before_pct": 64.897,
+        "after_pct": 64.87
+      },
+      "flag_mobil": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "flag_emp_phone": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "flag_work_phone": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "flag_cont_mobile": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "flag_phone": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "flag_email": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "occupation_type": {
+        "before": 792,
+        "after": 790,
+        "before_pct": 30.686,
+        "after_pct": 30.632
+      },
+      "cnt_fam_members": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "region_rating_client": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "region_rating_client_w_city": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "weekday_appr_process_start": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "hour_appr_process_start": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "reg_region_not_live_region": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "organization_type": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "ext_source_1": {
+        "before": 1447,
+        "after": 1446,
+        "before_pct": 56.064,
+        "after_pct": 56.068
+      },
+      "ext_source_2": {
+        "before": 3,
+        "after": 3,
+        "before_pct": 0.116,
+        "after_pct": 0.116
+      },
+      "ext_source_3": {
+        "before": 504,
+        "after": 504,
+        "before_pct": 19.527,
+        "after_pct": 19.542
+      },
+      "apartments_avg": {
+        "before": 1256,
+        "after": 1255,
+        "before_pct": 48.663,
+        "after_pct": 48.662
+      },
+      "years_build_avg": {
+        "before": 1692,
+        "after": 1691,
+        "before_pct": 65.556,
+        "after_pct": 65.568
+      },
+      "floorsmax_medi": {
+        "before": 1284,
+        "after": 1284,
+        "before_pct": 49.748,
+        "after_pct": 49.787
+      },
+      "totalarea_mode": {
+        "before": 1251,
+        "after": 1249,
+        "before_pct": 48.47,
+        "after_pct": 48.43
+      },
+      "emergencystate_mode": {
+        "before": 1165,
+        "after": 1165,
+        "before_pct": 45.138,
+        "after_pct": 45.173
+      },
+      "obs_30_cnt_social_circle": {
+        "before": 4,
+        "after": 4,
+        "before_pct": 0.155,
+        "after_pct": 0.155
+      },
+      "def_30_cnt_social_circle": {
+        "before": 9,
+        "after": 9,
+        "before_pct": 0.349,
+        "after_pct": 0.349
+      },
+      "days_last_phone_change": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "flag_document_3": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "amt_req_credit_bureau_year": {
+        "before": 356,
+        "after": 355,
+        "before_pct": 13.793,
+        "after_pct": 13.765
+      }
+    },
+    "semantic_checks": {
+      "own_car_age_null_while_owns_car": 539,
+      "organization_xna_vs_days_employed_sentinel": 0
+    },
+    "silver_uri": "/home/claude/credit-risk-bigdata/data/silver/application_train",
+    "rows_quarantined": 0,
+    "seconds": 7.37,
+    "reconciliation_ok": true
+  },
+  {
+    "table": "application_test",
+    "source_id": "loan_application_system",
+    "origin": "ORIGINAL",
+    "bronze_uri": "/home/claude/credit-risk-bigdata/data/bronze/original/loan_application_system/application_test/ingest_id=20261113T005446_bbf0cbf2/application_test.csv",
+    "ingest_id": "20261113T005446_bbf0cbf2",
+    "rows_in": 421,
+    "columns_in": 48,
+    "schema": {
+      "unregistered_columns": [],
+      "registered_but_absent": []
+    },
+    "cast_failures": {},
+    "quarantined_required_null": 0,
+    "exact_duplicates_removed": 0,
+    "pk_duplicates_quarantined": 0,
+    "rows_out": 421,
+    "flags": {
+      "_invalid_negative": 0,
+      "_after_application": 0,
+      "amt_income_total_outlier": 1,
+      "amt_credit_outlier": 1,
+      "days_employed_is_sentinel": 83
+    },
+    "outlier_thresholds": {
+      "amt_income_total": 705150.0,
+      "amt_credit": 2920500.0
+    },
+    "missing": {
+      "sk_id_curr": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "name_contract_type": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "code_gender": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "flag_own_car": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "flag_own_realty": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "cnt_children": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "amt_income_total": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "amt_credit": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "amt_annuity": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "amt_goods_price": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "name_type_suite": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "name_income_type": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "name_education_type": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "name_family_status": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "name_housing_type": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "region_population_relative": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "days_birth": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "days_employed": {
+        "before": 0,
+        "after": 83,
+        "before_pct": 0.0,
+        "after_pct": 19.715
+      },
+      "days_registration": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "days_id_publish": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "own_car_age": {
+        "before": 286,
+        "after": 286,
+        "before_pct": 67.933,
+        "after_pct": 67.933
+      },
+      "flag_mobil": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "flag_emp_phone": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "flag_work_phone": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "flag_cont_mobile": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "flag_phone": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "flag_email": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "occupation_type": {
+        "before": 135,
+        "after": 135,
+        "before_pct": 32.067,
+        "after_pct": 32.067
+      },
+      "cnt_fam_members": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "region_rating_client": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "region_rating_client_w_city": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "weekday_appr_process_start": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "hour_appr_process_start": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "reg_region_not_live_region": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "organization_type": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "ext_source_1": {
+        "before": 237,
+        "after": 237,
+        "before_pct": 56.295,
+        "after_pct": 56.295
+      },
+      "ext_source_2": {
+        "before": 2,
+        "after": 2,
+        "before_pct": 0.475,
+        "after_pct": 0.475
+      },
+      "ext_source_3": {
+        "before": 88,
+        "after": 88,
+        "before_pct": 20.903,
+        "after_pct": 20.903
+      },
+      "apartments_avg": {
+        "before": 239,
+        "after": 239,
+        "before_pct": 56.77,
+        "after_pct": 56.77
+      },
+      "years_build_avg": {
+        "before": 289,
+        "after": 289,
+        "before_pct": 68.646,
+        "after_pct": 68.646
+      },
+      "floorsmax_medi": {
+        "before": 220,
+        "after": 220,
+        "before_pct": 52.257,
+        "after_pct": 52.257
+      },
+      "totalarea_mode": {
+        "before": 196,
+        "after": 196,
+        "before_pct": 46.556,
+        "after_pct": 46.556
+      },
+      "emergencystate_mode": {
+        "before": 189,
+        "after": 189,
+        "before_pct": 44.893,
+        "after_pct": 44.893
+      },
+      "obs_30_cnt_social_circle": {
+        "before": 4,
+        "after": 4,
+        "before_pct": 0.95,
+        "after_pct": 0.95
+      },
+      "def_30_cnt_social_circle": {
+        "before": 1,
+        "after": 1,
+        "before_pct": 0.238,
+        "after_pct": 0.238
+      },
+      "days_last_phone_change": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "flag_document_3": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "amt_req_credit_bureau_year": {
+        "before": 63,
+        "after": 63,
+        "before_pct": 14.964,
+        "after_pct": 14.964
+      }
+    },
+    "semantic_checks": {
+      "own_car_age_null_while_owns_car": 94,
+      "organization_xna_vs_days_employed_sentinel": 0
+    },
+    "silver_uri": "/home/claude/credit-risk-bigdata/data/silver/application_test",
+    "rows_quarantined": 0,
+    "seconds": 6.11,
+    "reconciliation_ok": true
+  },
+  {
+    "table": "bureau",
+    "source_id": "external_credit_bureau",
+    "origin": "ORIGINAL",
+    "bronze_uri": "/home/claude/credit-risk-bigdata/data/bronze/original/external_credit_bureau/bureau/ingest_id=20261113T005446_fad675b5/bureau.csv",
+    "ingest_id": "20261113T005446_fad675b5",
+    "rows_in": 9694,
+    "columns_in": 17,
+    "schema": {
+      "unregistered_columns": [],
+      "registered_but_absent": []
+    },
+    "cast_failures": {},
+    "quarantined_required_null": 1,
+    "exact_duplicates_removed": 0,
+    "pk_duplicates_quarantined": 0,
+    "rows_out": 9693,
+    "flags": {
+      "_invalid_negative": 0,
+      "_after_application": 1,
+      "_orphan_application": 4,
+      "amt_credit_sum_outlier": 15,
+      "amt_credit_sum_debt_outlier": 13
+    },
+    "outlier_thresholds": {
+      "amt_credit_sum": 3247300.0,
+      "amt_credit_sum_debt": 1533348.69
+    },
+    "missing": {
+      "sk_id_curr": {
+        "before": 1,
+        "after": 0,
+        "before_pct": 0.01,
+        "after_pct": 0.0
+      },
+      "sk_id_bureau": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "credit_active": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "credit_currency": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "days_credit": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "credit_day_overdue": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "days_credit_enddate": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "days_enddate_fact": {
+        "before": 3542,
+        "after": 3542,
+        "before_pct": 36.538,
+        "after_pct": 36.542
+      },
+      "amt_credit_max_overdue": {
+        "before": 6386,
+        "after": 6386,
+        "before_pct": 65.876,
+        "after_pct": 65.883
+      },
+      "cnt_credit_prolong": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "amt_credit_sum": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "amt_credit_sum_debt": {
+        "before": 1366,
+        "after": 1366,
+        "before_pct": 14.091,
+        "after_pct": 14.093
+      },
+      "amt_credit_sum_limit": {
+        "before": 3265,
+        "after": 3264,
+        "before_pct": 33.681,
+        "after_pct": 33.674
+      },
+      "amt_credit_sum_overdue": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "credit_type": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "days_credit_update": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "amt_annuity": {
+        "before": 6769,
+        "after": 6768,
+        "before_pct": 69.827,
+        "after_pct": 69.824
+      }
+    },
+    "silver_uri": "/home/claude/credit-risk-bigdata/data/silver/bureau",
+    "rows_quarantined": 1,
+    "seconds": 4.87,
+    "reconciliation_ok": true
+  },
+  {
+    "table": "bureau_balance",
+    "source_id": "external_credit_bureau",
+    "origin": "ORIGINAL",
+    "bronze_uri": "/home/claude/credit-risk-bigdata/data/bronze/original/external_credit_bureau/bureau_balance/ingest_id=20261113T005446_c59c190b/bureau_balance.csv",
+    "ingest_id": "20261113T005446_c59c190b",
+    "rows_in": 295046,
+    "columns_in": 3,
+    "schema": {
+      "unregistered_columns": [],
+      "registered_but_absent": []
+    },
+    "cast_failures": {},
+    "quarantined_required_null": 0,
+    "exact_duplicates_removed": 0,
+    "pk_duplicates_quarantined": 0,
+    "rows_out": 295046,
+    "flags": {
+      "_invalid_negative": 0,
+      "_after_application": 0,
+      "_orphan_bureau": 3
+    },
+    "outlier_thresholds": {},
+    "missing": {
+      "sk_id_bureau": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "months_balance": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "status": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      }
+    },
+    "silver_uri": "/home/claude/credit-risk-bigdata/data/silver/bureau_balance",
+    "rows_quarantined": 0,
+    "seconds": 7.9,
+    "reconciliation_ok": true
+  },
+  {
+    "table": "previous_application",
+    "source_id": "previous_loan_system",
+    "origin": "ORIGINAL",
+    "bronze_uri": "/home/claude/credit-risk-bigdata/data/bronze/original/previous_loan_system/previous_application/ingest_id=20261113T005447_d34c9a1d/previous_application.csv",
+    "ingest_id": "20261113T005447_d34c9a1d",
+    "rows_in": 8724,
+    "columns_in": 37,
+    "schema": {
+      "unregistered_columns": [],
+      "registered_but_absent": []
+    },
+    "cast_failures": {},
+    "quarantined_required_null": 0,
+    "exact_duplicates_removed": 0,
+    "pk_duplicates_quarantined": 0,
+    "rows_out": 8724,
+    "flags": {
+      "_invalid_negative": 0,
+      "_after_application": 0,
+      "_orphan_application": 0,
+      "days_first_drawing_is_sentinel": 5387,
+      "days_first_due_is_sentinel": 0,
+      "days_last_due_1st_version_is_sentinel": 0,
+      "days_last_due_is_sentinel": 781,
+      "days_termination_is_sentinel": 781
+    },
+    "outlier_thresholds": {},
+    "missing": {
+      "sk_id_prev": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "sk_id_curr": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "name_contract_type": {
+        "before": 0,
+        "after": 7,
+        "before_pct": 0.0,
+        "after_pct": 0.08
+      },
+      "amt_annuity": {
+        "before": 3337,
+        "after": 3337,
+        "before_pct": 38.251,
+        "after_pct": 38.251
+      },
+      "amt_application": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "amt_credit": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "amt_down_payment": {
+        "before": 4589,
+        "after": 4589,
+        "before_pct": 52.602,
+        "after_pct": 52.602
+      },
+      "amt_goods_price": {
+        "before": 1993,
+        "after": 1993,
+        "before_pct": 22.845,
+        "after_pct": 22.845
+      },
+      "weekday_appr_process_start": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "hour_appr_process_start": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "flag_last_appl_per_contract": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "nflag_last_appl_in_day": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "rate_down_payment": {
+        "before": 4722,
+        "after": 4722,
+        "before_pct": 54.127,
+        "after_pct": 54.127
+      },
+      "rate_interest_primary": {
+        "before": 8675,
+        "after": 8675,
+        "before_pct": 99.438,
+        "after_pct": 99.438
+      },
+      "rate_interest_privileged": {
+        "before": 8698,
+        "after": 8698,
+        "before_pct": 99.702,
+        "after_pct": 99.702
+      },
+      "name_cash_loan_purpose": {
+        "before": 0,
+        "after": 1286,
+        "before_pct": 0.0,
+        "after_pct": 14.741
+      },
+      "name_contract_status": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "days_decision": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "name_payment_type": {
+        "before": 0,
+        "after": 3370,
+        "before_pct": 0.0,
+        "after_pct": 38.629
+      },
+      "code_reject_reason": {
+        "before": 0,
+        "after": 385,
+        "before_pct": 0.0,
+        "after_pct": 4.413
+      },
+      "name_type_suite": {
+        "before": 4329,
+        "after": 4329,
+        "before_pct": 49.622,
+        "after_pct": 49.622
+      },
+      "name_client_type": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "name_goods_category": {
+        "before": 0,
+        "after": 2138,
+        "before_pct": 0.0,
+        "after_pct": 24.507
+      },
+      "name_portfolio": {
+        "before": 0,
+        "after": 7,
+        "before_pct": 0.0,
+        "after_pct": 0.08
+      },
+      "name_product_type": {
+        "before": 0,
+        "after": 5522,
+        "before_pct": 0.0,
+        "after_pct": 63.297
+      },
+      "channel_type": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "sellerplace_area": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "name_seller_industry": {
+        "before": 0,
+        "after": 2920,
+        "before_pct": 0.0,
+        "after_pct": 33.471
+      },
+      "cnt_payment": {
+        "before": 3337,
+        "after": 3337,
+        "before_pct": 38.251,
+        "after_pct": 38.251
+      },
+      "name_yield_group": {
+        "before": 0,
+        "after": 2124,
+        "before_pct": 0.0,
+        "after_pct": 24.347
+      },
+      "product_combination": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "days_first_drawing": {
+        "before": 3337,
+        "after": 8724,
+        "before_pct": 38.251,
+        "after_pct": 100.0
+      },
+      "days_first_due": {
+        "before": 3337,
+        "after": 3337,
+        "before_pct": 38.251,
+        "after_pct": 38.251
+      },
+      "days_last_due_1st_version": {
+        "before": 3337,
+        "after": 3337,
+        "before_pct": 38.251,
+        "after_pct": 38.251
+      },
+      "days_last_due": {
+        "before": 3337,
+        "after": 4118,
+        "before_pct": 38.251,
+        "after_pct": 47.203
+      },
+      "days_termination": {
+        "before": 3337,
+        "after": 4118,
+        "before_pct": 38.251,
+        "after_pct": 47.203
+      },
+      "nflag_insured_on_approval": {
+        "before": 3337,
+        "after": 3337,
+        "before_pct": 38.251,
+        "after_pct": 38.251
+      }
+    },
+    "silver_uri": "/home/claude/credit-risk-bigdata/data/silver/previous_application",
+    "rows_quarantined": 0,
+    "seconds": 4.56,
+    "reconciliation_ok": true
+  },
+  {
+    "table": "installments_payments",
+    "source_id": "installment_payment_system",
+    "origin": "ORIGINAL",
+    "bronze_uri": "/home/claude/credit-risk-bigdata/data/bronze/original/installment_payment_system/installments_payments/ingest_id=20261113T005447_090e4cda/installments_payments.csv",
+    "ingest_id": "20261113T005447_090e4cda",
+    "rows_in": 68368,
+    "columns_in": 8,
+    "schema": {
+      "unregistered_columns": [],
+      "registered_but_absent": []
+    },
+    "cast_failures": {},
+    "quarantined_required_null": 0,
+    "exact_duplicates_removed": 3,
+    "pk_duplicates_quarantined": 0,
+    "rows_out": 68365,
+    "flags": {
+      "_invalid_negative": 11,
+      "_after_application": 2,
+      "_orphan_previous_application": 5,
+      "_orphan_application": 0,
+      "amt_payment_outlier": 102,
+      "_dup_business_key": 0
+    },
+    "outlier_thresholds": {
+      "amt_payment": 193578.68
+    },
+    "missing": {
+      "sk_id_prev": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "sk_id_curr": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "num_instalment_version": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "num_instalment_number": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "days_instalment": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "days_entry_payment": {
+        "before": 669,
+        "after": 669,
+        "before_pct": 0.979,
+        "after_pct": 0.979
+      },
+      "amt_instalment": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "amt_payment": {
+        "before": 669,
+        "after": 669,
+        "before_pct": 0.979,
+        "after_pct": 0.979
+      }
+    },
+    "silver_uri": "/home/claude/credit-risk-bigdata/data/silver/installments_payments",
+    "rows_quarantined": 0,
+    "seconds": 4.66,
+    "reconciliation_ok": true
+  },
+  {
+    "table": "POS_CASH_balance",
+    "source_id": "pos_cash_system",
+    "origin": "ORIGINAL",
+    "bronze_uri": "/home/claude/credit-risk-bigdata/data/bronze/original/pos_cash_system/POS_CASH_balance/ingest_id=20261113T005447_cd2e2e69/POS_CASH_balance.csv",
+    "ingest_id": "20261113T005447_cd2e2e69",
+    "rows_in": 236650,
+    "columns_in": 8,
+    "schema": {
+      "unregistered_columns": [],
+      "registered_but_absent": []
+    },
+    "cast_failures": {},
+    "quarantined_required_null": 0,
+    "exact_duplicates_removed": 2,
+    "pk_duplicates_quarantined": 0,
+    "rows_out": 236648,
+    "flags": {
+      "_invalid_negative": 0,
+      "_after_application": 0,
+      "_orphan_previous_application": 0,
+      "_orphan_application": 0,
+      "_dup_business_key": 0
+    },
+    "outlier_thresholds": {},
+    "missing": {
+      "sk_id_prev": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "sk_id_curr": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "months_balance": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "cnt_instalment": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "cnt_instalment_future": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "name_contract_status": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "sk_dpd": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "sk_dpd_def": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      }
+    },
+    "silver_uri": "/home/claude/credit-risk-bigdata/data/silver/POS_CASH_balance",
+    "rows_quarantined": 0,
+    "seconds": 6.9,
+    "reconciliation_ok": true
+  },
+  {
+    "table": "credit_card_balance",
+    "source_id": "credit_card_system",
+    "origin": "ORIGINAL",
+    "bronze_uri": "/home/claude/credit-risk-bigdata/data/bronze/original/credit_card_system/credit_card_balance/ingest_id=20261113T005447_f2b67852/credit_card_balance.csv",
+    "ingest_id": "20261113T005447_f2b67852",
+    "rows_in": 29824,
+    "columns_in": 23,
+    "schema": {
+      "unregistered_columns": [],
+      "registered_but_absent": []
+    },
+    "cast_failures": {},
+    "quarantined_required_null": 0,
+    "exact_duplicates_removed": 0,
+    "pk_duplicates_quarantined": 0,
+    "rows_out": 29824,
+    "flags": {
+      "_invalid_negative": 0,
+      "_after_application": 0,
+      "_orphan_previous_application": 0,
+      "_orphan_application": 0,
+      "amt_balance_outlier": 39,
+      "_dup_business_key": 0
+    },
+    "outlier_thresholds": {
+      "amt_balance": 280815.11
+    },
+    "missing": {
+      "sk_id_prev": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "sk_id_curr": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "months_balance": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "amt_balance": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "amt_credit_limit_actual": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "amt_drawings_atm_current": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "amt_drawings_current": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "amt_drawings_other_current": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "amt_drawings_pos_current": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "amt_inst_min_regularity": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "amt_payment_current": {
+        "before": 6028,
+        "after": 6028,
+        "before_pct": 20.212,
+        "after_pct": 20.212
+      },
+      "amt_payment_total_current": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "amt_receivable_principal": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "amt_recivable": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "amt_total_receivable": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "cnt_drawings_atm_current": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "cnt_drawings_current": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "cnt_drawings_other_current": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "cnt_drawings_pos_current": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "cnt_instalment_mature_cum": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "name_contract_status": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "sk_dpd": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "sk_dpd_def": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      }
+    },
+    "silver_uri": "/home/claude/credit-risk-bigdata/data/silver/credit_card_balance",
+    "rows_quarantined": 0,
+    "seconds": 5.37,
+    "reconciliation_ok": true
+  },
+  {
+    "table": "synthetic_traffic_profile",
+    "source_id": "synthetic_customer_behavior",
+    "origin": "SYNTHETIC",
+    "bronze_uri": "/home/claude/credit-risk-bigdata/data/bronze/synthetic/synthetic_customer_behavior/synthetic_traffic_profile/ingest_id=20261113T005447_4820b6ac/synthetic_traffic_profile.csv",
+    "ingest_id": "20261113T005447_4820b6ac",
+    "rows_in": 3000,
+    "columns_in": 9,
+    "schema": {
+      "unregistered_columns": [],
+      "registered_but_absent": []
+    },
+    "cast_failures": {},
+    "quarantined_required_null": 0,
+    "exact_duplicates_removed": 0,
+    "pk_duplicates_quarantined": 0,
+    "rows_out": 3000,
+    "flags": {
+      "_invalid_negative": 0,
+      "_after_application": 0,
+      "_orphan_application": 0
+    },
+    "outlier_thresholds": {},
+    "missing": {
+      "sk_id_curr": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "traffic_violation_count": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "major_violation_count": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "total_traffic_fine": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "accident_count": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "data_updated_at": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "data_origin": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "generator_version": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      },
+      "generator_seed": {
+        "before": 0,
+        "after": 0,
+        "before_pct": 0.0,
+        "after_pct": 0.0
+      }
+    },
+    "silver_uri": "/home/claude/credit-risk-bigdata/data/silver/synthetic_traffic_profile",
+    "rows_quarantined": 0,
+    "seconds": 2.52,
+    "reconciliation_ok": true
+  }
+]

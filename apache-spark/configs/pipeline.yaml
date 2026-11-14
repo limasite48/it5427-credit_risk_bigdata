@@ -1,0 +1,60 @@
+# Central pipeline configuration.
+# Every value can be overridden by an environment variable named CRB_<SECTION>_<KEY>
+# (e.g. CRB_LAKE_BACKEND=s3a, CRB_PATHS_RAW_DIR=/data/home-credit).
+
+project:
+  name: credit-risk-intelligence
+  seed: 20261113            # global seed (synthetic data, sampling, replay)
+
+paths:
+  raw_dir: data/raw               # landing zone: put the 10 Kaggle CSV files here (never modified)
+  synthetic_dir: data/synthetic   # output of the synthetic generator (never mixed with raw)
+  local_lake_dir: data            # local mirror of the lake: data/bronze, data/silver, data/gold
+  reports_dir: reports
+  docs_dir: docs                  # generated docs (DATA_QUALITY_REPORT.md)
+  checkpoint_dir: data/_checkpoints
+  stream_landing_dir: data/_stream_landing   # file-replay sink of the producer
+  state_dir: data/_state                      # producer offsets, control files
+
+lake:
+  # local  -> Spark reads/writes data/{bronze,silver,gold} (verified path)
+  # s3a    -> Spark reads/writes s3a://<bucket>/... on MinIO (needs hadoop-aws jars, internet on first run)
+  backend: local
+  # parquet (default, verified) | delta (needs delta-spark jars; optional)
+  format: parquet
+  buckets:
+    bronze: bronze
+    silver: silver
+    gold: gold
+  target_file_mb: 128      # used to compute repartition counts (avoid many small files)
+
+minio:
+  endpoint: http://localhost:9000
+  access_key: minioadmin
+  secret_key: minioadmin
+  region: us-east-1
+
+spark:
+  master: local[*]
+  driver_memory: 4g
+  shuffle_partitions: 16
+  packages:
+    s3a: org.apache.hadoop:hadoop-aws:3.3.4
+    kafka: org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.3
+    delta: io.delta:delta-spark_2.12:3.2.1
+
+kafka:
+  bootstrap_servers: localhost:9092
+
+streaming:
+  sink: file                 # file | kafka   (producer sink and consumer source)
+  rate_per_sec: 50           # default producer rate
+  events_per_file: 200       # file sink: roll a new JSONL file every N events
+  watermark: "10 minutes"    # late-event tolerance on event_time
+  trigger_seconds: 5
+  files_per_trigger: 4       # file source: max files per micro-batch (smaller -> more, smaller micro-batches)
+
+quality:
+  # thresholds used for outlier FLAGGING (rows are never dropped because of them)
+  income_outlier_quantile: 0.999
+  sentinel_days: 365243

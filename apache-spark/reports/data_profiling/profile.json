@@ -1,0 +1,4072 @@
+{
+  "generated_at": "2026-11-13T00:54:39+00:00",
+  "raw_dir": "/home/claude/credit-risk-bigdata/data/fixture/raw",
+  "dataset_label": "TEST FIXTURE (random values, NOT Home Credit)",
+  "tables": [
+    {
+      "table": "application_train",
+      "file": "application_train.csv",
+      "source_id": "loan_application_system",
+      "origin": "ORIGINAL",
+      "grain": "1 row = 1 current loan application (SK_ID_CURR)",
+      "size_bytes": 756663,
+      "rows": 2581,
+      "columns": 49,
+      "header": {
+        "missing_required_columns": [],
+        "unregistered_columns": []
+      },
+      "exact_duplicate_rows": 2,
+      "primary_key": {
+        "columns": [
+          "SK_ID_CURR"
+        ],
+        "null_rows": 0,
+        "distinct": 2579,
+        "duplicate_rows": 2,
+        "is_unique": false
+      },
+      "business_key": {},
+      "columns_detail": [
+        {
+          "name": "SK_ID_CURR",
+          "declared_type": "bigint",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": "ID of loan in our sample"
+        },
+        {
+          "name": "TARGET",
+          "declared_type": "int",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": "Target variable (1 - client with payment difficulties, 0 - all other cases)"
+        },
+        {
+          "name": "NAME_CONTRACT_TYPE",
+          "declared_type": "string",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "CODE_GENDER",
+          "declared_type": "string",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "FLAG_OWN_CAR",
+          "declared_type": "string",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "FLAG_OWN_REALTY",
+          "declared_type": "string",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "CNT_CHILDREN",
+          "declared_type": "int",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "AMT_INCOME_TOTAL",
+          "declared_type": "double",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": "Income of the client"
+        },
+        {
+          "name": "AMT_CREDIT",
+          "declared_type": "double",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": "Credit amount of the loan"
+        },
+        {
+          "name": "AMT_ANNUITY",
+          "declared_type": "double",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": "Loan annuity"
+        },
+        {
+          "name": "AMT_GOODS_PRICE",
+          "declared_type": "double",
+          "missing": 3,
+          "missing_pct": 0.116,
+          "cast_failures": 0,
+          "description": "Price of the goods for which the loan is given"
+        },
+        {
+          "name": "NAME_TYPE_SUITE",
+          "declared_type": "string",
+          "missing": 19,
+          "missing_pct": 0.736,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "NAME_INCOME_TYPE",
+          "declared_type": "string",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "NAME_EDUCATION_TYPE",
+          "declared_type": "string",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "NAME_FAMILY_STATUS",
+          "declared_type": "string",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "NAME_HOUSING_TYPE",
+          "declared_type": "string",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "REGION_POPULATION_RELATIVE",
+          "declared_type": "double",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "DAYS_BIRTH",
+          "declared_type": "double",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": "Client's age in days at the time of application"
+        },
+        {
+          "name": "DAYS_EMPLOYED",
+          "declared_type": "double",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": "How many days before the application the person started current employment"
+        },
+        {
+          "name": "DAYS_REGISTRATION",
+          "declared_type": "double",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "DAYS_ID_PUBLISH",
+          "declared_type": "double",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "OWN_CAR_AGE",
+          "declared_type": "double",
+          "missing": 1675,
+          "missing_pct": 64.897,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "FLAG_MOBIL",
+          "declared_type": "int",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "FLAG_EMP_PHONE",
+          "declared_type": "int",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "FLAG_WORK_PHONE",
+          "declared_type": "int",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "FLAG_CONT_MOBILE",
+          "declared_type": "int",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "FLAG_PHONE",
+          "declared_type": "int",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "FLAG_EMAIL",
+          "declared_type": "int",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "OCCUPATION_TYPE",
+          "declared_type": "string",
+          "missing": 792,
+          "missing_pct": 30.686,
+          "cast_failures": 0,
+          "description": "What kind of occupation does the client have"
+        },
+        {
+          "name": "CNT_FAM_MEMBERS",
+          "declared_type": "double",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": "How many family members does client have"
+        },
+        {
+          "name": "REGION_RATING_CLIENT",
+          "declared_type": "int",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "REGION_RATING_CLIENT_W_CITY",
+          "declared_type": "int",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "WEEKDAY_APPR_PROCESS_START",
+          "declared_type": "string",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "HOUR_APPR_PROCESS_START",
+          "declared_type": "int",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "REG_REGION_NOT_LIVE_REGION",
+          "declared_type": "int",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "ORGANIZATION_TYPE",
+          "declared_type": "string",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "EXT_SOURCE_1",
+          "declared_type": "double",
+          "missing": 1447,
+          "missing_pct": 56.064,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "EXT_SOURCE_2",
+          "declared_type": "double",
+          "missing": 3,
+          "missing_pct": 0.116,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "EXT_SOURCE_3",
+          "declared_type": "double",
+          "missing": 504,
+          "missing_pct": 19.527,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "APARTMENTS_AVG",
+          "declared_type": "double",
+          "missing": 1256,
+          "missing_pct": 48.663,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "YEARS_BUILD_AVG",
+          "declared_type": "double",
+          "missing": 1692,
+          "missing_pct": 65.556,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "FLOORSMAX_MEDI",
+          "declared_type": "double",
+          "missing": 1284,
+          "missing_pct": 49.748,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "TOTALAREA_MODE",
+          "declared_type": "double",
+          "missing": 1251,
+          "missing_pct": 48.47,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "EMERGENCYSTATE_MODE",
+          "declared_type": "string",
+          "missing": 1165,
+          "missing_pct": 45.138,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "OBS_30_CNT_SOCIAL_CIRCLE",
+          "declared_type": "double",
+          "missing": 4,
+          "missing_pct": 0.155,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "DEF_30_CNT_SOCIAL_CIRCLE",
+          "declared_type": "double",
+          "missing": 9,
+          "missing_pct": 0.349,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "DAYS_LAST_PHONE_CHANGE",
+          "declared_type": "double",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "FLAG_DOCUMENT_3",
+          "declared_type": "int",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "AMT_REQ_CREDIT_BUREAU_YEAR",
+          "declared_type": "double",
+          "missing": 356,
+          "missing_pct": 13.793,
+          "cast_failures": 0,
+          "description": ""
+        }
+      ],
+      "numeric": {
+        "TARGET": {
+          "min": 0,
+          "max": 1,
+          "mean": 0.08252615265401007,
+          "neg": 0,
+          "sentinel": 0
+        },
+        "CNT_CHILDREN": {
+          "min": 0,
+          "max": 3,
+          "mean": 0.41456799690042617,
+          "neg": 0,
+          "sentinel": 0,
+          "p50": 0.0,
+          "p99": 3.0
+        },
+        "AMT_INCOME_TOTAL": {
+          "min": 28350.0,
+          "max": 117000000.0,
+          "mean": 211882.0030995738,
+          "neg": 0,
+          "sentinel": 0,
+          "p50": 147600.0,
+          "p99": 117000000.0
+        },
+        "AMT_CREDIT": {
+          "min": 45000.0,
+          "max": 3613500.0,
+          "mean": 586173.3824099186,
+          "neg": 0,
+          "sentinel": 0,
+          "p50": 477000.0,
+          "p99": 3613500.0
+        },
+        "AMT_ANNUITY": {
+          "min": 1078.1,
+          "max": 274706.2,
+          "mean": 27747.60476559493,
+          "neg": 0,
+          "sentinel": 0,
+          "p50": 18651.6,
+          "p99": 274706.2
+        },
+        "AMT_GOODS_PRICE": {
+          "min": 45000.0,
+          "max": 3370500.0,
+          "mean": 526042.6687354539,
+          "neg": 0,
+          "sentinel": 0,
+          "p50": 418500.0,
+          "p99": 3370500.0
+        },
+        "REGION_POPULATION_RELATIVE": {
+          "min": 0.001095,
+          "max": 0.071982,
+          "mean": 0.03644375164664849,
+          "neg": 0,
+          "sentinel": 0
+        },
+        "DAYS_BIRTH": {
+          "min": -25196.0,
+          "max": -7500.0,
+          "mean": -16156.955831073228,
+          "neg": 2581,
+          "sentinel": 0,
+          "p50": -16116.0,
+          "p99": -7500.0
+        },
+        "DAYS_EMPLOYED": {
+          "min": -11998.0,
+          "max": 365243.0,
+          "mean": 60684.47810925997,
+          "neg": 2118,
+          "sentinel": 463,
+          "p50": -4427.0,
+          "p99": 365243.0
+        },
+        "DAYS_REGISTRATION": {
+          "min": -19996.0,
+          "max": -3.0,
+          "mean": -9871.74428516079,
+          "neg": 2581,
+          "sentinel": 0,
+          "p50": -9729.0,
+          "p99": -3.0
+        },
+        "DAYS_ID_PUBLISH": {
+          "min": -6997.0,
+          "max": -1.0,
+          "mean": -3501.5854320030994,
+          "neg": 2581,
+          "sentinel": 0,
+          "p50": -3548.0,
+          "p99": -1.0
+        },
+        "OWN_CAR_AGE": {
+          "min": 0.0,
+          "max": 39.0,
+          "mean": 19.50551876379691,
+          "neg": 0,
+          "sentinel": 0
+        },
+        "FLAG_MOBIL": {
+          "min": 1,
+          "max": 1,
+          "mean": 1.0,
+          "neg": 0,
+          "sentinel": 0
+        },
+        "FLAG_EMP_PHONE": {
+          "min": 0,
+          "max": 1,
+          "mean": 0.8206121658271988,
+          "neg": 0,
+          "sentinel": 0
+        },
+        "FLAG_WORK_PHONE": {
+          "min": 0,
+          "max": 1,
+          "mean": 0.4924447888415343,
+          "neg": 0,
+          "sentinel": 0
+        },
+        "FLAG_CONT_MOBILE": {
+          "min": 1,
+          "max": 1,
+          "mean": 1.0,
+          "neg": 0,
+          "sentinel": 0
+        },
+        "FLAG_PHONE": {
+          "min": 0,
+          "max": 1,
+          "mean": 0.4901201084850833,
+          "neg": 0,
+          "sentinel": 0
+        },
+        "FLAG_EMAIL": {
+          "min": 0,
+          "max": 1,
+          "mean": 0.060829135993800854,
+          "neg": 0,
+          "sentinel": 0
+        },
+        "CNT_FAM_MEMBERS": {
+          "min": 1.0,
+          "max": 5.0,
+          "mean": 2.1724137931034484,
+          "neg": 0,
+          "sentinel": 0,
+          "p50": 2.0,
+          "p99": 5.0
+        },
+        "REGION_RATING_CLIENT": {
+          "min": 1,
+          "max": 3,
+          "mean": 2.04726850058117,
+          "neg": 0,
+          "sentinel": 0
+        },
+        "REGION_RATING_CLIENT_W_CITY": {
+          "min": 1,
+          "max": 3,
+          "mean": 2.0290585044556373,
+          "neg": 0,
+          "sentinel": 0
+        },
+        "HOUR_APPR_PROCESS_START": {
+          "min": 6,
+          "max": 19,
+          "mean": 12.411468423091826,
+          "neg": 0,
+          "sentinel": 0
+        },
+        "REG_REGION_NOT_LIVE_REGION": {
+          "min": 0,
+          "max": 1,
+          "mean": 0.013948082138705927,
+          "neg": 0,
+          "sentinel": 0
+        },
+        "EXT_SOURCE_1": {
+          "min": 0.029417,
+          "max": 0.972376,
+          "mean": 0.5017943395061734,
+          "neg": 0,
+          "sentinel": 0
+        },
+        "EXT_SOURCE_2": {
+          "min": 0.055174,
+          "max": 0.990756,
+          "mean": 0.6133683017843291,
+          "neg": 0,
+          "sentinel": 0
+        },
+        "EXT_SOURCE_3": {
+          "min": 0.022682,
+          "max": 0.991239,
+          "mean": 0.5758257631198852,
+          "neg": 0,
+          "sentinel": 0
+        },
+        "APARTMENTS_AVG": {
+          "min": 0.0003,
+          "max": 0.2999,
+          "mean": 0.15026399999999998,
+          "neg": 0,
+          "sentinel": 0
+        },
+        "YEARS_BUILD_AVG": {
+          "min": 0.5004,
+          "max": 0.9978,
+          "mean": 0.751186614173229,
+          "neg": 0,
+          "sentinel": 0
+        },
+        "FLOORSMAX_MEDI": {
+          "min": 0.0,
+          "max": 0.6996,
+          "mean": 0.3375569776407094,
+          "neg": 0,
+          "sentinel": 0
+        },
+        "TOTALAREA_MODE": {
+          "min": 0.0002,
+          "max": 0.2996,
+          "mean": 0.15166969924812035,
+          "neg": 0,
+          "sentinel": 0
+        },
+        "OBS_30_CNT_SOCIAL_CIRCLE": {
+          "min": 0.0,
+          "max": 6.0,
+          "mean": 1.4000776096235934,
+          "neg": 0,
+          "sentinel": 0
+        },
+        "DEF_30_CNT_SOCIAL_CIRCLE": {
+          "min": 0.0,
+          "max": 2.0,
+          "mean": 0.13102643856920684,
+          "neg": 0,
+          "sentinel": 0
+        },
+        "DAYS_LAST_PHONE_CHANGE": {
+          "min": -3999.0,
+          "max": -1.0,
+          "mean": -2019.1615652847734,
+          "neg": 2581,
+          "sentinel": 0,
+          "p50": -2028.0,
+          "p99": -1.0
+        },
+        "FLAG_DOCUMENT_3": {
+          "min": 0,
+          "max": 1,
+          "mean": 0.7160015497869043,
+          "neg": 0,
+          "sentinel": 0
+        },
+        "AMT_REQ_CREDIT_BUREAU_YEAR": {
+          "min": 0.0,
+          "max": 8.0,
+          "mean": 1.8975280898876405,
+          "neg": 0,
+          "sentinel": 0,
+          "p50": 2.0,
+          "p99": 8.0
+        }
+      },
+      "categorical": {
+        "NAME_CONTRACT_TYPE": {
+          "distinct": 2,
+          "top": [
+            [
+              "Cash loans",
+              2336
+            ],
+            [
+              "Revolving loans",
+              245
+            ]
+          ]
+        },
+        "CODE_GENDER": {
+          "distinct": 3,
+          "top": [
+            [
+              "F",
+              1672
+            ],
+            [
+              "M",
+              907
+            ],
+            [
+              "XNA",
+              2
+            ]
+          ]
+        },
+        "FLAG_OWN_CAR": {
+          "distinct": 2,
+          "top": [
+            [
+              "N",
+              1705
+            ],
+            [
+              "Y",
+              876
+            ]
+          ]
+        },
+        "FLAG_OWN_REALTY": {
+          "distinct": 2,
+          "top": [
+            [
+              "Y",
+              1752
+            ],
+            [
+              "N",
+              829
+            ]
+          ]
+        },
+        "NAME_TYPE_SUITE": {
+          "distinct": 4,
+          "top": [
+            [
+              "Family",
+              884
+            ],
+            [
+              "Unaccompanied",
+              865
+            ],
+            [
+              "Spouse, partner",
+              813
+            ],
+            [
+              null,
+              19
+            ]
+          ]
+        },
+        "NAME_INCOME_TYPE": {
+          "distinct": 4,
+          "top": [
+            [
+              "Working",
+              1316
+            ],
+            [
+              "Commercial associate",
+              612
+            ],
+            [
+              "Pensioner",
+              463
+            ],
+            [
+              "State servant",
+              190
+            ]
+          ]
+        },
+        "NAME_EDUCATION_TYPE": {
+          "distinct": 4,
+          "top": [
+            [
+              "Secondary / secondary special",
+              1859
+            ],
+            [
+              "Higher education",
+              608
+            ],
+            [
+              "Incomplete higher",
+              77
+            ],
+            [
+              "Lower secondary",
+              37
+            ]
+          ]
+        },
+        "NAME_FAMILY_STATUS": {
+          "distinct": 5,
+          "top": [
+            [
+              "Married",
+              1689
+            ],
+            [
+              "Single / not married",
+              372
+            ],
+            [
+              "Civil marriage",
+              267
+            ],
+            [
+              "Separated",
+              134
+            ],
+            [
+              "Widow",
+              119
+            ]
+          ]
+        },
+        "NAME_HOUSING_TYPE": {
+          "distinct": 3,
+          "top": [
+            [
+              "House / apartment",
+              2300
+            ],
+            [
+              "Municipal apartment",
+              158
+            ],
+            [
+              "With parents",
+              123
+            ]
+          ]
+        },
+        "OCCUPATION_TYPE": {
+          "distinct": 11,
+          "top": [
+            [
+              null,
+              792
+            ],
+            [
+              "Managers",
+              201
+            ],
+            [
+              "Security staff",
+              198
+            ],
+            [
+              "Accountants",
+              191
+            ],
+            [
+              "Sales staff",
+              183
+            ],
+            [
+              "Laborers",
+              182
+            ]
+          ]
+        },
+        "WEEKDAY_APPR_PROCESS_START": {
+          "distinct": 7,
+          "top": [
+            [
+              "SUNDAY",
+              412
+            ],
+            [
+              "TUESDAY",
+              383
+            ],
+            [
+              "MONDAY",
+              377
+            ],
+            [
+              "WEDNESDAY",
+              368
+            ],
+            [
+              "SATURDAY",
+              359
+            ],
+            [
+              "FRIDAY",
+              358
+            ]
+          ]
+        },
+        "ORGANIZATION_TYPE": {
+          "distinct": 8,
+          "top": [
+            [
+              "XNA",
+              463
+            ],
+            [
+              "Government",
+              316
+            ],
+            [
+              "Other",
+              311
+            ],
+            [
+              "Trade: type 7",
+              309
+            ],
+            [
+              "Self-employed",
+              303
+            ],
+            [
+              "School",
+              301
+            ]
+          ]
+        },
+        "EMERGENCYSTATE_MODE": {
+          "distinct": 3,
+          "top": [
+            [
+              "No",
+              1397
+            ],
+            [
+              null,
+              1165
+            ],
+            [
+              "Yes",
+              19
+            ]
+          ]
+        }
+      },
+      "rows_after_application_date": {},
+      "target": {
+        "distribution": {
+          "1": 213,
+          "0": 2368
+        },
+        "positive_rate": 0.08252615265401007,
+        "imbalance_ratio_neg_per_pos": 11.11737089201878
+      },
+      "seconds": 14.64
+    },
+    {
+      "table": "application_test",
+      "file": "application_test.csv",
+      "source_id": "loan_application_system",
+      "origin": "ORIGINAL",
+      "grain": "1 row = 1 current loan application (SK_ID_CURR), no TARGET",
+      "size_bytes": 122949,
+      "rows": 421,
+      "columns": 48,
+      "header": {
+        "missing_required_columns": [],
+        "unregistered_columns": []
+      },
+      "exact_duplicate_rows": 0,
+      "primary_key": {
+        "columns": [
+          "SK_ID_CURR"
+        ],
+        "null_rows": 0,
+        "distinct": 421,
+        "duplicate_rows": 0,
+        "is_unique": true
+      },
+      "business_key": {},
+      "columns_detail": [
+        {
+          "name": "SK_ID_CURR",
+          "declared_type": "bigint",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": "ID of loan in our sample"
+        },
+        {
+          "name": "NAME_CONTRACT_TYPE",
+          "declared_type": "string",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "CODE_GENDER",
+          "declared_type": "string",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "FLAG_OWN_CAR",
+          "declared_type": "string",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "FLAG_OWN_REALTY",
+          "declared_type": "string",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "CNT_CHILDREN",
+          "declared_type": "int",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "AMT_INCOME_TOTAL",
+          "declared_type": "double",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": "Income of the client"
+        },
+        {
+          "name": "AMT_CREDIT",
+          "declared_type": "double",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": "Credit amount of the loan"
+        },
+        {
+          "name": "AMT_ANNUITY",
+          "declared_type": "double",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": "Loan annuity"
+        },
+        {
+          "name": "AMT_GOODS_PRICE",
+          "declared_type": "double",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": "Price of the goods for which the loan is given"
+        },
+        {
+          "name": "NAME_TYPE_SUITE",
+          "declared_type": "string",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "NAME_INCOME_TYPE",
+          "declared_type": "string",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "NAME_EDUCATION_TYPE",
+          "declared_type": "string",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "NAME_FAMILY_STATUS",
+          "declared_type": "string",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "NAME_HOUSING_TYPE",
+          "declared_type": "string",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "REGION_POPULATION_RELATIVE",
+          "declared_type": "double",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "DAYS_BIRTH",
+          "declared_type": "double",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": "Client's age in days at the time of application"
+        },
+        {
+          "name": "DAYS_EMPLOYED",
+          "declared_type": "double",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": "How many days before the application the person started current employment"
+        },
+        {
+          "name": "DAYS_REGISTRATION",
+          "declared_type": "double",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "DAYS_ID_PUBLISH",
+          "declared_type": "double",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "OWN_CAR_AGE",
+          "declared_type": "double",
+          "missing": 286,
+          "missing_pct": 67.933,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "FLAG_MOBIL",
+          "declared_type": "int",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "FLAG_EMP_PHONE",
+          "declared_type": "int",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "FLAG_WORK_PHONE",
+          "declared_type": "int",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "FLAG_CONT_MOBILE",
+          "declared_type": "int",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "FLAG_PHONE",
+          "declared_type": "int",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "FLAG_EMAIL",
+          "declared_type": "int",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "OCCUPATION_TYPE",
+          "declared_type": "string",
+          "missing": 135,
+          "missing_pct": 32.067,
+          "cast_failures": 0,
+          "description": "What kind of occupation does the client have"
+        },
+        {
+          "name": "CNT_FAM_MEMBERS",
+          "declared_type": "double",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": "How many family members does client have"
+        },
+        {
+          "name": "REGION_RATING_CLIENT",
+          "declared_type": "int",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "REGION_RATING_CLIENT_W_CITY",
+          "declared_type": "int",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "WEEKDAY_APPR_PROCESS_START",
+          "declared_type": "string",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "HOUR_APPR_PROCESS_START",
+          "declared_type": "int",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "REG_REGION_NOT_LIVE_REGION",
+          "declared_type": "int",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "ORGANIZATION_TYPE",
+          "declared_type": "string",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "EXT_SOURCE_1",
+          "declared_type": "double",
+          "missing": 237,
+          "missing_pct": 56.295,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "EXT_SOURCE_2",
+          "declared_type": "double",
+          "missing": 2,
+          "missing_pct": 0.475,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "EXT_SOURCE_3",
+          "declared_type": "double",
+          "missing": 88,
+          "missing_pct": 20.903,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "APARTMENTS_AVG",
+          "declared_type": "double",
+          "missing": 239,
+          "missing_pct": 56.77,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "YEARS_BUILD_AVG",
+          "declared_type": "double",
+          "missing": 289,
+          "missing_pct": 68.646,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "FLOORSMAX_MEDI",
+          "declared_type": "double",
+          "missing": 220,
+          "missing_pct": 52.257,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "TOTALAREA_MODE",
+          "declared_type": "double",
+          "missing": 196,
+          "missing_pct": 46.556,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "EMERGENCYSTATE_MODE",
+          "declared_type": "string",
+          "missing": 189,
+          "missing_pct": 44.893,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "OBS_30_CNT_SOCIAL_CIRCLE",
+          "declared_type": "double",
+          "missing": 4,
+          "missing_pct": 0.95,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "DEF_30_CNT_SOCIAL_CIRCLE",
+          "declared_type": "double",
+          "missing": 1,
+          "missing_pct": 0.238,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "DAYS_LAST_PHONE_CHANGE",
+          "declared_type": "double",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "FLAG_DOCUMENT_3",
+          "declared_type": "int",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "AMT_REQ_CREDIT_BUREAU_YEAR",
+          "declared_type": "double",
+          "missing": 63,
+          "missing_pct": 14.964,
+          "cast_failures": 0,
+          "description": ""
+        }
+      ],
+      "numeric": {
+        "CNT_CHILDREN": {
+          "min": 0,
+          "max": 3,
+          "mean": 0.3847980997624703,
+          "neg": 0,
+          "sentinel": 0,
+          "p50": 0.0,
+          "p99": 3.0
+        },
+        "AMT_INCOME_TOTAL": {
+          "min": 36000.0,
+          "max": 705150.0,
+          "mean": 178749.40617577196,
+          "neg": 0,
+          "sentinel": 0,
+          "p50": 155250.0,
+          "p99": 705150.0
+        },
+        "AMT_CREDIT": {
+          "min": 67500.0,
+          "max": 2920500.0,
+          "mean": 631111.6389548694,
+          "neg": 0,
+          "sentinel": 0,
+          "p50": 522000.0,
+          "p99": 2920500.0
+        },
+        "AMT_ANNUITY": {
+          "min": 2415.0,
+          "max": 279881.2,
+          "mean": 30439.30902612824,
+          "neg": 0,
+          "sentinel": 0,
+          "p50": 19693.8,
+          "p99": 279881.2
+        },
+        "AMT_GOODS_PRICE": {
+          "min": 58500.0,
+          "max": 2718000.0,
+          "mean": 568806.4133016627,
+          "neg": 0,
+          "sentinel": 0,
+          "p50": 463500.0,
+          "p99": 2718000.0
+        },
+        "REGION_POPULATION_RELATIVE": {
+          "min": 0.001054,
+          "max": 0.071855,
+          "mean": 0.0365587410926366,
+          "neg": 0,
+          "sentinel": 0
+        },
+        "DAYS_BIRTH": {
+          "min": -25135.0,
+          "max": -7501.0,
+          "mean": -16307.076009501188,
+          "neg": 421,
+          "sentinel": 0,
+          "p50": -16491.0,
+          "p99": -7501.0
+        },
+        "DAYS_EMPLOYED": {
+          "min": -11970.0,
+          "max": 365243.0,
+          "mean": 67248.86460807601,
+          "neg": 338,
+          "sentinel": 83,
+          "p50": -4676.0,
+          "p99": 365243.0
+        },
+        "DAYS_REGISTRATION": {
+          "min": -19971.0,
+          "max": -133.0,
+          "mean": -10506.688836104513,
+          "neg": 421,
+          "sentinel": 0,
+          "p50": -11073.0,
+          "p99": -133.0
+        },
+        "DAYS_ID_PUBLISH": {
+          "min": -6952.0,
+          "max": -7.0,
+          "mean": -3575.463182897862,
+          "neg": 421,
+          "sentinel": 0,
+          "p50": -3627.0,
+          "p99": -7.0
+        },
+        "OWN_CAR_AGE": {
+          "min": 0.0,
+          "max": 39.0,
+          "mean": 19.637037037037036,
+          "neg": 0,
+          "sentinel": 0
+        },
+        "FLAG_MOBIL": {
+          "min": 1,
+          "max": 1,
+          "mean": 1.0,
+          "neg": 0,
+          "sentinel": 0
+        },
+        "FLAG_EMP_PHONE": {
+          "min": 0,
+          "max": 1,
+          "mean": 0.8028503562945368,
+          "neg": 0,
+          "sentinel": 0
+        },
+        "FLAG_WORK_PHONE": {
+          "min": 0,
+          "max": 1,
+          "mean": 0.4916864608076009,
+          "neg": 0,
+          "sentinel": 0
+        },
+        "FLAG_CONT_MOBILE": {
+          "min": 1,
+          "max": 1,
+          "mean": 1.0,
+          "neg": 0,
+          "sentinel": 0
+        },
+        "FLAG_PHONE": {
+          "min": 0,
+          "max": 1,
+          "mean": 0.47980997624703087,
+          "neg": 0,
+          "sentinel": 0
+        },
+        "FLAG_EMAIL": {
+          "min": 0,
+          "max": 1,
+          "mean": 0.05463182897862233,
+          "neg": 0,
+          "sentinel": 0
+        },
+        "CNT_FAM_MEMBERS": {
+          "min": 1.0,
+          "max": 5.0,
+          "mean": 2.0926365795724466,
+          "neg": 0,
+          "sentinel": 0,
+          "p50": 2.0,
+          "p99": 5.0
+        },
+        "REGION_RATING_CLIENT": {
+          "min": 1,
+          "max": 3,
+          "mean": 2.0570071258907365,
+          "neg": 0,
+          "sentinel": 0
+        },
+        "REGION_RATING_CLIENT_W_CITY": {
+          "min": 1,
+          "max": 3,
+          "mean": 2.026128266033254,
+          "neg": 0,
+          "sentinel": 0
+        },
+        "HOUR_APPR_PROCESS_START": {
+          "min": 6,
+          "max": 19,
+          "mean": 12.7458432304038,
+          "neg": 0,
+          "sentinel": 0
+        },
+        "REG_REGION_NOT_LIVE_REGION": {
+          "min": 0,
+          "max": 1,
+          "mean": 0.0166270783847981,
+          "neg": 0,
+          "sentinel": 0
+        },
+        "EXT_SOURCE_1": {
+          "min": 0.045995,
+          "max": 0.926091,
+          "mean": 0.5038686032608697,
+          "neg": 0,
+          "sentinel": 0
+        },
+        "EXT_SOURCE_2": {
+          "min": 0.05798,
+          "max": 0.987,
+          "mean": 0.6234115751789976,
+          "neg": 0,
+          "sentinel": 0
+        },
+        "EXT_SOURCE_3": {
+          "min": 0.075269,
+          "max": 0.949527,
+          "mean": 0.5718071321321323,
+          "neg": 0,
+          "sentinel": 0
+        },
+        "APARTMENTS_AVG": {
+          "min": 0.0018,
+          "max": 0.2981,
+          "mean": 0.14735989010989003,
+          "neg": 0,
+          "sentinel": 0
+        },
+        "YEARS_BUILD_AVG": {
+          "min": 0.5,
+          "max": 0.9943,
+          "mean": 0.727197727272727,
+          "neg": 0,
+          "sentinel": 0
+        },
+        "FLOORSMAX_MEDI": {
+          "min": 0.0016,
+          "max": 0.6996,
+          "mean": 0.3282910447761194,
+          "neg": 0,
+          "sentinel": 0
+        },
+        "TOTALAREA_MODE": {
+          "min": 0.0006,
+          "max": 0.2996,
+          "mean": 0.14924977777777784,
+          "neg": 0,
+          "sentinel": 0
+        },
+        "OBS_30_CNT_SOCIAL_CIRCLE": {
+          "min": 0.0,
+          "max": 6.0,
+          "mean": 1.39568345323741,
+          "neg": 0,
+          "sentinel": 0
+        },
+        "DEF_30_CNT_SOCIAL_CIRCLE": {
+          "min": 0.0,
+          "max": 2.0,
+          "mean": 0.11428571428571428,
+          "neg": 0,
+          "sentinel": 0
+        },
+        "DAYS_LAST_PHONE_CHANGE": {
+          "min": -3996.0,
+          "max": -25.0,
+          "mean": -1981.8717339667458,
+          "neg": 421,
+          "sentinel": 0,
+          "p50": -2030.0,
+          "p99": -25.0
+        },
+        "FLAG_DOCUMENT_3": {
+          "min": 0,
+          "max": 1,
+          "mean": 0.7220902612826603,
+          "neg": 0,
+          "sentinel": 0
+        },
+        "AMT_REQ_CREDIT_BUREAU_YEAR": {
+          "min": 0.0,
+          "max": 7.0,
+          "mean": 1.9022346368715084,
+          "neg": 0,
+          "sentinel": 0,
+          "p50": 2.0,
+          "p99": 7.0
+        }
+      },
+      "categorical": {
+        "NAME_CONTRACT_TYPE": {
+          "distinct": 2,
+          "top": [
+            [
+              "Cash loans",
+              379
+            ],
+            [
+              "Revolving loans",
+              42
+            ]
+          ]
+        },
+        "CODE_GENDER": {
+          "distinct": 2,
+          "top": [
+            [
+              "F",
+              266
+            ],
+            [
+              "M",
+              155
+            ]
+          ]
+        },
+        "FLAG_OWN_CAR": {
+          "distinct": 2,
+          "top": [
+            [
+              "N",
+              281
+            ],
+            [
+              "Y",
+              140
+            ]
+          ]
+        },
+        "FLAG_OWN_REALTY": {
+          "distinct": 2,
+          "top": [
+            [
+              "Y",
+              263
+            ],
+            [
+              "N",
+              158
+            ]
+          ]
+        },
+        "NAME_TYPE_SUITE": {
+          "distinct": 3,
+          "top": [
+            [
+              "Spouse, partner",
+              156
+            ],
+            [
+              "Family",
+              143
+            ],
+            [
+              "Unaccompanied",
+              122
+            ]
+          ]
+        },
+        "NAME_INCOME_TYPE": {
+          "distinct": 4,
+          "top": [
+            [
+              "Working",
+              223
+            ],
+            [
+              "Commercial associate",
+              88
+            ],
+            [
+              "Pensioner",
+              83
+            ],
+            [
+              "State servant",
+              27
+            ]
+          ]
+        },
+        "NAME_EDUCATION_TYPE": {
+          "distinct": 4,
+          "top": [
+            [
+              "Secondary / secondary special",
+              301
+            ],
+            [
+              "Higher education",
+              93
+            ],
+            [
+              "Incomplete higher",
+              20
+            ],
+            [
+              "Lower secondary",
+              7
+            ]
+          ]
+        },
+        "NAME_FAMILY_STATUS": {
+          "distinct": 5,
+          "top": [
+            [
+              "Married",
+              258
+            ],
+            [
+              "Single / not married",
+              66
+            ],
+            [
+              "Civil marriage",
+              40
+            ],
+            [
+              "Separated",
+              33
+            ],
+            [
+              "Widow",
+              24
+            ]
+          ]
+        },
+        "NAME_HOUSING_TYPE": {
+          "distinct": 3,
+          "top": [
+            [
+              "House / apartment",
+              370
+            ],
+            [
+              "Municipal apartment",
+              28
+            ],
+            [
+              "With parents",
+              23
+            ]
+          ]
+        },
+        "OCCUPATION_TYPE": {
+          "distinct": 11,
+          "top": [
+            [
+              null,
+              135
+            ],
+            [
+              "Sales staff",
+              38
+            ],
+            [
+              "Managers",
+              34
+            ],
+            [
+              "Medicine staff",
+              33
+            ],
+            [
+              "High skill tech staff",
+              30
+            ],
+            [
+              "Core staff",
+              29
+            ]
+          ]
+        },
+        "WEEKDAY_APPR_PROCESS_START": {
+          "distinct": 7,
+          "top": [
+            [
+              "SUNDAY",
+              71
+            ],
+            [
+              "TUESDAY",
+              64
+            ],
+            [
+              "WEDNESDAY",
+              64
+            ],
+            [
+              "MONDAY",
+              60
+            ],
+            [
+              "SATURDAY",
+              57
+            ],
+            [
+              "THURSDAY",
+              53
+            ]
+          ]
+        },
+        "ORGANIZATION_TYPE": {
+          "distinct": 8,
+          "top": [
+            [
+              "XNA",
+              83
+            ],
+            [
+              "Government",
+              53
+            ],
+            [
+              "Trade: type 7",
+              50
+            ],
+            [
+              "Business Entity Type 3",
+              50
+            ],
+            [
+              "Medicine",
+              50
+            ],
+            [
+              "School",
+              47
+            ]
+          ]
+        },
+        "EMERGENCYSTATE_MODE": {
+          "distinct": 3,
+          "top": [
+            [
+              "No",
+              229
+            ],
+            [
+              null,
+              189
+            ],
+            [
+              "Yes",
+              3
+            ]
+          ]
+        }
+      },
+      "rows_after_application_date": {},
+      "target": {},
+      "seconds": 5.74
+    },
+    {
+      "table": "bureau",
+      "file": "bureau.csv",
+      "source_id": "external_credit_bureau",
+      "origin": "ORIGINAL",
+      "grain": "1 row = 1 credit reported by another institution (SK_ID_BUREAU)",
+      "size_bytes": 971520,
+      "rows": 9694,
+      "columns": 17,
+      "header": {
+        "missing_required_columns": [],
+        "unregistered_columns": []
+      },
+      "exact_duplicate_rows": 0,
+      "primary_key": {
+        "columns": [
+          "SK_ID_BUREAU"
+        ],
+        "null_rows": 0,
+        "distinct": 9694,
+        "duplicate_rows": 0,
+        "is_unique": true
+      },
+      "business_key": {},
+      "columns_detail": [
+        {
+          "name": "SK_ID_CURR",
+          "declared_type": "bigint",
+          "missing": 1,
+          "missing_pct": 0.01,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "SK_ID_BUREAU",
+          "declared_type": "bigint",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": "Recoded ID of previous Credit Bureau credit related to our loan (unique coding for each loan application)"
+        },
+        {
+          "name": "CREDIT_ACTIVE",
+          "declared_type": "string",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": "Status of the Credit Bureau (CB) reported credits"
+        },
+        {
+          "name": "CREDIT_CURRENCY",
+          "declared_type": "string",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "DAYS_CREDIT",
+          "declared_type": "int",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": "How many days before current application did client apply for Credit Bureau credit"
+        },
+        {
+          "name": "CREDIT_DAY_OVERDUE",
+          "declared_type": "int",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": "Number of days past due on CB credit at the time of application for related loan in our sample"
+        },
+        {
+          "name": "DAYS_CREDIT_ENDDATE",
+          "declared_type": "double",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "DAYS_ENDDATE_FACT",
+          "declared_type": "double",
+          "missing": 3542,
+          "missing_pct": 36.538,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "AMT_CREDIT_MAX_OVERDUE",
+          "declared_type": "double",
+          "missing": 6386,
+          "missing_pct": 65.876,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "CNT_CREDIT_PROLONG",
+          "declared_type": "int",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "AMT_CREDIT_SUM",
+          "declared_type": "double",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "AMT_CREDIT_SUM_DEBT",
+          "declared_type": "double",
+          "missing": 1366,
+          "missing_pct": 14.091,
+          "cast_failures": 0,
+          "description": "Current debt on Credit Bureau credit"
+        },
+        {
+          "name": "AMT_CREDIT_SUM_LIMIT",
+          "declared_type": "double",
+          "missing": 3265,
+          "missing_pct": 33.681,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "AMT_CREDIT_SUM_OVERDUE",
+          "declared_type": "double",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "CREDIT_TYPE",
+          "declared_type": "string",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "DAYS_CREDIT_UPDATE",
+          "declared_type": "int",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "AMT_ANNUITY",
+          "declared_type": "double",
+          "missing": 6769,
+          "missing_pct": 69.827,
+          "cast_failures": 0,
+          "description": ""
+        }
+      ],
+      "numeric": {
+        "DAYS_CREDIT": {
+          "min": -2899,
+          "max": 5,
+          "mean": -1453.0015473488756,
+          "neg": 9693,
+          "sentinel": 0,
+          "p50": -1452.0,
+          "p99": 5.0
+        },
+        "CREDIT_DAY_OVERDUE": {
+          "min": 0,
+          "max": 40,
+          "mean": 1.6474107695481741,
+          "neg": 0,
+          "sentinel": 0
+        },
+        "DAYS_CREDIT_ENDDATE": {
+          "min": -2782.0,
+          "max": 2967.0,
+          "mean": 103.3272127088921,
+          "neg": 4517,
+          "sentinel": 0,
+          "p50": 101.0,
+          "p99": 2967.0
+        },
+        "DAYS_ENDDATE_FACT": {
+          "min": -2842.0,
+          "max": -1.0,
+          "mean": -813.3754876462939,
+          "neg": 6152,
+          "sentinel": 0,
+          "p50": -692.0,
+          "p99": -1.0
+        },
+        "AMT_CREDIT_MAX_OVERDUE": {
+          "min": 0.0,
+          "max": 4999.0,
+          "mean": 2532.3793833131804,
+          "neg": 0,
+          "sentinel": 0,
+          "p50": 2483.0,
+          "p99": 4999.0
+        },
+        "CNT_CREDIT_PROLONG": {
+          "min": 0,
+          "max": 1,
+          "mean": 0.005983082318960182,
+          "neg": 0,
+          "sentinel": 0,
+          "p50": 0.0,
+          "p99": 1.0
+        },
+        "AMT_CREDIT_SUM": {
+          "min": 3200.0,
+          "max": 9595700.0,
+          "mean": 268119.6410150609,
+          "neg": 0,
+          "sentinel": 0,
+          "p50": 161300.0,
+          "p99": 9595700.0
+        },
+        "AMT_CREDIT_SUM_DEBT": {
+          "min": 0.0,
+          "max": 3268791.08,
+          "mean": 49790.652334293845,
+          "neg": 0,
+          "sentinel": 0,
+          "p50": 0.0,
+          "p99": 3268791.08
+        },
+        "AMT_CREDIT_SUM_LIMIT": {
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0,
+          "neg": 0,
+          "sentinel": 0,
+          "p50": 0.0,
+          "p99": 0.0
+        },
+        "AMT_CREDIT_SUM_OVERDUE": {
+          "min": 0.0,
+          "max": 2000.0,
+          "mean": 82.3705384774087,
+          "neg": 0,
+          "sentinel": 0,
+          "p50": 0.0,
+          "p99": 2000.0
+        },
+        "DAYS_CREDIT_UPDATE": {
+          "min": -2864,
+          "max": -1,
+          "mean": -472.88632143593975,
+          "neg": 9694,
+          "sentinel": 0,
+          "p50": -1.0,
+          "p99": -1.0
+        },
+        "AMT_ANNUITY": {
+          "min": 42.0,
+          "max": 29986.0,
+          "mean": 14761.721025641025,
+          "neg": 0,
+          "sentinel": 0,
+          "p50": 14182.0,
+          "p99": 29986.0
+        }
+      },
+      "categorical": {
+        "CREDIT_ACTIVE": {
+          "distinct": 4,
+          "top": [
+            [
+              "Closed",
+              6091
+            ],
+            [
+              "Active",
+              3542
+            ],
+            [
+              "Sold",
+              51
+            ],
+            [
+              "Bad debt",
+              10
+            ]
+          ]
+        },
+        "CREDIT_CURRENCY": {
+          "distinct": 2,
+          "top": [
+            [
+              "currency 1",
+              9684
+            ],
+            [
+              "currency 2",
+              10
+            ]
+          ]
+        },
+        "CREDIT_TYPE": {
+          "distinct": 4,
+          "top": [
+            [
+              "Consumer credit",
+              7126
+            ],
+            [
+              "Credit card",
+              2184
+            ],
+            [
+              "Car loan",
+              203
+            ],
+            [
+              "Mortgage",
+              181
+            ]
+          ]
+        }
+      },
+      "rows_after_application_date": {
+        "DAYS_CREDIT": 1
+      },
+      "target": {},
+      "seconds": 2.62
+    },
+    {
+      "table": "bureau_balance",
+      "file": "bureau_balance.csv",
+      "source_id": "external_credit_bureau",
+      "origin": "ORIGINAL",
+      "grain": "1 row = 1 bureau credit x 1 month (SK_ID_BUREAU, MONTHS_BALANCE)",
+      "size_bytes": 4067725,
+      "rows": 295046,
+      "columns": 3,
+      "header": {
+        "missing_required_columns": [],
+        "unregistered_columns": []
+      },
+      "exact_duplicate_rows": 0,
+      "primary_key": {
+        "columns": [
+          "SK_ID_BUREAU",
+          "MONTHS_BALANCE"
+        ],
+        "null_rows": 0,
+        "distinct": 295046,
+        "duplicate_rows": 0,
+        "is_unique": true
+      },
+      "business_key": {},
+      "columns_detail": [
+        {
+          "name": "SK_ID_BUREAU",
+          "declared_type": "bigint",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "MONTHS_BALANCE",
+          "declared_type": "int",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": "Month of balance relative to application date (-1 means the freshest balance date)"
+        },
+        {
+          "name": "STATUS",
+          "declared_type": "string",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": "Status of Credit Bureau loan during the month (C closed, X unknown, 0 no DPD, 1 maximal DPD 1-30, ..., 5 120+ or sold/written off)"
+        }
+      ],
+      "numeric": {
+        "MONTHS_BALANCE": {
+          "min": -96,
+          "max": 0,
+          "mean": -32.320997403794664,
+          "neg": 289106,
+          "sentinel": 0,
+          "p50": -28.0,
+          "p99": 0.0
+        }
+      },
+      "categorical": {
+        "STATUS": {
+          "distinct": 8,
+          "top": [
+            [
+              "0",
+              161278
+            ],
+            [
+              "C",
+              102155
+            ],
+            [
+              "X",
+              23142
+            ],
+            [
+              "1",
+              5963
+            ],
+            [
+              "2",
+              1208
+            ],
+            [
+              "3",
+              673
+            ]
+          ]
+        }
+      },
+      "rows_after_application_date": {
+        "MONTHS_BALANCE": 0
+      },
+      "target": {},
+      "seconds": 3.37
+    },
+    {
+      "table": "previous_application",
+      "file": "previous_application.csv",
+      "source_id": "previous_loan_system",
+      "origin": "ORIGINAL",
+      "grain": "1 row = 1 previous Home Credit application (SK_ID_PREV)",
+      "size_bytes": 2114392,
+      "rows": 8724,
+      "columns": 37,
+      "header": {
+        "missing_required_columns": [],
+        "unregistered_columns": []
+      },
+      "exact_duplicate_rows": 0,
+      "primary_key": {
+        "columns": [
+          "SK_ID_PREV"
+        ],
+        "null_rows": 0,
+        "distinct": 8724,
+        "duplicate_rows": 0,
+        "is_unique": true
+      },
+      "business_key": {},
+      "columns_detail": [
+        {
+          "name": "SK_ID_PREV",
+          "declared_type": "bigint",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": "ID of previous credit in Home credit related to loan in our sample"
+        },
+        {
+          "name": "SK_ID_CURR",
+          "declared_type": "bigint",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "NAME_CONTRACT_TYPE",
+          "declared_type": "string",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "AMT_ANNUITY",
+          "declared_type": "double",
+          "missing": 3337,
+          "missing_pct": 38.251,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "AMT_APPLICATION",
+          "declared_type": "double",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "AMT_CREDIT",
+          "declared_type": "double",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "AMT_DOWN_PAYMENT",
+          "declared_type": "double",
+          "missing": 4589,
+          "missing_pct": 52.602,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "AMT_GOODS_PRICE",
+          "declared_type": "double",
+          "missing": 1993,
+          "missing_pct": 22.845,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "WEEKDAY_APPR_PROCESS_START",
+          "declared_type": "string",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "HOUR_APPR_PROCESS_START",
+          "declared_type": "int",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "FLAG_LAST_APPL_PER_CONTRACT",
+          "declared_type": "string",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "NFLAG_LAST_APPL_IN_DAY",
+          "declared_type": "int",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "RATE_DOWN_PAYMENT",
+          "declared_type": "double",
+          "missing": 4722,
+          "missing_pct": 54.127,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "RATE_INTEREST_PRIMARY",
+          "declared_type": "double",
+          "missing": 8675,
+          "missing_pct": 99.438,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "RATE_INTEREST_PRIVILEGED",
+          "declared_type": "double",
+          "missing": 8698,
+          "missing_pct": 99.702,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "NAME_CASH_LOAN_PURPOSE",
+          "declared_type": "string",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "NAME_CONTRACT_STATUS",
+          "declared_type": "string",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": "Contract status (approved, cancelled, ...) of previous application"
+        },
+        {
+          "name": "DAYS_DECISION",
+          "declared_type": "int",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": "Relative to current application when was the decision about previous application made"
+        },
+        {
+          "name": "NAME_PAYMENT_TYPE",
+          "declared_type": "string",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "CODE_REJECT_REASON",
+          "declared_type": "string",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "NAME_TYPE_SUITE",
+          "declared_type": "string",
+          "missing": 4329,
+          "missing_pct": 49.622,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "NAME_CLIENT_TYPE",
+          "declared_type": "string",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "NAME_GOODS_CATEGORY",
+          "declared_type": "string",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "NAME_PORTFOLIO",
+          "declared_type": "string",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "NAME_PRODUCT_TYPE",
+          "declared_type": "string",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "CHANNEL_TYPE",
+          "declared_type": "string",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "SELLERPLACE_AREA",
+          "declared_type": "int",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "NAME_SELLER_INDUSTRY",
+          "declared_type": "string",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "CNT_PAYMENT",
+          "declared_type": "double",
+          "missing": 3337,
+          "missing_pct": 38.251,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "NAME_YIELD_GROUP",
+          "declared_type": "string",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "PRODUCT_COMBINATION",
+          "declared_type": "string",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "DAYS_FIRST_DRAWING",
+          "declared_type": "double",
+          "missing": 3337,
+          "missing_pct": 38.251,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "DAYS_FIRST_DUE",
+          "declared_type": "double",
+          "missing": 3337,
+          "missing_pct": 38.251,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "DAYS_LAST_DUE_1ST_VERSION",
+          "declared_type": "double",
+          "missing": 3337,
+          "missing_pct": 38.251,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "DAYS_LAST_DUE",
+          "declared_type": "double",
+          "missing": 3337,
+          "missing_pct": 38.251,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "DAYS_TERMINATION",
+          "declared_type": "double",
+          "missing": 3337,
+          "missing_pct": 38.251,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "NFLAG_INSURED_ON_APPROVAL",
+          "declared_type": "double",
+          "missing": 3337,
+          "missing_pct": 38.251,
+          "cast_failures": 0,
+          "description": ""
+        }
+      ],
+      "numeric": {
+        "AMT_ANNUITY": {
+          "min": 135.71,
+          "max": 447878.1,
+          "mean": 17157.86941154631,
+          "neg": 0,
+          "sentinel": 0,
+          "p50": 9199.49,
+          "p99": 447878.1
+        },
+        "AMT_APPLICATION": {
+          "min": 2300.0,
+          "max": 2772700.0,
+          "mean": 163038.93856029343,
+          "neg": 0,
+          "sentinel": 0,
+          "p50": 98700.0,
+          "p99": 2772700.0
+        },
+        "AMT_CREDIT": {
+          "min": 0.0,
+          "max": 2978957.9,
+          "mean": 164418.6750229257,
+          "neg": 0,
+          "sentinel": 0,
+          "p50": 99302.4,
+          "p99": 2978957.9
+        },
+        "AMT_DOWN_PAYMENT": {
+          "min": 12.0,
+          "max": 19996.0,
+          "mean": 10067.79008464329,
+          "neg": 0,
+          "sentinel": 0,
+          "p50": 10085.0,
+          "p99": 19996.0
+        },
+        "AMT_GOODS_PRICE": {
+          "min": 2300.0,
+          "max": 2772700.0,
+          "mean": 163470.00445699005,
+          "neg": 0,
+          "sentinel": 0,
+          "p50": 99700.0,
+          "p99": 2772700.0
+        },
+        "HOUR_APPR_PROCESS_START": {
+          "min": 6,
+          "max": 19,
+          "mean": 12.582416322787711,
+          "neg": 0,
+          "sentinel": 0
+        },
+        "NFLAG_LAST_APPL_IN_DAY": {
+          "min": 1,
+          "max": 1,
+          "mean": 1.0,
+          "neg": 0,
+          "sentinel": 0
+        },
+        "RATE_DOWN_PAYMENT": {
+          "min": 2.8e-05,
+          "max": 0.199992,
+          "mean": 0.10035117941029469,
+          "neg": 0,
+          "sentinel": 0
+        },
+        "RATE_INTEREST_PRIMARY": {
+          "min": 0.030565,
+          "max": 0.194016,
+          "mean": 0.10895689795918365,
+          "neg": 0,
+          "sentinel": 0
+        },
+        "RATE_INTEREST_PRIVILEGED": {
+          "min": 0.304877,
+          "max": 0.889778,
+          "mean": 0.603453923076923,
+          "neg": 0,
+          "sentinel": 0
+        },
+        "DAYS_DECISION": {
+          "min": -2899,
+          "max": -30,
+          "mean": -1468.7221458046768,
+          "neg": 8724,
+          "sentinel": 0,
+          "p50": -1484.0,
+          "p99": -30.0
+        },
+        "SELLERPLACE_AREA": {
+          "min": -1,
+          "max": 1200,
+          "mean": 317.49507106831726,
+          "neg": 2173,
+          "sentinel": 0
+        },
+        "CNT_PAYMENT": {
+          "min": 6.0,
+          "max": 24.0,
+          "mean": 15.046222387228513,
+          "neg": 0,
+          "sentinel": 0,
+          "p50": 12.0,
+          "p99": 24.0
+        },
+        "DAYS_FIRST_DRAWING": {
+          "min": 365243.0,
+          "max": 365243.0,
+          "mean": 365243.0,
+          "neg": 0,
+          "sentinel": 5387,
+          "p50": 365243.0,
+          "p99": 365243.0
+        },
+        "DAYS_FIRST_DUE": {
+          "min": -2868.0,
+          "max": 0.0,
+          "mean": -1439.4310376833116,
+          "neg": 5385,
+          "sentinel": 0,
+          "p50": -1436.0,
+          "p99": 0.0
+        },
+        "DAYS_LAST_DUE_1ST_VERSION": {
+          "min": -2715.0,
+          "max": 690.0,
+          "mean": -1018.0443660664563,
+          "neg": 4608,
+          "sentinel": 0,
+          "p50": -1025.0,
+          "p99": 690.0
+        },
+        "DAYS_LAST_DUE": {
+          "min": -2715.0,
+          "max": 365243.0,
+          "mean": 51894.462038240206,
+          "neg": 4606,
+          "sentinel": 781,
+          "p50": -1025.0,
+          "p99": 365243.0
+        },
+        "DAYS_TERMINATION": {
+          "min": -2712.0,
+          "max": 365243.0,
+          "mean": 51897.027102283275,
+          "neg": 4603,
+          "sentinel": 781,
+          "p50": -1022.0,
+          "p99": 365243.0
+        },
+        "NFLAG_INSURED_ON_APPROVAL": {
+          "min": 0.0,
+          "max": 1.0,
+          "mean": 0.5025060330425097,
+          "neg": 0,
+          "sentinel": 0
+        }
+      },
+      "categorical": {
+        "NAME_CONTRACT_TYPE": {
+          "distinct": 4,
+          "top": [
+            [
+              "Cash loans",
+              3922
+            ],
+            [
+              "Consumer loans",
+              3824
+            ],
+            [
+              "Revolving loans",
+              971
+            ],
+            [
+              "XNA",
+              7
+            ]
+          ]
+        },
+        "WEEKDAY_APPR_PROCESS_START": {
+          "distinct": 7,
+          "top": [
+            [
+              "MONDAY",
+              1268
+            ],
+            [
+              "SUNDAY",
+              1258
+            ],
+            [
+              "TUESDAY",
+              1252
+            ],
+            [
+              "SATURDAY",
+              1251
+            ],
+            [
+              "THURSDAY",
+              1247
+            ],
+            [
+              "FRIDAY",
+              1227
+            ]
+          ]
+        },
+        "FLAG_LAST_APPL_PER_CONTRACT": {
+          "distinct": 2,
+          "top": [
+            [
+              "Y",
+              8680
+            ],
+            [
+              "N",
+              44
+            ]
+          ]
+        },
+        "NAME_CASH_LOAN_PURPOSE": {
+          "distinct": 4,
+          "top": [
+            [
+              "XAP",
+              4802
+            ],
+            [
+              "Other",
+              1326
+            ],
+            [
+              "Repairs",
+              1310
+            ],
+            [
+              "XNA",
+              1286
+            ]
+          ]
+        },
+        "NAME_CONTRACT_STATUS": {
+          "distinct": 4,
+          "top": [
+            [
+              "Approved",
+              5387
+            ],
+            [
+              "Canceled",
+              1679
+            ],
+            [
+              "Refused",
+              1483
+            ],
+            [
+              "Unused offer",
+              175
+            ]
+          ]
+        },
+        "NAME_PAYMENT_TYPE": {
+          "distinct": 2,
+          "top": [
+            [
+              "Cash through the bank",
+              5354
+            ],
+            [
+              "XNA",
+              3370
+            ]
+          ]
+        },
+        "CODE_REJECT_REASON": {
+          "distinct": 5,
+          "top": [
+            [
+              "XAP",
+              7241
+            ],
+            [
+              "XNA",
+              385
+            ],
+            [
+              "HC",
+              375
+            ],
+            [
+              "SCO",
+              363
+            ],
+            [
+              "LIMIT",
+              360
+            ]
+          ]
+        },
+        "NAME_TYPE_SUITE": {
+          "distinct": 2,
+          "top": [
+            [
+              "Unaccompanied",
+              4395
+            ],
+            [
+              null,
+              4329
+            ]
+          ]
+        },
+        "NAME_CLIENT_TYPE": {
+          "distinct": 3,
+          "top": [
+            [
+              "Repeater",
+              6441
+            ],
+            [
+              "New",
+              1618
+            ],
+            [
+              "Refreshed",
+              665
+            ]
+          ]
+        },
+        "NAME_GOODS_CATEGORY": {
+          "distinct": 4,
+          "top": [
+            [
+              "Consumer Electronics",
+              2208
+            ],
+            [
+              "Mobile",
+              2190
+            ],
+            [
+              "Computers",
+              2188
+            ],
+            [
+              "XNA",
+              2138
+            ]
+          ]
+        },
+        "NAME_PORTFOLIO": {
+          "distinct": 4,
+          "top": [
+            [
+              "Cash",
+              3922
+            ],
+            [
+              "POS",
+              3824
+            ],
+            [
+              "Cards",
+              971
+            ],
+            [
+              "XNA",
+              7
+            ]
+          ]
+        },
+        "NAME_PRODUCT_TYPE": {
+          "distinct": 3,
+          "top": [
+            [
+              "XNA",
+              5522
+            ],
+            [
+              "x-sell",
+              2391
+            ],
+            [
+              "walk-in",
+              811
+            ]
+          ]
+        },
+        "CHANNEL_TYPE": {
+          "distinct": 3,
+          "top": [
+            [
+              "Credit and cash offices",
+              2972
+            ],
+            [
+              "Stone",
+              2909
+            ],
+            [
+              "Country-wide",
+              2843
+            ]
+          ]
+        },
+        "NAME_SELLER_INDUSTRY": {
+          "distinct": 3,
+          "top": [
+            [
+              "Consumer electronics",
+              2936
+            ],
+            [
+              "XNA",
+              2920
+            ],
+            [
+              "Connectivity",
+              2868
+            ]
+          ]
+        },
+        "NAME_YIELD_GROUP": {
+          "distinct": 4,
+          "top": [
+            [
+              "high",
+              2210
+            ],
+            [
+              "low_normal",
+              2208
+            ],
+            [
+              "middle",
+              2182
+            ],
+            [
+              "XNA",
+              2124
+            ]
+          ]
+        },
+        "PRODUCT_COMBINATION": {
+          "distinct": 3,
+          "top": [
+            [
+              "Card Street",
+              2996
+            ],
+            [
+              "Cash",
+              2877
+            ],
+            [
+              "POS household with interest",
+              2851
+            ]
+          ]
+        }
+      },
+      "rows_after_application_date": {
+        "DAYS_DECISION": 0
+      },
+      "target": {},
+      "seconds": 5.6
+    },
+    {
+      "table": "installments_payments",
+      "file": "installments_payments.csv",
+      "source_id": "installment_payment_system",
+      "origin": "ORIGINAL",
+      "grain": "1 row = 1 payment record of 1 installment of a previous loan (an installment can have several partial-payment rows)",
+      "size_bytes": 3626837,
+      "rows": 68368,
+      "columns": 8,
+      "header": {
+        "missing_required_columns": [],
+        "unregistered_columns": []
+      },
+      "exact_duplicate_rows": 3,
+      "primary_key": {},
+      "business_key": {
+        "columns": [
+          "SK_ID_PREV",
+          "NUM_INSTALMENT_VERSION",
+          "NUM_INSTALMENT_NUMBER",
+          "DAYS_ENTRY_PAYMENT",
+          "AMT_PAYMENT"
+        ],
+        "duplicate_rows": 3
+      },
+      "columns_detail": [
+        {
+          "name": "SK_ID_PREV",
+          "declared_type": "bigint",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "SK_ID_CURR",
+          "declared_type": "bigint",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "NUM_INSTALMENT_VERSION",
+          "declared_type": "double",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "NUM_INSTALMENT_NUMBER",
+          "declared_type": "int",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "DAYS_INSTALMENT",
+          "declared_type": "double",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": "When the installment of previous credit was supposed to be paid (relative to application date of current loan)"
+        },
+        {
+          "name": "DAYS_ENTRY_PAYMENT",
+          "declared_type": "double",
+          "missing": 669,
+          "missing_pct": 0.979,
+          "cast_failures": 0,
+          "description": "When was the installments of previous credit paid actually (relative to application date of current loan)"
+        },
+        {
+          "name": "AMT_INSTALMENT",
+          "declared_type": "double",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": "What was the prescribed installment amount of previous credit on this installment"
+        },
+        {
+          "name": "AMT_PAYMENT",
+          "declared_type": "double",
+          "missing": 669,
+          "missing_pct": 0.979,
+          "cast_failures": 0,
+          "description": "What the client actually paid on previous credit on this installment"
+        }
+      ],
+      "numeric": {
+        "NUM_INSTALMENT_VERSION": {
+          "min": 1.0,
+          "max": 2.0,
+          "mean": 1.0000292534519073,
+          "neg": 0,
+          "sentinel": 0
+        },
+        "NUM_INSTALMENT_NUMBER": {
+          "min": 1,
+          "max": 24,
+          "mean": 9.000614322490053,
+          "neg": 0,
+          "sentinel": 0
+        },
+        "DAYS_INSTALMENT": {
+          "min": -2868.0,
+          "max": -1.0,
+          "mean": -1326.3337818862626,
+          "neg": 68368,
+          "sentinel": 0,
+          "p50": -1324.0,
+          "p99": -1.0
+        },
+        "DAYS_ENTRY_PAYMENT": {
+          "min": -2880.0,
+          "max": 7.0,
+          "mean": -1330.9364983234611,
+          "neg": 67697,
+          "sentinel": 0,
+          "p50": -1352.0,
+          "p99": 7.0
+        },
+        "AMT_INSTALMENT": {
+          "min": 135.71,
+          "max": 447878.1,
+          "mean": 13785.963417681362,
+          "neg": 0,
+          "sentinel": 0,
+          "p50": 7380.94,
+          "p99": 447878.1
+        },
+        "AMT_PAYMENT": {
+          "min": -439.572,
+          "max": 447878.1,
+          "mean": 13101.625279325173,
+          "neg": 11,
+          "sentinel": 0,
+          "p50": 7072.26,
+          "p99": 447878.1
+        }
+      },
+      "categorical": {},
+      "rows_after_application_date": {
+        "DAYS_INSTALMENT": 0,
+        "DAYS_ENTRY_PAYMENT": 2
+      },
+      "target": {},
+      "seconds": 1.93
+    },
+    {
+      "table": "POS_CASH_balance",
+      "file": "POS_CASH_balance.csv",
+      "source_id": "pos_cash_system",
+      "origin": "ORIGINAL",
+      "grain": "1 row = 1 previous POS/cash loan x 1 month (SK_ID_PREV, MONTHS_BALANCE)",
+      "size_bytes": 9686231,
+      "rows": 236650,
+      "columns": 8,
+      "header": {
+        "missing_required_columns": [],
+        "unregistered_columns": []
+      },
+      "exact_duplicate_rows": 2,
+      "primary_key": {},
+      "business_key": {
+        "columns": [
+          "SK_ID_PREV",
+          "MONTHS_BALANCE"
+        ],
+        "duplicate_rows": 2
+      },
+      "columns_detail": [
+        {
+          "name": "SK_ID_PREV",
+          "declared_type": "bigint",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "SK_ID_CURR",
+          "declared_type": "bigint",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "MONTHS_BALANCE",
+          "declared_type": "int",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": "Month of balance relative to application date (-1 means the information to the freshest monthly snapshot)"
+        },
+        {
+          "name": "CNT_INSTALMENT",
+          "declared_type": "double",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "CNT_INSTALMENT_FUTURE",
+          "declared_type": "double",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "NAME_CONTRACT_STATUS",
+          "declared_type": "string",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "SK_DPD",
+          "declared_type": "int",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": "DPD (days past due) during the month of previous credit"
+        },
+        {
+          "name": "SK_DPD_DEF",
+          "declared_type": "int",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        }
+      ],
+      "numeric": {
+        "MONTHS_BALANCE": {
+          "min": -97,
+          "max": -1,
+          "mean": -32.99900697232199,
+          "neg": 236650,
+          "sentinel": 0,
+          "p50": -29.0,
+          "p99": -1.0
+        },
+        "CNT_INSTALMENT": {
+          "min": 6.0,
+          "max": 24.0,
+          "mean": 15.001014155926473,
+          "neg": 0,
+          "sentinel": 0,
+          "p50": 12.0,
+          "p99": 24.0
+        },
+        "CNT_INSTALMENT_FUTURE": {
+          "min": 0.0,
+          "max": 24.0,
+          "mean": 2.695782801605747,
+          "neg": 0,
+          "sentinel": 0,
+          "p50": 0.0,
+          "p99": 24.0
+        },
+        "SK_DPD": {
+          "min": 0,
+          "max": 89,
+          "mean": 1.4650158461863512,
+          "neg": 0,
+          "sentinel": 0,
+          "p50": 0.0,
+          "p99": 89.0
+        },
+        "SK_DPD_DEF": {
+          "min": 0,
+          "max": 89,
+          "mean": 1.300409888020283,
+          "neg": 0,
+          "sentinel": 0,
+          "p50": 0.0,
+          "p99": 89.0
+        }
+      },
+      "categorical": {
+        "NAME_CONTRACT_STATUS": {
+          "distinct": 2,
+          "top": [
+            [
+              "Completed",
+              170824
+            ],
+            [
+              "Active",
+              65826
+            ]
+          ]
+        }
+      },
+      "rows_after_application_date": {
+        "MONTHS_BALANCE": 0
+      },
+      "target": {},
+      "seconds": 3.66
+    },
+    {
+      "table": "credit_card_balance",
+      "file": "credit_card_balance.csv",
+      "source_id": "credit_card_system",
+      "origin": "ORIGINAL",
+      "grain": "1 row = 1 previous credit card x 1 month (SK_ID_PREV, MONTHS_BALANCE)",
+      "size_bytes": 3778838,
+      "rows": 29824,
+      "columns": 23,
+      "header": {
+        "missing_required_columns": [],
+        "unregistered_columns": []
+      },
+      "exact_duplicate_rows": 0,
+      "primary_key": {},
+      "business_key": {
+        "columns": [
+          "SK_ID_PREV",
+          "MONTHS_BALANCE"
+        ],
+        "duplicate_rows": 0
+      },
+      "columns_detail": [
+        {
+          "name": "SK_ID_PREV",
+          "declared_type": "bigint",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "SK_ID_CURR",
+          "declared_type": "bigint",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "MONTHS_BALANCE",
+          "declared_type": "int",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "AMT_BALANCE",
+          "declared_type": "double",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": "Balance during the month of previous credit"
+        },
+        {
+          "name": "AMT_CREDIT_LIMIT_ACTUAL",
+          "declared_type": "double",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": "Credit card limit during the month of the previous credit"
+        },
+        {
+          "name": "AMT_DRAWINGS_ATM_CURRENT",
+          "declared_type": "double",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "AMT_DRAWINGS_CURRENT",
+          "declared_type": "double",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "AMT_DRAWINGS_OTHER_CURRENT",
+          "declared_type": "double",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "AMT_DRAWINGS_POS_CURRENT",
+          "declared_type": "double",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "AMT_INST_MIN_REGULARITY",
+          "declared_type": "double",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "AMT_PAYMENT_CURRENT",
+          "declared_type": "double",
+          "missing": 6028,
+          "missing_pct": 20.212,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "AMT_PAYMENT_TOTAL_CURRENT",
+          "declared_type": "double",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "AMT_RECEIVABLE_PRINCIPAL",
+          "declared_type": "double",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "AMT_RECIVABLE",
+          "declared_type": "double",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "AMT_TOTAL_RECEIVABLE",
+          "declared_type": "double",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "CNT_DRAWINGS_ATM_CURRENT",
+          "declared_type": "double",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "CNT_DRAWINGS_CURRENT",
+          "declared_type": "double",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "CNT_DRAWINGS_OTHER_CURRENT",
+          "declared_type": "double",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "CNT_DRAWINGS_POS_CURRENT",
+          "declared_type": "double",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "CNT_INSTALMENT_MATURE_CUM",
+          "declared_type": "double",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "NAME_CONTRACT_STATUS",
+          "declared_type": "string",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        },
+        {
+          "name": "SK_DPD",
+          "declared_type": "int",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": "DPD (Days past due) during the month on the previous credit"
+        },
+        {
+          "name": "SK_DPD_DEF",
+          "declared_type": "int",
+          "missing": 0,
+          "missing_pct": 0.0,
+          "cast_failures": 0,
+          "description": ""
+        }
+      ],
+      "numeric": {
+        "MONTHS_BALANCE": {
+          "min": -97,
+          "max": -1,
+          "mean": -33.3541107832618,
+          "neg": 29824,
+          "sentinel": 0,
+          "p50": -30.0,
+          "p99": -1.0
+        },
+        "AMT_BALANCE": {
+          "min": 0.0,
+          "max": 283492.64,
+          "mean": 51131.334559415445,
+          "neg": 0,
+          "sentinel": 0,
+          "p50": 28766.23,
+          "p99": 283492.64
+        },
+        "AMT_CREDIT_LIMIT_ACTUAL": {
+          "min": 0.0,
+          "max": 270000.0,
+          "mean": 137294.96378755366,
+          "neg": 0,
+          "sentinel": 0,
+          "p50": 135000.0,
+          "p99": 270000.0
+        },
+        "AMT_DRAWINGS_ATM_CURRENT": {
+          "min": 0.0,
+          "max": 14999.49,
+          "mean": 2261.0499691523532,
+          "neg": 0,
+          "sentinel": 0,
+          "p50": 0.0,
+          "p99": 14999.49
+        },
+        "AMT_DRAWINGS_CURRENT": {
+          "min": 0.0,
+          "max": 29998.98,
+          "mean": 4522.0999383047065,
+          "neg": 0,
+          "sentinel": 0,
+          "p50": 0.0,
+          "p99": 29998.98
+        },
+        "AMT_DRAWINGS_OTHER_CURRENT": {
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0,
+          "neg": 0,
+          "sentinel": 0,
+          "p50": 0.0,
+          "p99": 0.0
+        },
+        "AMT_DRAWINGS_POS_CURRENT": {
+          "min": 0.0,
+          "max": 14999.49,
+          "mean": 2261.0499691523532,
+          "neg": 0,
+          "sentinel": 0,
+          "p50": 0.0,
+          "p99": 14999.49
+        },
+        "AMT_INST_MIN_REGULARITY": {
+          "min": 0.0,
+          "max": 14174.63,
+          "mean": 2556.566803245709,
+          "neg": 0,
+          "sentinel": 0,
+          "p50": 1438.31,
+          "p99": 14174.63
+        },
+        "AMT_PAYMENT_CURRENT": {
+          "min": 0.0,
+          "max": 28346.88,
+          "mean": 5113.0428050933015,
+          "neg": 0,
+          "sentinel": 0,
+          "p50": 2810.86,
+          "p99": 28346.88
+        },
+        "AMT_PAYMENT_TOTAL_CURRENT": {
+          "min": 0.0,
+          "max": 28349.26,
+          "mean": 5113.133668186668,
+          "neg": 0,
+          "sentinel": 0,
+          "p50": 2876.62,
+          "p99": 28349.26
+        },
+        "AMT_RECEIVABLE_PRINCIPAL": {
+          "min": 0.0,
+          "max": 269318.01,
+          "mean": 48574.76775818099,
+          "neg": 0,
+          "sentinel": 0,
+          "p50": 27327.92,
+          "p99": 269318.01
+        },
+        "AMT_RECIVABLE": {
+          "min": 0.0,
+          "max": 283492.64,
+          "mean": 51131.334559415445,
+          "neg": 0,
+          "sentinel": 0,
+          "p50": 28766.23,
+          "p99": 283492.64
+        },
+        "AMT_TOTAL_RECEIVABLE": {
+          "min": 0.0,
+          "max": 283492.64,
+          "mean": 51131.334559415445,
+          "neg": 0,
+          "sentinel": 0,
+          "p50": 28766.23,
+          "p99": 283492.64
+        },
+        "CNT_DRAWINGS_ATM_CURRENT": {
+          "min": 0.0,
+          "max": 1.0,
+          "mean": 0.2996579935622318,
+          "neg": 0,
+          "sentinel": 0,
+          "p50": 0.0,
+          "p99": 1.0
+        },
+        "CNT_DRAWINGS_CURRENT": {
+          "min": 0.0,
+          "max": 2.0,
+          "mean": 0.5993159871244635,
+          "neg": 0,
+          "sentinel": 0,
+          "p50": 0.0,
+          "p99": 2.0
+        },
+        "CNT_DRAWINGS_OTHER_CURRENT": {
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0,
+          "neg": 0,
+          "sentinel": 0,
+          "p50": 0.0,
+          "p99": 0.0
+        },
+        "CNT_DRAWINGS_POS_CURRENT": {
+          "min": 0.0,
+          "max": 1.0,
+          "mean": 0.2996579935622318,
+          "neg": 0,
+          "sentinel": 0,
+          "p50": 0.0,
+          "p99": 1.0
+        },
+        "CNT_INSTALMENT_MATURE_CUM": {
+          "min": 0.0,
+          "max": 96.0,
+          "mean": 32.3541107832618,
+          "neg": 0,
+          "sentinel": 0,
+          "p50": 28.0,
+          "p99": 96.0
+        },
+        "SK_DPD": {
+          "min": 0,
+          "max": 45,
+          "mean": 2.0505297746781115,
+          "neg": 0,
+          "sentinel": 0,
+          "p50": 0.0,
+          "p99": 45.0
+        },
+        "SK_DPD_DEF": {
+          "min": 0,
+          "max": 45,
+          "mean": 1.5163961909871244,
+          "neg": 0,
+          "sentinel": 0,
+          "p50": 0.0,
+          "p99": 45.0
+        }
+      },
+      "categorical": {
+        "NAME_CONTRACT_STATUS": {
+          "distinct": 1,
+          "top": [
+            [
+              "Active",
+              29824
+            ]
+          ]
+        }
+      },
+      "rows_after_application_date": {
+        "MONTHS_BALANCE": 0
+      },
+      "target": {},
+      "seconds": 2.68
+    }
+  ],
+  "relationships": [
+    {
+      "check": "train/test SK_ID_CURR overlap",
+      "overlap_ids": 0
+    },
+    {
+      "child": "bureau",
+      "child_columns": [
+        "SK_ID_CURR"
+      ],
+      "parent": "application",
+      "parent_columns": [
+        "SK_ID_CURR"
+      ],
+      "child_rows": 9693,
+      "orphan_keys": 4,
+      "orphan_rows": 4,
+      "parent_rows": 3000,
+      "parents_with_children": 2576,
+      "parent_coverage_pct": 85.87,
+      "children_per_parent": {
+        "min": 1,
+        "avg": 3.76,
+        "max": 10
+      },
+      "cardinality": "1:N"
+    },
+    {
+      "child": "bureau_balance",
+      "child_columns": [
+        "SK_ID_BUREAU"
+      ],
+      "parent": "bureau",
+      "parent_columns": [
+        "SK_ID_BUREAU"
+      ],
+      "child_rows": 295046,
+      "orphan_keys": 1,
+      "orphan_rows": 3,
+      "parent_rows": 9694,
+      "parents_with_children": 5939,
+      "parent_coverage_pct": 61.26,
+      "children_per_parent": {
+        "min": 2,
+        "avg": 49.68,
+        "max": 97
+      },
+      "cardinality": "1:N"
+    },
+    {
+      "child": "previous_application",
+      "child_columns": [
+        "SK_ID_CURR"
+      ],
+      "parent": "application",
+      "parent_columns": [
+        "SK_ID_CURR"
+      ],
+      "child_rows": 8724,
+      "orphan_keys": 0,
+      "orphan_rows": 0,
+      "parent_rows": 3000,
+      "parents_with_children": 2856,
+      "parent_coverage_pct": 95.2,
+      "children_per_parent": {
+        "min": 1,
+        "avg": 3.05,
+        "max": 7
+      },
+      "cardinality": "1:N"
+    },
+    {
+      "child": "installments_payments",
+      "child_columns": [
+        "SK_ID_PREV"
+      ],
+      "parent": "previous_application",
+      "parent_columns": [
+        "SK_ID_PREV"
+      ],
+      "child_rows": 68368,
+      "orphan_keys": 1,
+      "orphan_rows": 5,
+      "parent_rows": 8724,
+      "parents_with_children": 4793,
+      "parent_coverage_pct": 54.94,
+      "children_per_parent": {
+        "min": 1,
+        "avg": 14.26,
+        "max": 30
+      },
+      "cardinality": "1:N"
+    },
+    {
+      "child": "installments_payments",
+      "child_columns": [
+        "SK_ID_CURR"
+      ],
+      "parent": "application",
+      "parent_columns": [
+        "SK_ID_CURR"
+      ],
+      "child_rows": 68368,
+      "orphan_keys": 0,
+      "orphan_rows": 0,
+      "parent_rows": 3000,
+      "parents_with_children": 2368,
+      "parent_coverage_pct": 78.93,
+      "children_per_parent": {
+        "min": 1,
+        "avg": 28.87,
+        "max": 117
+      },
+      "cardinality": "1:N"
+    },
+    {
+      "child": "POS_CASH_balance",
+      "child_columns": [
+        "SK_ID_PREV"
+      ],
+      "parent": "previous_application",
+      "parent_columns": [
+        "SK_ID_PREV"
+      ],
+      "child_rows": 236650,
+      "orphan_keys": 0,
+      "orphan_rows": 0,
+      "parent_rows": 8724,
+      "parents_with_children": 4795,
+      "parent_coverage_pct": 54.96,
+      "children_per_parent": {
+        "min": 1,
+        "avg": 49.35,
+        "max": 97
+      },
+      "cardinality": "1:N"
+    },
+    {
+      "child": "POS_CASH_balance",
+      "child_columns": [
+        "SK_ID_CURR"
+      ],
+      "parent": "application",
+      "parent_columns": [
+        "SK_ID_CURR"
+      ],
+      "child_rows": 236650,
+      "orphan_keys": 0,
+      "orphan_rows": 0,
+      "parent_rows": 3000,
+      "parents_with_children": 2368,
+      "parent_coverage_pct": 78.93,
+      "children_per_parent": {
+        "min": 2,
+        "avg": 99.94,
+        "max": 442
+      },
+      "cardinality": "1:N"
+    },
+    {
+      "child": "credit_card_balance",
+      "child_columns": [
+        "SK_ID_PREV"
+      ],
+      "parent": "previous_application",
+      "parent_columns": [
+        "SK_ID_PREV"
+      ],
+      "child_rows": 29824,
+      "orphan_keys": 0,
+      "orphan_rows": 0,
+      "parent_rows": 8724,
+      "parents_with_children": 592,
+      "parent_coverage_pct": 6.79,
+      "children_per_parent": {
+        "min": 2,
+        "avg": 50.38,
+        "max": 97
+      },
+      "cardinality": "1:N"
+    },
+    {
+      "child": "credit_card_balance",
+      "child_columns": [
+        "SK_ID_CURR"
+      ],
+      "parent": "application",
+      "parent_columns": [
+        "SK_ID_CURR"
+      ],
+      "child_rows": 29824,
+      "orphan_keys": 0,
+      "orphan_rows": 0,
+      "parent_rows": 3000,
+      "parents_with_children": 535,
+      "parent_coverage_pct": 17.83,
+      "children_per_parent": {
+        "min": 2,
+        "avg": 55.75,
+        "max": 179
+      },
+      "cardinality": "1:N"
+    },
+    {
+      "check": "installments_payments.SK_ID_CURR consistent with previous_application via SK_ID_PREV",
+      "matched_rows": 68363,
+      "mismatched_rows": 0
+    },
+    {
+      "check": "POS_CASH_balance.SK_ID_CURR consistent with previous_application via SK_ID_PREV",
+      "matched_rows": 236650,
+      "mismatched_rows": 0
+    },
+    {
+      "check": "credit_card_balance.SK_ID_CURR consistent with previous_application via SK_ID_PREV",
+      "matched_rows": 29824,
+      "mismatched_rows": 0
+    }
+  ],
+  "reference_files": {
+    "sample_submission.csv": 421
+  }
+}

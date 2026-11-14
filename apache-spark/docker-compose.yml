@@ -1,0 +1,69 @@
+# Local infrastructure: MinIO-compatible S3 (Data Lake) + Kafka (KRaft, no ZooKeeper) + Kafka UI.
+#   docker compose up -d
+#   MinIO console : http://localhost:9001  (minioadmin / minioadmin)
+#   Kafka         : localhost:9092 (from the host), kafka:29092 (inside the compose network)
+#   Kafka UI      : http://localhost:8080
+# Spark runs on the host (pip pyspark) and talks to these services through the ports above.
+name: credit-risk-bigdata
+
+services:
+  minio:
+    # minio/minio was removed from Docker Hub (Sep 2026); Chainguard's build is a drop-in (entrypoint = minio).
+    image: cgr.dev/chainguard/minio:latest
+    user: "0:0"                     # image runs as 65532 by default; root avoids volume permission issues
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    ports: ["9000:9000", "9001:9001"]
+    volumes: ["minio-data:/data"]
+    # buckets bronze/silver/gold are created by the pipeline itself (storage/minio/client.py: ensure_buckets)
+
+  kafka:
+    image: apache/kafka:3.8.0
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: PLAINTEXT://:29092,EXTERNAL://:9092,CONTROLLER://:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,EXTERNAL://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
+      KAFKA_NUM_PARTITIONS: 3
+    ports: ["9092:9092"]
+    volumes: ["kafka-data:/var/lib/kafka/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --list >/dev/null 2>&1"]
+      interval: 10s
+      timeout: 10s
+      retries: 12
+
+  kafka-init:                      # one topic per logical source + dead-letter topic
+    image: apache/kafka:3.8.0
+    depends_on:
+      kafka: {condition: service_healthy}
+    entrypoint: ["/bin/bash", "-c"]
+    command:
+      - |
+        for t in loan_application_events credit_bureau_events previous_loan_events installment_payment_events pos_cash_events credit_card_events synthetic_customer_events dead_letter_events; do
+          /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:29092 --create --if-not-exists --topic "$$t" --partitions 3 --replication-factor 1
+        done
+        /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:29092 --list
+    restart: "no"
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:v0.7.2
+    depends_on: [kafka]
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
+    ports: ["8080:8080"]
+
+volumes:
+  minio-data:
+  kafka-data:

@@ -1,0 +1,278 @@
+{
+  "checks": [
+    {
+      "check": "application base (train+test): one row per sk_id_curr",
+      "passed": true,
+      "rows": 3000,
+      "distinct_keys": 3000
+    },
+    {
+      "check": "leakage: no child row dated after application is used",
+      "passed": true,
+      "excluded": {
+        "bureau": {
+          "rows_silver": 9693,
+          "rows_used": 9688,
+          "excluded_after_application": 1,
+          "excluded_total": 5
+        },
+        "bureau_balance": {
+          "rows_silver": 295046,
+          "rows_used": 295043,
+          "excluded_after_application": 0,
+          "excluded_total": 3
+        },
+        "previous_application": {
+          "rows_silver": 8724,
+          "rows_used": 8724,
+          "excluded_after_application": 0,
+          "excluded_total": 0
+        },
+        "installments_payments": {
+          "rows_silver": 68365,
+          "rows_used": 68358,
+          "excluded_after_application": 2,
+          "excluded_total": 7
+        },
+        "POS_CASH_balance": {
+          "rows_silver": 236648,
+          "rows_used": 236648,
+          "excluded_after_application": 0,
+          "excluded_total": 0
+        },
+        "credit_card_balance": {
+          "rows_silver": 29824,
+          "rows_used": 29824,
+          "excluded_after_application": 0,
+          "excluded_total": 0
+        }
+      }
+    },
+    {
+      "check": "previous_application base: one row per sk_id_prev",
+      "passed": true,
+      "rows": 8724,
+      "distinct_keys": 8724
+    },
+    {
+      "check": "aggregate installments@loan: one row per sk_id_prev",
+      "passed": true,
+      "rows": 4793,
+      "distinct_keys": 4793
+    },
+    {
+      "check": "join installments@loan: row count unchanged",
+      "passed": true,
+      "before": 8724,
+      "after": 8724
+    },
+    {
+      "check": "aggregate pos@loan: one row per sk_id_prev",
+      "passed": true,
+      "rows": 4795,
+      "distinct_keys": 4795
+    },
+    {
+      "check": "join pos@loan: row count unchanged",
+      "passed": true,
+      "before": 8724,
+      "after": 8724
+    },
+    {
+      "check": "aggregate credit_card@loan: one row per sk_id_prev",
+      "passed": true,
+      "rows": 592,
+      "distinct_keys": 592
+    },
+    {
+      "check": "join credit_card@loan: row count unchanged",
+      "passed": true,
+      "before": 8724,
+      "after": 8724
+    },
+    {
+      "check": "gold.loan_credit_features: one row per sk_id_prev",
+      "passed": true,
+      "rows": 8724,
+      "distinct_keys": 8724
+    },
+    {
+      "check": "aggregate bureau: one row per sk_id_curr",
+      "passed": true,
+      "rows": 2576,
+      "distinct_keys": 2576
+    },
+    {
+      "check": "join bureau: row count unchanged",
+      "passed": true,
+      "before": 3000,
+      "after": 3000
+    },
+    {
+      "check": "aggregate bureau_balance: one row per sk_id_curr",
+      "passed": true,
+      "rows": 2294,
+      "distinct_keys": 2294
+    },
+    {
+      "check": "join bureau_balance: row count unchanged",
+      "passed": true,
+      "before": 3000,
+      "after": 3000
+    },
+    {
+      "check": "aggregate previous_application: one row per sk_id_curr",
+      "passed": true,
+      "rows": 2856,
+      "distinct_keys": 2856
+    },
+    {
+      "check": "join previous_application: row count unchanged",
+      "passed": true,
+      "before": 3000,
+      "after": 3000
+    },
+    {
+      "check": "aggregate installments: one row per sk_id_curr",
+      "passed": true,
+      "rows": 2368,
+      "distinct_keys": 2368
+    },
+    {
+      "check": "join installments: row count unchanged",
+      "passed": true,
+      "before": 3000,
+      "after": 3000
+    },
+    {
+      "check": "aggregate pos_cash: one row per sk_id_curr",
+      "passed": true,
+      "rows": 2368,
+      "distinct_keys": 2368
+    },
+    {
+      "check": "join pos_cash: row count unchanged",
+      "passed": true,
+      "before": 3000,
+      "after": 3000
+    },
+    {
+      "check": "aggregate credit_card: one row per sk_id_curr",
+      "passed": true,
+      "rows": 535,
+      "distinct_keys": 535
+    },
+    {
+      "check": "join credit_card: row count unchanged",
+      "passed": true,
+      "before": 3000,
+      "after": 3000
+    },
+    {
+      "check": "aggregate synthetic_traffic (SYNTHETIC): one row per sk_id_curr",
+      "passed": true,
+      "rows": 3000,
+      "distinct_keys": 3000
+    },
+    {
+      "check": "join synthetic_traffic (SYNTHETIC): row count unchanged",
+      "passed": true,
+      "before": 3000,
+      "after": 3000
+    },
+    {
+      "check": "gold.customer_credit_features: one row per sk_id_curr",
+      "passed": true,
+      "rows": 3000,
+      "distinct_keys": 3000
+    },
+    {
+      "check": "customer_credit_features covers every application",
+      "passed": true,
+      "customers": 3000,
+      "applications": 3000
+    },
+    {
+      "check": "join application+customer_features: row count unchanged",
+      "passed": true,
+      "before": 3000,
+      "after": 3000
+    },
+    {
+      "check": "gold.integrated_credit_profile: one row per sk_id_curr",
+      "passed": true,
+      "rows": 3000,
+      "distinct_keys": 3000
+    },
+    {
+      "check": "integrated profile has exactly one row per application",
+      "passed": true,
+      "profile": 3000,
+      "applications": 3000
+    },
+    {
+      "check": "TARGET not present in any feature table",
+      "passed": true,
+      "columns": []
+    },
+    {
+      "check": "training_labels only for train split",
+      "passed": true
+    }
+  ],
+  "excluded_rows": {
+    "bureau": {
+      "rows_silver": 9693,
+      "rows_used": 9688,
+      "excluded_after_application": 1,
+      "excluded_total": 5
+    },
+    "bureau_balance": {
+      "rows_silver": 295046,
+      "rows_used": 295043,
+      "excluded_after_application": 0,
+      "excluded_total": 3
+    },
+    "previous_application": {
+      "rows_silver": 8724,
+      "rows_used": 8724,
+      "excluded_after_application": 0,
+      "excluded_total": 0
+    },
+    "installments_payments": {
+      "rows_silver": 68365,
+      "rows_used": 68358,
+      "excluded_after_application": 2,
+      "excluded_total": 7
+    },
+    "POS_CASH_balance": {
+      "rows_silver": 236648,
+      "rows_used": 236648,
+      "excluded_after_application": 0,
+      "excluded_total": 0
+    },
+    "credit_card_balance": {
+      "rows_silver": 29824,
+      "rows_used": 29824,
+      "excluded_after_application": 0,
+      "excluded_total": 0
+    }
+  },
+  "stats": {
+    "rows": {
+      "loan_credit_features": 8724,
+      "customer_credit_features": 3000,
+      "integrated_credit_profile": 3000,
+      "training_labels": 2579
+    },
+    "feature_count": 102,
+    "customer_feature_count": 39,
+    "seconds": 14.68,
+    "outputs": {
+      "loan_credit_features": "/home/claude/credit-risk-bigdata/data/gold/loan_credit_features",
+      "customer_credit_features": "/home/claude/credit-risk-bigdata/data/gold/customer_credit_features",
+      "integrated_credit_profile": "/home/claude/credit-risk-bigdata/data/gold/integrated_credit_profile",
+      "training_labels": "/home/claude/credit-risk-bigdata/data/gold/training_labels"
+    }
+  }
+}
