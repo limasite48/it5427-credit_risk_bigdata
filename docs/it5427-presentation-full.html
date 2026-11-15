@@ -33,7 +33,7 @@
     position: absolute;
     inset: 0;
     background: var(--paper);
-    padding: 32px 46px 22px;
+    padding: 24px 40px 14px;
     flex-direction: column;
     overflow: hidden;
   }
@@ -49,10 +49,10 @@
   h1 {
     font-family: var(--sans);
     font-weight: 600;
-    font-size: 28px;
-    line-height: 1.25;
+    font-size: 26px;
+    line-height: 1.22;
     letter-spacing: -0.015em;
-    margin: 0 0 14px;
+    margin: 0 0 8px;
     color: var(--ink);
   }
   h2 {
@@ -61,15 +61,15 @@
     font-weight: 600;
     margin: 0 0 8px;
   }
-  p { margin: 0 0 10px; font-size: 17px; line-height: 1.42; }
+  p { margin: 0 0 8px; font-size: 16px; line-height: 1.36; }
   ul, ol { margin: 0; padding-left: 1.15em; }
-  li { margin: 0 0 6px; font-size: 16.5px; line-height: 1.38; }
+  li { margin: 0 0 5px; font-size: 15.5px; line-height: 1.34; }
   li:last-child { margin-bottom: 0; }
   .note {
-    margin-top: 10px;
-    font-size: 13.5px;
-    line-height: 1.4;
-    color: var(--muted);
+    margin-top: 8px;
+    font-size: 15px;
+    line-height: 1.34;
+    color: #2a2723;
   }
   .foot {
     margin-top: auto;
@@ -114,9 +114,9 @@
   .node p, .arm p, .tier p, .mode p, .box p { margin: 0; font-size: 14.5px; line-height: 1.38; }
   .medallion { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 10px; }
   .medallion .node h2 { font-size: 15px; }
-  .pipe { display: flex; flex-direction: column; gap: 8px; }
+  .pipe { display: flex; flex-direction: column; gap: 6px; }
   .pipe-row { display: grid; grid-template-columns: 1fr 26px 1fr 26px 1fr; align-items: stretch; }
-  .pipe-node { border: 1px solid var(--rule); padding: 8px 11px 9px; }
+  .pipe-node { border: 1px solid var(--rule); padding: 6px 10px 7px; }
   .pipe-node h2 { font-size: 16px; margin: 2px 0 4px; }
   .pipe-node .tech {
     margin: 0 0 6px;
@@ -133,11 +133,11 @@
   }
   .pipe-arrow svg { width: 22px; height: 12px; }
   .pipe-elbow { display: block; width: 100%; height: 26px; }
-  .pack { border: 1px solid var(--rule); padding: 8px 10px 10px; }
+  .pack { border: 1px solid var(--rule); padding: 6px 10px 8px; }
   .pack-head { margin-bottom: 8px; }
   .pack-head h2 { margin: 0 0 2px; font-size: 15px; }
   .pack-head p { margin: 0; font-family: var(--sans); font-size: 13px; color: var(--muted); }
-  .checks { border: 1px solid var(--rule); padding: 8px 10px 10px; }
+  .checks { border: 1px solid var(--rule); padding: 6px 10px 8px; }
   .checks .medallion { margin-top: 6px; }
   .arms { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
   .tiers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
@@ -162,7 +162,7 @@
     background: transparent;
     border: none;
     border-bottom: 1px solid var(--line);
-    padding: 11px 0;
+    padding: 8px 0;
     text-align: left;
     cursor: pointer;
     color: var(--ink);
@@ -224,28 +224,30 @@
         <section class="slide title-slide active" aria-label="Trang bìa">
           <p class="kicker">IT5427 — Tích hợp và xử lý dữ liệu lớn</p>
           <h1>Đánh giá và dự báo rủi ro tín dụng từ dữ liệu đa nguồn</h1>
-          <p class="lede">Đường ống dữ liệu lớn cho thẩm định khoản vay tiêu dùng: thu nhận nhiều nguồn, hồ dữ liệu Spark, ước lượng xác suất vỡ nợ và giao diện ra quyết định.</p>
+          <p class="lede">Em xin trình bày đề tài Credit Risk Intelligence, trên tập Home Credit Default Risk. Quy mô có nhãn là 307.511 hồ sơ vay. Bài đi từ thu nhận nhiều nguồn, qua hồ dữ liệu Spark ba lớp, đến ước lượng xác suất vỡ nợ, ngưỡng theo chi phí, và giao diện ra quyết định.</p>
+          <p>Sản phẩm đưa ra không phải một điểm số đứng riêng. Đó là một xác suất gắn với một hành động: duyệt thẳng, chuyển cán bộ thẩm định, hoặc từ chối kèm lý do.</p>
           <dl class="meta">
             <div><dt>Tên đề tài</dt><dd>Credit Risk Intelligence</dd></div>
             <div><dt>Tập dữ liệu</dt><dd>Home Credit Default Risk</dd></div>
             <div><dt>Quy mô có nhãn</dt><dd>307.511 hồ sơ vay</dd></div>
             <div><dt>Thời điểm</dt><dd>15 tháng 11 năm 2026</dd></div>
           </dl>
-          <footer class="foot"><span>Phím mũi tên để chuyển slide. In trình duyệt để xuất PDF.</span><span class="pageno"></span></footer>
+          <footer class="foot"><span>Đọc nội dung trên từng slide. Phím mũi tên để chuyển. In trình duyệt để xuất PDF.</span><span class="pageno"></span></footer>
         </section>
 
         <section class="slide" aria-label="Mục lục">
           <p class="kicker">Nội dung trình bày</p>
-          <h1>Tám phần của bài</h1>
+          <h1>Tám phần, đi lần lượt</h1>
+          <p>Em đi từ bài toán thẩm định, đường ống và dữ liệu, đến hạng mục đã làm, kết quả đo được, tình huống minh họa, ứng dụng, rồi hiện trạng và hướng phát triển. Bấm một mục để nhảy tới đúng phần.</p>
           <ol class="toc">
             <li><button type="button" data-go="3">Tổng quan và ý nghĩa thực tế <em>3–4</em></button></li>
-            <li><button type="button" data-go="5">Ý tưởng và đường ống xử lý <em>5–7</em></button></li>
-            <li><button type="button" data-go="8">Tập dữ liệu và tiền xử lý <em>8–10</em></button></li>
-            <li><button type="button" data-go="11">Hạng mục đã triển khai <em>11–12</em></button></li>
-            <li><button type="button" data-go="13">Kết quả đo được <em>13–18</em></button></li>
-            <li><button type="button" data-go="19">Tình huống minh họa <em>19–21</em></button></li>
-            <li><button type="button" data-go="22">Ứng dụng thực tế <em>22</em></button></li>
-            <li><button type="button" data-go="23">Hiện trạng và hướng phát triển <em>23–25</em></button></li>
+            <li><button type="button" data-go="5">Ý tưởng và đường ống xử lý <em>5–8</em></button></li>
+            <li><button type="button" data-go="9">Tập dữ liệu và tiền xử lý <em>9–12</em></button></li>
+            <li><button type="button" data-go="13">Hạng mục đã triển khai <em>13–14</em></button></li>
+            <li><button type="button" data-go="15">Kết quả đo được <em>15–20</em></button></li>
+            <li><button type="button" data-go="21">Tình huống minh họa <em>21–23</em></button></li>
+            <li><button type="button" data-go="24">Ứng dụng thực tế <em>24</em></button></li>
+            <li><button type="button" data-go="25">Hiện trạng và hướng phát triển <em>25–27</em></button></li>
           </ol>
           <footer class="foot"><span>IT5427 · Tích hợp và xử lý dữ liệu lớn</span><span class="pageno"></span></footer>
         </section>
@@ -253,15 +255,15 @@
         <section class="slide" aria-label="Tổng quan đề tài">
           <p class="kicker">01 · Tổng quan</p>
           <h1>Bài toán thẩm định và phạm vi đề tài</h1>
-          <p>Thẩm định tín dụng bán lẻ yêu cầu ước lượng xác suất vỡ nợ trước khi giải ngân. Dữ liệu nằm ở nhiều hệ thống, lớp vỡ nợ là thiểu số, và mỗi quyết định từ chối cần truy được lý do.</p>
-          <p>Đề tài xây dựng đường ống khép kín, không dừng ở một bộ phân loại trên một bảng phẳng. Bốn khâu đã nối với nhau:</p>
+          <p>Thẩm định tín dụng bán lẻ là ước lượng xác suất một khoản vay sẽ vỡ nợ, và phải làm việc đó trước khi giải ngân. Dữ liệu không nằm trên một bảng: đơn vay, cục tín dụng, lịch trả góp, thẻ và điểm bán là các hệ thống khác nhau. Lớp vỡ nợ chỉ là thiểu số, khoảng 8%. Nếu từ chối, phải truy được lý do.</p>
+          <p>Đề tài không dừng ở một bộ phân loại trên một bảng phẳng. Bốn khâu đã nối thành một đường ống khép kín.</p>
           <ol>
-            <li>Thu nhận có kiểm tra lược đồ, kèm chuỗi vĩ mô theo vùng.</li>
-            <li>Hồ dữ liệu ba lớp trên Apache Spark, có kiểm tra chống rò rỉ nhãn và rò rỉ thời gian.</li>
-            <li>Hai mô hình xác suất: thẻ điểm hồi quy logistic L2 để đối chứng, và LightGBM được huấn luyện sao cho xác suất bám tần suất thực. Ngưỡng quyết định chọn theo ma trận chi phí.</li>
-            <li>Lớp ra quyết định: dịch vụ chấm điểm, cổng REST có xác thực, và giao diện thẩm định.</li>
+            <li>Thu nhận có kiểm tra lược đồ JSON trước khi ghi vào kho. Kèm theo là chuỗi vĩ mô theo vùng. Chuỗi này do dự án sinh, không phải số liệu thống kê nhà nước.</li>
+            <li>Hồ dữ liệu ba lớp trên Apache Spark. Biến mục tiêu không nằm trong bảng đặc trưng. Không dùng sự kiện phát sinh sau ngày nộp đơn.</li>
+            <li>Hai mô hình xác suất. Hồi quy logistic L2 là thẻ điểm đối chứng. LightGBM được huấn luyện để xác suất bám tần suất thực. Ngưỡng quyết định chọn theo ma trận chi phí, không lấy mặc định 0,50.</li>
+            <li>Lớp ra quyết định gồm dịch vụ chấm điểm, cổng REST có xác thực, và giao diện thẩm định. Đầu ra vận hành là một xác suất gắn với một hành động: duyệt thẳng, chuyển cán bộ, hoặc từ chối.</li>
           </ol>
-          <p class="note">Sản phẩm của mô hình là một xác suất gắn với một hành động: duyệt thẳng, chuyển cán bộ, hoặc từ chối. Điểm số đứng một mình không phải đầu ra vận hành.</p>
+          <p class="note">Một điểm số đứng một mình không phải đầu ra vận hành. Cán bộ cần biết duyệt, chuyển người, hay từ chối, và nếu từ chối thì vì đặc trưng nào.</p>
           <footer class="foot"><span>IT5427 · Tích hợp và xử lý dữ liệu lớn</span><span class="pageno"></span></footer>
         </section>
 
@@ -277,34 +279,34 @@
               <text x="1096" y="18" text-anchor="end" font-family="Segoe UI, Arial, sans-serif" font-size="14" fill="#1c1c1c">8,07% vỡ nợ · 24.825</text>
             </svg>
           </figure>
-          <p>Một quy tắc gán mọi hồ sơ vào lớp đa số đạt độ chính xác khoảng 92% nhưng không phát hiện khoản vỡ nợ nào. Vì vậy đề tài không dùng độ chính xác làm hàm mục tiêu.</p>
+          <p>Phần nhạt là 282.686 hồ sơ trả nợ đúng hạn, tức 91,93%. Phần đậm là 24.825 hồ sơ vỡ nợ, tức 8,07%. Vì vậy đề tài không dùng độ chính xác làm hàm mục tiêu. Bài dùng khả năng xếp hạng và hàm chi phí.</p>
           <ul>
-            <li>Phê duyệt nhầm một khoản vỡ nợ được gán chi phí gấp năm lần từ chối nhầm một khách hàng trả nợ. Tỷ lệ 5:1 thể hiện mất gốc, chi phí thu hồi và trích lập dự phòng so với chi phí cơ hội.</li>
-            <li>Trên 61.503 hồ sơ kiểm định, ngưỡng 0,50 cho tổn thất kỳ vọng 24.314 đơn vị chi phí; ngưỡng 0,18 hạ xuống 20.441, tức giảm 15,93%.</li>
-            <li>Xác suất phải bám tần suất thực thì các mốc vận hành 5% và 15% mới có nghĩa.</li>
-            <li>Quyết định từ chối cần danh sách đặc trưng làm tăng rủi ro, để giải trình trong nội bộ và với người vay.</li>
+            <li>Phê duyệt nhầm một khoản vỡ nợ được gán chi phí gấp năm lần từ chối nhầm một khách hàng trả nợ. Tỷ lệ 5 ăn 1 thay cho mất gốc, chi phí thu hồi và trích lập dự phòng, so với chi phí cơ hội của một khách bị từ chối.</li>
+            <li>Trên 61.503 hồ sơ kiểm định, ngưỡng 0,50 cho tổn thất kỳ vọng 24.314 đơn vị chi phí. Ngưỡng 0,18 hạ xuống 20.441. Chênh 3.873 đơn vị, tức giảm 15,93%.</li>
+            <li>Xác suất phải bám tần suất thực thì hai mốc 5% và 15% mới dùng được. Nếu xác suất bị thổi lên, hồ sơ rủi ro thấp cũng vượt mốc 5%, dù tần suất cả danh mục chỉ là 8,07%.</li>
+            <li>Quyết định từ chối cần danh sách đặc trưng làm tăng rủi ro, để giải trình trong nội bộ và với người vay. Đó là vai trò của TreeSHAP ở các slide sau.</li>
           </ul>
-          <p class="note">Mức giảm 15,93% là tổn thất kỳ vọng trên tập kiểm định theo hàm 5·FN + FP, không phải lợi nhuận đã hạch toán.</p>
+          <p class="note">Mức giảm 15,93% là tổn thất kỳ vọng trên tập kiểm định, theo hàm năm lần âm tính sai cộng một lần dương tính sai. Không phải lợi nhuận đã ghi sổ.</p>
           <footer class="foot"><span>IT5427 · Tích hợp và xử lý dữ liệu lớn</span><span class="pageno"></span></footer>
         </section>
 
         <section class="slide" aria-label="Ý tưởng thực hiện">
           <p class="kicker">02 · Ý tưởng</p>
           <h1>Tách chuẩn hóa dữ liệu khỏi lớp ra quyết định</h1>
-          <p>Cùng một hồ sơ vay xuất hiện ở cục tín dụng, khoản vay trước, lịch trả góp, thẻ và điểm bán. Ý tưởng là gộp các nguồn đó thành đặc trưng ở mức khách hàng mà không đưa nhãn vào bảng đặc trưng, rồi mới ước lượng xác suất.</p>
+          <p>Cùng một khách hàng xuất hiện ở cục tín dụng, khoản vay trước, lịch trả góp, thẻ và điểm bán. Ý tưởng là gộp các nguồn đó thành đặc trưng ở mức khách hàng, không đưa nhãn vào bảng đặc trưng, rồi mới ước lượng xác suất.</p>
           <div class="arms">
             <article class="arm">
               <p class="idx">Đường ngoại tuyến</p>
               <h2>Hồ dữ liệu Spark</h2>
-              <p>Nhiều bảng lịch sử đi qua Bronze, Silver, Gold. Biến mục tiêu chỉ nằm ở bảng nhãn. Đường này đang chạy trên tập con 5.000 khách hàng.</p>
+              <p>Nhiều bảng lịch sử đi qua Bronze, Silver, rồi Gold. Bản thô giữ nguyên nguồn. Silver chuẩn hóa kiểu. Gold gộp về một dòng mỗi khách. Biến mục tiêu chỉ nằm ở bảng nhãn. Đường này đang chạy trên tập con 5.000 khách hàng của dữ liệu thật.</p>
             </article>
             <article class="arm">
               <p class="idx">Đường trực tuyến</p>
               <h2>Chấm một hồ sơ mới</h2>
-              <p>Các trường trên đơn vay và biến vĩ mô đã nối đúng thời điểm, 137 đặc trưng. LightGBM huấn luyện trên đủ 307.511 hồ sơ trả về xác suất, bậc rủi ro và đóng góp TreeSHAP.</p>
+              <p>Nhận các trường trên đơn vay và biến vĩ mô đã nối đúng thời điểm nộp, thành 137 đặc trưng. LightGBM huấn luyện trên đủ 307.511 hồ sơ trả về xác suất, bậc rủi ro và đóng góp TreeSHAP. Đường này không chờ lô Spark.</p>
             </article>
           </div>
-          <p class="note">Hai đường chưa dùng chung một kho đặc trưng. Mô hình trực tuyến chưa đọc các tổng hợp lịch sử trả góp và cục tín dụng do Spark tạo ra. Việc ghép chúng là hạng mục tiếp theo, sau khi có lớp Gold đầy đủ.</p>
+          <p class="note">Hai đường chưa dùng chung một kho đặc trưng. Mô hình trực tuyến chưa đọc các tổng hợp lịch sử trả góp và cục tín dụng do Spark tạo ra. Ghép chúng là hạng mục tiếp theo, sau khi có lớp Gold đầy đủ 307.511 hồ sơ. Khi đó hai đường mới cùng một định nghĩa đặc trưng.</p>
           <footer class="foot"><span>IT5427 · Tích hợp và xử lý dữ liệu lớn</span><span class="pageno"></span></footer>
         </section>
 
@@ -337,18 +339,42 @@
           <div class="medallion">
             <article class="node">
               <h2>Bronze</h2>
-              <p>Bản ghi thô, đúng nguồn, chưa sửa nghiệp vụ.</p>
+              <p>Bản ghi thô, đúng nguồn, chưa sửa nghiệp vụ. Giữ để truy ngược về lô nạp.</p>
             </article>
             <article class="node">
               <h2>Silver</h2>
-              <p>Chuẩn hóa kiểu, cách ly bản ghi lỗi, đối soát số dòng.</p>
+              <p>Chuẩn hóa kiểu, cách ly bản ghi lỗi, khử trùng, rồi đối soát số dòng.</p>
             </article>
             <article class="node">
               <h2>Gold</h2>
-              <p>Gộp theo khoản vay và theo khách hàng. Nhãn không nằm trong bảng đặc trưng.</p>
+              <p>Gộp theo khoản vay và theo khách. Nhãn không nằm trong bảng đặc trưng.</p>
             </article>
           </div>
-          <p class="note">Đường chấm điểm trực tuyến không chờ lô Spark. Đường Spark là nơi lịch sử nhiều bảng được chuẩn hóa.</p>
+          <p class="note">Em đi từ trái sang phải. Thu nhận bằng Kafka và MinIO. Xử lý phân tán bằng Spark. Mô hình là logistic L2 đối chứng với LightGBM, kèm ngưỡng chi phí và TreeSHAP. Ra quyết định bằng FastAPI, Spring Boot và React. Ba vai trò trên giao diện là thẩm định, phân tích và quản trị. Đường chấm điểm trực tuyến không chờ lô Spark. Đường Spark là nơi lịch sử nhiều bảng được chuẩn hóa.</p>
+          <footer class="foot"><span>IT5427 · Tích hợp và xử lý dữ liệu lớn</span><span class="pageno"></span></footer>
+        </section>
+
+        <section class="slide" aria-label="Khóa nối">
+          <p class="kicker">02 · Khóa nối</p>
+          <h1>Ba khóa, và không nối thẳng bảng nhiều dòng</h1>
+          <p>Mọi sự kiện dùng một phong bì: mã sự kiện, thời điểm, hệ thống nguồn, bảng nguồn và phần dữ liệu. Bản ghi sai lược đồ không vào hồ. Nó vào hàng đợi lỗi <span class="mono">hc.dlq.v1</span>. Kafka có bảy topic nguồn. Hàng đợi lỗi là topic thứ tám, không phải một nguồn tín dụng.</p>
+          <table>
+            <thead>
+              <tr><th>Khóa</th><th>Nối cái gì</th><th>Quy tắc ghép</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><span class="mono">SK_ID_CURR</span></td><td>Đơn vay là gốc. Cục tín dụng, khoản vay trước và giao thông cuối cùng đều về khóa này.</td><td>Một khách, một dòng ở bảng đặc trưng.</td></tr>
+              <tr><td><span class="mono">SK_ID_BUREAU</span></td><td>Khoản tại tổ chức khác. Số dư theo tháng treo dưới khoản này.</td><td>Gộp số dư về khoản, rồi gộp khoản về khách.</td></tr>
+              <tr><td><span class="mono">SK_ID_PREV</span></td><td>Khoản vay trước trong hệ thống. Trả góp, dư nợ điểm bán và thẻ treo dưới khóa này.</td><td>Gộp về khoản trước, rồi mới nối trái vào khách.</td></tr>
+            </tbody>
+          </table>
+          <ol style="margin-top: 10px;">
+            <li>Bỏ dòng con phát sinh sau ngày nộp đơn, và bỏ dòng không có cha.</li>
+            <li>Tách biến mục tiêu sang bảng nhãn. Bảng dùng để ghép không còn cột này.</li>
+            <li>Gộp nhiều dòng con về khóa cha trước. Không nối thẳng bảng theo tháng vào đơn vay.</li>
+            <li>Sau mỗi phép nối trái, số dòng của bảng cha không đổi. Nếu thiếu bảng con mà số khách bị giảm, đó là lỗi tích hợp, không phải kết quả nghiệp vụ.</li>
+            <li>Khách không có lịch sử con vẫn được giữ: số đếm bằng 0, tỷ lệ để khuyết. Bài không sinh khách giả để nối vào Home Credit. Hồ sơ giao thông gắn đúng mã hồ sơ thật và được đánh dấu là mô phỏng.</li>
+          </ol>
           <footer class="foot"><span>IT5427 · Tích hợp và xử lý dữ liệu lớn</span><span class="pageno"></span></footer>
         </section>
 
@@ -357,25 +383,25 @@
           <h1>Năm bước xử lý và hai chế độ thực thi</h1>
           <div class="cols">
             <div>
-              <h2>Thứ tự xử lý</h2>
+              <h2>Thứ tự xử lý, đọc từ trên xuống</h2>
               <ol>
-                <li>Chia trục thời gian 104 tuần và kiểm lược đồ trước khi ghi vào MinIO hoặc Kafka.</li>
-                <li>Sinh chỉ số GDP, thất nghiệp, CPI cho 82 vùng và chuẩn lương theo nghề.</li>
-                <li>Làm sạch ở Silver; gộp lịch sử con trước khi nối; để biến mục tiêu ở bảng nhãn.</li>
-                <li>Huấn luyện logistic L2 và LightGBM trên 246.008 dòng, kiểm định 61.503 dòng. Quét ngưỡng từ 0,01 đến 0,99.</li>
-                <li>Phục vụ xác suất, bậc rủi ro và giải thích qua API có xác thực.</li>
+                <li>Chia trục thời gian 104 tuần, mốc cắt ngày 1 tháng 12 năm 2025, và kiểm lược đồ JSON trước khi ghi vào MinIO hoặc Kafka.</li>
+                <li>Sinh GDP, thất nghiệp và CPI cho 82 vùng, cùng chuẩn lương theo nghề. Đây là dữ liệu do dự án sinh cho 2016–2025, không phải số liệu thống kê nhà nước.</li>
+                <li>Làm sạch ở Silver. Gộp lịch sử con về khóa cha trước khi nối. Để biến mục tiêu ở bảng nhãn riêng.</li>
+                <li>Huấn luyện logistic L2 và LightGBM trên 246.008 dòng, kiểm định 61.503 dòng. Quét ngưỡng từ 0,01 đến 0,99 theo hàm chi phí.</li>
+                <li>Phục vụ xác suất, bậc rủi ro và giải thích TreeSHAP qua API có xác thực JWT.</li>
               </ol>
             </div>
             <div>
               <article class="mode">
                 <h2>Chạy cục bộ, khoảng 2 phút</h2>
-                <p>Tính KPI, logistic, LightGBM, đường cong và biểu đồ SHAP trên đủ 307.511 hồ sơ. Báo cáo Spark giữ nguyên tập con.</p>
+                <p>Tính chỉ số danh mục, logistic, LightGBM, đường cong và biểu đồ SHAP trên đủ 307.511 hồ sơ. Báo cáo Spark của lần chạy này vẫn là tập con.</p>
               </article>
               <article class="mode" style="border-top: none;">
                 <h2>Chạy Spark đầy đủ trên Colab</h2>
-                <p>Xử lý toàn bộ lịch sử con, cỡ vài chục triệu dòng, rồi xuất một tệp nén. Lệnh hợp nhất chỉ giải nén vào các thư mục đã cho phép.</p>
+                <p>Xử lý toàn bộ lịch sử con, cỡ vài chục triệu dòng, rồi xuất một tệp nén. Lệnh hợp nhất chỉ giải nén vào các thư mục đã cho phép, không ghi đè tùy ý.</p>
               </article>
-              <p class="note">Lô Colab chưa được hợp nhất vào bản đang trình bày. Mọi số liệu Spark ở các slide sau là của tập con trên dữ liệu thật.</p>
+              <p class="note">Lô Colab chưa được hợp nhất vào bản đang trình bày. Mọi số liệu Spark ở các slide sau là của tập con trên dữ liệu thật, không phải dữ liệu giả lập.</p>
             </div>
           </div>
           <footer class="foot"><span>IT5427 · Tích hợp và xử lý dữ liệu lớn</span><span class="pageno"></span></footer>
@@ -384,20 +410,21 @@
         <section class="slide" aria-label="Lý do chọn tập dữ liệu">
           <p class="kicker">03 · Tập dữ liệu</p>
           <h1>Vì sao dùng Home Credit Default Risk</h1>
-          <p>Đây là hồ sơ vay tiêu dùng do Home Credit công bố, có khóa <span class="mono">SK_ID_CURR</span> nối đơn vay với cục tín dụng, khoản vay trước, lịch trả góp, dư nợ điểm bán và thẻ. Cấu trúc đó sát hệ thống ngân hàng bán lẻ hơn một bảng phẳng dùng để giảng bài.</p>
+          <p>Đây là hồ sơ vay tiêu dùng do Home Credit công bố. Khóa <span class="mono">SK_ID_CURR</span> nối đơn vay với cục tín dụng, khoản vay trước, lịch trả góp, dư nợ điểm bán và thẻ. Cấu trúc đó sát hệ thống ngân hàng bán lẻ hơn một bảng phẳng dùng để giảng phân loại. Vì vậy tập này hợp với một bài tích hợp dữ liệu.</p>
           <ul>
-            <li>Khối lượng buộc phải xử lý phân tán: trạng thái cục tín dụng theo tháng có 27.299.925 dòng; lịch trả góp khoảng 13,6 triệu dòng.</li>
-            <li>Lớp vỡ nợ chỉ chiếm 8,07%, nên phải chọn thước đo xếp hạng và hàm chi phí, không dùng độ chính xác.</li>
-            <li>Dữ liệu có lỗi mã hóa đã biết. <span class="mono">DAYS_EMPLOYED = 365243</span> là mốc thay cho người không đi làm, không phải thâm niên một nghìn năm.</li>
-            <li>Tập cố định và công khai, nên đường ống của đồ án tái lập được.</li>
+            <li>Khối lượng buộc phải xử lý phân tán. Trạng thái cục tín dụng theo tháng có 27.299.925 dòng. Lịch trả góp khoảng 13,6 triệu dòng. Không xử lý được nếu để nguyên trên một máy tính bảng tính.</li>
+            <li>Lớp vỡ nợ chỉ chiếm 8,07%, nên phải chọn thước đo xếp hạng và hàm chi phí. Độ chính xác khoảng 92% của lớp đa số không được dùng làm mục tiêu.</li>
+            <li>Dữ liệu có lỗi mã hóa đã biết. <span class="mono">DAYS_EMPLOYED = 365243</span> là mốc thay cho người không đi làm, không phải thâm niên một nghìn năm. Bài lập cờ rồi thay bằng giá trị khuyết.</li>
+            <li>Tập cố định và công khai, nên đường ống của đồ án tái lập được. Người nghe có thể đối chiếu lại từng con số.</li>
           </ul>
-          <p class="note">Giới hạn: đây là tập cuộc thi, không phải dòng giao dịch đang chạy tại ngân hàng. Tập kiểm tra 48.744 hồ sơ không có nhãn. Chuỗi vĩ mô và hồ sơ giao thông là dữ liệu do dự án sinh, không phải số liệu thống kê chính thức.</p>
+          <p class="note">Giới hạn cần nói: đây là tập cuộc thi, không phải dòng giao dịch đang chạy tại một ngân hàng. Tập kiểm tra 48.744 hồ sơ không có nhãn, nên không dùng để chấm chất lượng mô hình. Chuỗi vĩ mô và hồ sơ giao thông là dữ liệu do dự án sinh, không phải số liệu thống kê chính thức.</p>
           <footer class="foot"><span>IT5427 · Tích hợp và xử lý dữ liệu lớn</span><span class="pageno"></span></footer>
         </section>
 
         <section class="slide compact" aria-label="Thành phần các nguồn">
           <p class="kicker">03 · Thành phần dữ liệu</p>
           <h1>Mười nguồn và phần Spark đã xử lý</h1>
+          <p>Cột đầy đủ là quy mô gốc. Cột tập con là phần Spark đã xử lý trên dữ liệu thật. Hai cực cần nhớ: đơn có nhãn gốc 307.511 dòng, tập con chỉ 4.316 dòng. Trạng thái cục tín dụng theo tháng gốc hơn 27 triệu dòng, tập con 352.119 dòng.</p>
           <table>
             <thead>
               <tr><th>Nguồn</th><th>Nội dung</th><th class="num">Dòng đầy đủ</th><th class="num">Dòng tập con</th></tr>
@@ -415,13 +442,14 @@
               <tr><td>macro, occupation</td><td>GDP, thất nghiệp, CPI, lương nghề</td><td class="num">82 vùng, 2016–2025</td><td class="num">làm giàu, không tính vào 799.487</td></tr>
             </tbody>
           </table>
-          <p class="note">Chín bảng đầu cộng lại 799.487 dòng ở cả Bronze và Silver của tập con: 4.316 + 684 + 24.618 + 352.119 + 23.990 + 192.599 + 142.543 + 53.618 + 5.000. Không có dòng bị cách ly và không có bản ghi trùng bị loại.</p>
+          <p class="note">Chín bảng đầu của tập con cộng lại 799.487 dòng ở cả Bronze và Silver: 4.316 + 684 + 24.618 + 352.119 + 23.990 + 192.599 + 142.543 + 53.618 + 5.000. Không có dòng bị cách ly và không có bản ghi trùng bị loại. Vĩ mô không nằm trong 799.487. Đó là bảng làm giàu, 82 vùng.</p>
           <footer class="foot"><span>IT5427 · Tích hợp và xử lý dữ liệu lớn</span><span class="pageno"></span></footer>
         </section>
 
         <section class="slide compact" aria-label="Tiền xử lý">
           <p class="kicker">03 · Tiền xử lý</p>
           <h1>Sửa dị thường, tạo tỷ số, chặn rò rỉ thời gian</h1>
+          <p>Sáu tỷ số dưới đây đưa ngôn ngữ thẩm định vào ma trận đặc trưng. Đòn bẩy trung bình của danh mục là 3,96 lần dư nợ trên thu nhập. Mỗi dòng gồm tên tỷ số, cách tính và ý nghĩa khi xét một hồ sơ.</p>
           <table>
             <thead>
               <tr><th>Đặc trưng tạo thêm</th><th>Cách tính</th><th>Ý nghĩa thẩm định</th></tr>
@@ -435,12 +463,27 @@
               <tr><td>DAYS_EMPLOYED_ANOM</td><td>Bằng 1 nếu DAYS_EMPLOYED = 365243</td><td>Tách người không đi làm khỏi biến thâm niên</td></tr>
             </tbody>
           </table>
-          <ul style="margin-top: 12px;">
-            <li>Giá trị 365243 được thay bằng khuyết sau khi đã lập cờ, để không kéo phân phối thâm niên.</li>
-            <li>Biến vĩ mô được nối lùi theo vùng và ngày hồ sơ, nên điều kiện kinh tế dùng cho một hồ sơ không lấy từ kỳ sau ngày nộp.</li>
+          <ul style="margin-top: 8px;">
+            <li>Giá trị 365243 được lập cờ <span class="mono">DAYS_EMPLOYED_ANOM</span> rồi thay bằng khuyết, để thâm niên một nghìn năm không kéo lệch phân phối.</li>
+            <li>Biến vĩ mô nối lùi theo vùng và ngày hồ sơ. Hồ sơ nộp giữa hai kỳ chỉ lấy kỳ đã công bố, không lấy kỳ sau ngày nộp.</li>
             <li>Ở Spark, lịch sử nhiều dòng được gộp theo khoản vay và theo khách hàng trước khi nối. Sau mỗi phép nối, số dòng không đổi. Biến mục tiêu không có trong bảng đặc trưng.</li>
-            <li>Biến số được hạ kiểu để giảm bộ nhớ, điền trung vị, và mã hóa có thứ tự với giá trị lạ ánh xạ về −1.</li>
+            <li>Biến số được hạ kiểu để giảm bộ nhớ, điền trung vị, và mã hóa có thứ tự. Giá trị lạ ánh xạ về −1, không bị biến thành một nhóm có nghĩa.</li>
           </ul>
+          <footer class="foot"><span>IT5427 · Tích hợp và xử lý dữ liệu lớn</span><span class="pageno"></span></footer>
+        </section>
+
+        <section class="slide" aria-label="Ba mươi mốt kiểm tra">
+          <p class="kicker">03 · Chất lượng dữ liệu</p>
+          <h1>Ba mươi mốt kiểm tra, cả 31 đều đạt</h1>
+          <p>Các kiểm tra chạy trên tập con thật, trước khi ghi bảng Gold. Khi bị hỏi “kiểm tra những gì”, em nói bốn nhóm sau.</p>
+          <ol>
+            <li>Đúng một dòng mỗi khóa, ở hạt khách hàng <span class="mono">SK_ID_CURR</span> và ở hạt khoản vay <span class="mono">SK_ID_PREV</span>.</li>
+            <li>Sau mỗi lần nối trái, số dòng không đổi, và mọi đơn vay vẫn còn trong bảng đặc trưng. Khách thiếu lịch sử con không bị rơi khỏi hồ sơ.</li>
+            <li>Không dùng dòng con có ngày sau ngày nộp đơn. Đây là cách chặn rò rỉ thời gian: mô hình không được nhìn sự kiện của tương lai.</li>
+            <li><span class="mono">TARGET</span> không có trong bảng đặc trưng. Nhãn chỉ nằm ở bảng nhãn của phần huấn luyện. Nguồn giao thông được đánh dấu mô phỏng ở cả bước gộp và bước nối.</li>
+          </ol>
+          <p>Vì sao Bronze và Silver cùng 799.487 dòng: số bản ghi cách ly bằng 0 và số bản ghi trùng bị loại bằng 0. Đối soát là vào bằng ra, cộng cách ly, cộng trùng. Hai lớp bằng nhau không có nghĩa Gold cũng 799.487 dòng. Gold đã gộp nhiều dòng thành một dòng: 5.000 hồ sơ khách và 23.990 khoản vay trước.</p>
+          <p class="note">Sáu đặc trưng giao thông nằm trong hồ sơ tích hợp nhưng gắn cờ dữ liệu mô phỏng. Em không trình bày chúng như dữ liệu thật của ngân hàng.</p>
           <footer class="foot"><span>IT5427 · Tích hợp và xử lý dữ liệu lớn</span><span class="pageno"></span></footer>
         </section>
 
@@ -520,32 +563,32 @@
               </div>
             </div>
           </div>
-          <p class="note">LightGBM tối ưu logloss không nhân trọng số lớp. Trọng số lớp khoảng 11,4 lần làm xác suất nhóm rủi ro thấp vượt mốc 5% dù tần suất danh mục chỉ là 8,07%, nên đã được bỏ.</p>
+          <p class="note">LightGBM tối ưu logloss và không nhân trọng số lớp. Trọng số khoảng 11,4 lần đẩy xác suất của nhóm rủi ro thấp vượt mốc 5%, trong khi tần suất danh mục chỉ là 8,07%, nên đã bỏ. Nhờ đó mốc duyệt thẳng và mốc chuyển cán bộ mới bám được tần suất thực. Kiểm thử đã chạy: 20 bài Python, 13 bài Java, 4 bài giao diện.</p>
           <footer class="foot"><span>IT5427 · Tích hợp và xử lý dữ liệu lớn</span><span class="pageno"></span></footer>
         </section>
 
         <section class="slide" aria-label="Quy tắc quyết định">
           <p class="kicker">04 · Quy tắc đã gắn vào hệ thống</p>
           <h1>Từ xác suất sang hành động thẩm định</h1>
-          <div class="src">Ba điều kiện loại trước khi chấm điểm: khoản trả định kỳ trên 50% thu nhập; hơn hai lần hỏi cục tín dụng trong một giờ hoặc hơn ba quan sát nợ xấu vòng xã hội trong 30 ngày; tuổi dưới 18.</div>
+          <div class="src">Trước khi chấm điểm có ba điều kiện loại, và mô hình không thay thế chúng: khoản trả định kỳ trên 50% thu nhập; hơn hai lần hỏi cục tín dụng trong một giờ, hoặc hơn ba quan sát nợ xấu vòng xã hội trong 30 ngày; tuổi dưới 18.</div>
           <div class="tiers">
             <article class="tier">
               <p class="idx">PD &lt; 5%</p>
-              <h2>Thấp</h2>
-              <p>Duyệt thẳng, không qua cán bộ. Hồ sơ mẫu “đủ chuẩn” cho PD 1,67%.</p>
+              <h2>Thấp — duyệt thẳng</h2>
+              <p>Không qua cán bộ. Hồ sơ mẫu “đủ chuẩn” cho xác suất 1,67%, nằm trong bậc này.</p>
             </article>
             <article class="tier">
               <p class="idx">5% ≤ PD &lt; 15%</p>
-              <h2>Trung bình</h2>
-              <p>Chuyển xem xét thủ công và giới hạn đòn bẩy. Đây là nhóm cán bộ cần đọc.</p>
+              <h2>Trung bình — chuyển cán bộ</h2>
+              <p>Xem xét thủ công và giới hạn đòn bẩy. Đây là nhóm người thẩm định cần đọc.</p>
             </article>
             <article class="tier">
               <p class="idx">PD ≥ 15%</p>
-              <h2>Cao</h2>
-              <p>Từ chối. Kèm các số hạng TreeSHAP làm tăng rủi ro để nêu lý do.</p>
+              <h2>Cao — từ chối</h2>
+              <p>Kèm các số hạng TreeSHAP dương, tức các đặc trưng làm tăng rủi ro, để nêu lý do.</p>
             </article>
           </div>
-          <p style="margin-top: 14px;">TreeSHAP phân rã log-odds của xác suất thành tổng đóng góp từng đặc trưng. Số hạng dương đẩy xác suất lên; số hạng âm kéo xuống. Ngưỡng chi phí 0,18 là ngưỡng tối ưu tổn thất, khác với hai mốc 5% và 15% dùng để chia bậc xử lý.</p>
+          <p style="margin-top: 12px;">TreeSHAP phân rã log-odds của xác suất thành tổng đóng góp từng đặc trưng. Số hạng dương đẩy xác suất lên. Số hạng âm kéo xuống. Không lẫn hai ngưỡng. Mốc 0,18 là ngưỡng tối ưu tổn thất với tỷ lệ phạt 5 ăn 1. Hai mốc 5% và 15% chỉ dùng để chia bậc xử lý cho cán bộ.</p>
           <footer class="foot"><span>IT5427 · Tích hợp và xử lý dữ liệu lớn</span><span class="pageno"></span></footer>
         </section>
 
@@ -558,9 +601,8 @@
             <div class="kpi"><b>599.026</b><span>Dư nợ trung bình, theo đơn vị tiền của tập dữ liệu.</span></div>
             <div class="kpi"><b>168.798</b><span>Thu nhập trung bình. Khoản trả định kỳ trung bình 27.109.</span></div>
           </div>
-          <p>Các mức này là mô tả danh mục, chưa phải chất lượng mô hình. Thu nhập trung vị là 147.150, thấp hơn trung bình, nên phân phối thu nhập lệch phải.</p>
-          <p>Có 11,44% hồ sơ mang ít nhất một quan sát nợ xấu vòng xã hội trong 30 ngày, và 8,38% với cửa sổ 60 ngày. Hai số này là độ phổ biến của chỉ báo, không phải tỷ lệ vỡ nợ của nhóm đó.</p>
-          <p class="note">Nguồn: <span class="mono">outputs/metrics/risk_summary.json</span>, tính trên toàn bộ hồ sơ có nhãn. Đơn vị tiền không được quy đổi.</p>
+          <p>Bốn số trên là mô tả danh mục, chưa phải chất lượng mô hình. Tỷ lệ vỡ nợ là 8,07%, tức 24.825 hồ sơ vỡ nợ và 282.686 hồ sơ trả nợ. Đòn bẩy trung bình là 3,96 lần dư nợ trên thu nhập. Trung vị dư nợ là 513.531, thấp hơn dư nợ trung bình 599.026. Thu nhập trung bình là 168.798, còn trung vị thu nhập chỉ 147.150, nên phân phối thu nhập lệch phải. Khoản trả định kỳ trung bình là 27.109. Đơn vị tiền là đơn vị của tập dữ liệu, không quy đổi.</p>
+          <p>Có 11,44% hồ sơ mang ít nhất một quan sát nợ xấu vòng xã hội trong 30 ngày, và 8,38% với cửa sổ 60 ngày. Hai số này là độ phổ biến của chỉ báo, không phải tỷ lệ vỡ nợ của những người đó. Nguồn là <span class="mono">outputs/metrics/risk_summary.json</span>, tính trên toàn bộ hồ sơ có nhãn.</p>
           <footer class="foot"><span>IT5427 · Tích hợp và xử lý dữ liệu lớn</span><span class="pageno"></span></footer>
         </section>
 
@@ -597,7 +639,6 @@
                 <line x1="374.1" y1="4" x2="374.1" y2="198" stroke="#ffffff" stroke-width="3"/>
                 <line x1="374.1" y1="4" x2="374.1" y2="198" stroke="#243044" stroke-dasharray="3 3"/>
               </svg>
-              <figcaption>LĐ phổ thông: lao động phổ thông. Tài xế gấp khoảng 2,3 lần kế toán.</figcaption>
             </figure>
             <figure>
               <svg viewBox="0 0 640 196" role="img" aria-label="Tỷ lệ vỡ nợ theo trình độ học vấn">
@@ -624,10 +665,10 @@
                 <line x1="374.1" y1="4" x2="374.1" y2="166" stroke="#ffffff" stroke-width="3"/>
                 <line x1="374.1" y1="4" x2="374.1" y2="166" stroke="#243044" stroke-dasharray="3 3"/>
               </svg>
-              <figcaption>THCS: trung học cơ sở. Học vị cao chỉ có 3 hồ sơ vỡ nợ trên 164 hồ sơ.</figcaption>
             </figure>
           </div>
-          <p class="note">Không vẽ ở đây: lao động kỹ năng thấp 17,15% (359/2.093); nghề để trống 6,51% (96.391 hồ sơ). Nam 10,14% (n = 105.059), nữ 7,00% (n = 202.448). Chênh lệch giới không được dùng làm quy tắc duyệt.</p>
+          <p>Cột đậm cao hơn mức danh mục 8,07%. Cột nhạt thấp hơn. Đường đứt là mức danh mục. Bên trái, tài xế 11,33% trên 18.603 hồ sơ, gấp khoảng 2,3 lần kế toán 4,83% trên 9.813 hồ sơ. Lao động phổ thông 10,58% trên mẫu lớn, 55.186 hồ sơ. Bên phải, trung học cơ sở 10,93% trên 3.816 hồ sơ. Đại học 5,36% trên 74.863 hồ sơ. Học vị cao 1,83% chỉ có 3 hồ sơ vỡ nợ trên 164 hồ sơ, nên tỷ lệ này không ổn định và em không dùng làm kết luận.</p>
+          <p class="note">Không vẽ trên biểu đồ: lao động kỹ năng thấp 17,15%, tức 359 trên 2.093 hồ sơ; nghề để trống 6,51% trên 96.391 hồ sơ. Nam 10,14% trên 105.059 hồ sơ, nữ 7,00% trên 202.448 hồ sơ. Chênh lệch giới không được dùng làm quy tắc duyệt.</p>
           <footer class="foot"><span>IT5427 · Tích hợp và xử lý dữ liệu lớn</span><span class="pageno"></span></footer>
         </section>
 
@@ -663,14 +704,14 @@
               <text x="534" y="20" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#243044">8,07%</text>
             </svg>
           </figure>
-          <p class="note">Tỷ lệ giảm đơn điệu từ 15,21% xuống 3,59%, khoảng 4,2 lần. Các nhóm gần bằng nhau về số hồ sơ, nên độ dốc không bị kích thước mẫu làm méo. Đây là bằng chứng mô tả, chưa phải hệ số của mô hình.</p>
+          <p>Điểm <span class="mono">EXT_SOURCE_2</span> nằm sẵn trên đơn vay. Em chia năm nhóm gần bằng nhau, mỗi nhóm khoảng 61.400 hồ sơ. Tỷ lệ vỡ nợ giảm đều từ 15,21% ở nhóm điểm thấp nhất xuống 3,59% ở nhóm cao nhất, khoảng 4,2 lần. Q1 và Q2 nằm trên mức danh mục 8,07%. Q3, Q4 và Q5 nằm dưới. Vì các nhóm cùng cỡ, độ dốc không bị kích thước mẫu làm méo. Đây là mô tả trên dữ liệu, chưa phải hệ số của mô hình.</p>
           <footer class="foot"><span>IT5427 · Tích hợp và xử lý dữ liệu lớn</span><span class="pageno"></span></footer>
         </section>
 
         <section class="slide" aria-label="So sánh hai mô hình">
           <p class="kicker">05 · Mô hình</p>
           <h1>Logistic L2 và LightGBM trên cùng một phép chia</h1>
-          <p>Tập huấn luyện 246.008 dòng, tập kiểm định 61.503 dòng, 137 đặc trưng khi đã nối biến vĩ mô. ROC-AUC đo khả năng xếp hạng, không đo việc chọn ngưỡng.</p>
+          <p>Cùng một phép chia: tập huấn luyện 246.008 dòng, tập kiểm định 61.503 dòng, 137 đặc trưng khi đã nối biến vĩ mô. ROC-AUC đo khả năng xếp hạng, nghĩa là hồ sơ vỡ nợ được xếp trên hồ sơ trả nợ. Nó không đo việc chọn ngưỡng duyệt hay từ chối.</p>
           <table>
             <thead>
               <tr><th>Mô hình</th><th class="num">ROC-AUC huấn luyện</th><th class="num">ROC-AUC kiểm định</th><th>Vai trò</th></tr>
@@ -680,11 +721,11 @@
               <tr><td>LightGBM</td><td class="num">0,835</td><td class="num">0,7685</td><td>Mô hình dùng để chấm điểm. Dừng sớm ở vòng 346</td></tr>
             </tbody>
           </table>
-          <ul style="margin-top: 14px;">
-            <li>Mức hơn trên tập kiểm định là 0,0192. Phần lợi ích vận hành lớn hơn nằm ở ngưỡng chi phí, không nằm ở khoảng AUC này.</li>
-            <li>PR-AUC của LightGBM trên tập kiểm định là 0,2595, cao hơn tỷ lệ lớp dương 8,07%. PR-AUC của logistic không có trong tệp kết quả.</li>
-            <li>LightGBM dùng logloss không trọng số để xác suất bám tần suất. Logistic đối chứng dùng trọng số lớp cân bằng, nên xác suất của nó không được so với mốc 5% và 15%.</li>
-            <li>Số lần tách cao nhất: CREDIT_TERM (871), DAYS_BIRTH (474), EXT_SOURCE_3 (363), DAYS_ID_PUBLISH (350), EXT_SOURCES_MEAN (340). Đây là số lần dùng trong cây, không phải biên độ SHAP.</li>
+          <ul style="margin-top: 10px;">
+            <li>LightGBM hơn logistic 0,0192 trên tập kiểm định: 0,7685 so với 0,7493. Phần lợi ích vận hành lớn hơn nằm ở ngưỡng chi phí, không nằm ở khoảng AUC này.</li>
+            <li>PR-AUC của LightGBM trên tập kiểm định là 0,2595, cao hơn tỷ lệ lớp dương 8,07%. PR-AUC của logistic không có trong tệp kết quả, nên em không so chỉ số này giữa hai mô hình.</li>
+            <li>LightGBM dùng logloss không trọng số để xác suất bám tần suất thực. Logistic đối chứng có dùng trọng số lớp cân bằng, nên xác suất của logistic không được đem so với mốc 5% và 15%.</li>
+            <li>Số lần tách cao nhất là <span class="mono">CREDIT_TERM</span> 871 lần, rồi <span class="mono">DAYS_BIRTH</span> 474, <span class="mono">EXT_SOURCE_3</span> 363, <span class="mono">DAYS_ID_PUBLISH</span> 350, và <span class="mono">EXT_SOURCES_MEAN</span> 340. Đây là số lần cây dùng biến, không phải biên độ SHAP.</li>
           </ul>
           <footer class="foot"><span>IT5427 · Tích hợp và xử lý dữ liệu lớn</span><span class="pageno"></span></footer>
         </section>
@@ -692,7 +733,7 @@
         <section class="slide" aria-label="Ngưỡng theo chi phí">
           <p class="kicker">05 · Ngưỡng quyết định</p>
           <h1>Tổn thất kỳ vọng trên 61.503 hồ sơ kiểm định</h1>
-          <p>Hàm mục tiêu là Loss(p) = 5·FN(p) + 1·FP(p). Ngưỡng được quét từ 0,01 đến 0,99.</p>
+          <p>Hàm tổn thất là năm lần hồ sơ vỡ nợ bị bỏ sót, cộng một lần hồ sơ tốt bị từ chối. Viết tắt là 5·FN + FP. Ngưỡng được quét từ 0,01 đến 0,99. Thanh nhạt là ngưỡng 0,50, tốn 24.314 đơn vị. Thanh đậm là ngưỡng 0,18, tốn 20.441. Chênh 3.873 đơn vị, tức giảm 15,93%.</p>
           <div class="cols-3">
             <figure>
               <svg viewBox="0 0 700 150" role="img" aria-label="Tổn thất giảm từ 24314 xuống 20441 khi hạ ngưỡng từ 0,50 xuống 0,18">
@@ -720,7 +761,8 @@
               </div>
             </div>
           </div>
-          <p class="note">Tại p = 0,18: precision 28,28%, độ nhạy 35,83%, độ đặc hiệu 92,02%, F1 = 0,3161. Ngưỡng này chỉ bắt khoảng một phần ba hồ sơ vỡ nợ. Mức giảm tổn thất đến từ việc không bỏ qua các xác suất trong khoảng 18–50%, so với ngưỡng 0,50.</p>
+          <p>Đọc bốn ô tại ngưỡng 0,18. Trong 61.503 hồ sơ: 52.027 hồ sơ trả nợ được dự báo đúng; 4.511 hồ sơ tốt bị từ chối nhầm; 3.186 hồ sơ vỡ nợ bị bỏ sót; 1.779 hồ sơ vỡ nợ được bắt đúng. Precision 28,28%, độ nhạy 35,83%, độ đặc hiệu 92,02%, F1 bằng 0,3161.</p>
+          <p class="note">Nói thẳng giới hạn: ngưỡng này chỉ bắt khoảng một phần ba hồ sơ vỡ nợ. Mức giảm tổn thất đến từ việc không bỏ qua các xác suất từ 18% đến 50%, so với ngưỡng một nửa.</p>
           <footer class="foot"><span>IT5427 · Tích hợp và xử lý dữ liệu lớn</span><span class="pageno"></span></footer>
         </section>
 
@@ -729,7 +771,7 @@
           <h1>Sốc trên 500 hồ sơ, và kiểm tra tập con Spark</h1>
           <div class="cols">
             <div>
-              <p>Cả 500 hồ sơ đã chấm đều khớp được vào 82 vùng. Sốc cộng 2 điểm phần trăm vào thất nghiệp và 3% vào CPI.</p>
+              <p>Cả 500 hồ sơ đã chấm đều khớp được vào 82 vùng. Sốc cộng 2 điểm phần trăm vào thất nghiệp và 3% vào CPI. Cột nhạt là trước sốc, cột đậm là sau.</p>
               <div class="legend"><span><i class="sw s"></i>Trước sốc</span><span><i class="sw d"></i>Sau sốc</span></div>
               <svg viewBox="0 0 560 168" role="img" aria-label="Nhóm rủi ro cao tăng từ 77 lên 104 hồ sơ sau sốc">
                 <title>Số hồ sơ theo bậc rủi ro trước và sau sốc</title>
@@ -749,7 +791,7 @@
                 <rect x="86" y="132" width="133.1" height="14" fill="#243044"/>
                 <text x="224" y="143" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#1c1c1c">104</text>
               </svg>
-              <p class="note">PD trung bình 8,37% lên 10,38%. Bậc cao: 77 hồ sơ (15,4%) lên 104 (20,8%), thêm 27 hồ sơ. Chuỗi vĩ mô là dữ liệu sinh trong dự án.</p>
+              <p class="note">Nhóm thấp giảm từ 248 xuống 194. Nhóm trung bình tăng từ 175 lên 202. Nhóm cao tăng từ 77 lên 104, thêm 27 hồ sơ, từ 15,4% lên 20,8%. Xác suất trung bình từ 8,37% lên 10,38%. Chuỗi vĩ mô là dữ liệu do dự án sinh, không phải số liệu thống kê nhà nước.</p>
             </div>
             <div>
               <h2>Spark trên tập con thật</h2>
@@ -764,7 +806,7 @@
                   <tr><td>Kiểm tra chất lượng</td><td class="num">31 / 31 đạt</td></tr>
                 </tbody>
               </table>
-              <p class="note">Trong 31 kiểm tra có: không dùng dòng lịch sử phát sinh sau ngày nộp, số dòng không đổi sau mỗi phép nối, và TARGET không có trong bảng đặc trưng. Sáu đặc trưng giao thông được đánh dấu là dữ liệu mô phỏng.</p>
+              <p class="note">Bảng này là tập con, không phải 307.511 hồ sơ. Ba ý trong 31 kiểm tra: không dùng dòng sau ngày nộp, số dòng không đổi sau mỗi phép nối, và TARGET không có trong bảng đặc trưng. Sáu đặc trưng giao thông được đánh dấu là dữ liệu mô phỏng.</p>
             </div>
           </div>
           <footer class="foot"><span>IT5427 · Tích hợp và xử lý dữ liệu lớn</span><span class="pageno"></span></footer>
@@ -773,26 +815,27 @@
         <section class="slide compact" aria-label="Các tình huống trên giao diện">
           <p class="kicker">06 · Minh họa</p>
           <h1>Năm màn hình của giao diện thẩm định</h1>
-          <p>Ứng dụng chạy tại cổng 8088 sau khi dựng bằng Docker Compose. Ba vai trò dùng cho buổi demo được ghi trong tài liệu vận hành, không đưa mật khẩu lên slide.</p>
+          <p>Ứng dụng chạy tại cổng 8088 sau khi dựng bằng Docker Compose. Ba vai trò demo nằm trong tài liệu vận hành. Em không đọc mật khẩu trên slide. Khi chỉ từng màn hình, em đọc số ở cột phải.</p>
           <table>
             <thead>
               <tr><th>Màn hình</th><th>Điều cần chỉ ra</th><th>Số đã đo</th></tr>
             </thead>
             <tbody>
-              <tr><td>Tổng quan</td><td>Quy mô danh mục, hai ROC-AUC, ngưỡng chi phí, đường cong và biểu đồ SHAP</td><td>307.511 hồ sơ; 0,7493 và 0,7685; p* = 0,18</td></tr>
-              <tr><td>Phân khúc</td><td>Nghề, học vấn và ngũ phân vị so với mức 8,07%</td><td>Tài xế 11,33%; kế toán 4,83%; Q1 15,21%; Q5 3,59%</td></tr>
-              <tr><td>Vĩ mô</td><td>Khớp vùng, rồi chạy một sốc thất nghiệp và lạm phát</td><td>500/500 khớp; bậc cao 77 lên 104</td></tr>
-              <tr><td>Đường ống</td><td>Số dòng ba lớp và các kiểm tra. Nhãn trên màn hình ghi đây là tập con</td><td>799.487 dòng; 31/31 kiểm tra đạt</td></tr>
-              <tr><td>Thẩm định</td><td>Hai hồ sơ giả định, một phép đổi tham số, và tra cứu hai mã Gold</td><td>Chi tiết ở slide sau</td></tr>
+              <tr><td>Tổng quan</td><td>Chỉ quy mô danh mục, hai ROC-AUC, ngưỡng chi phí, đường cong và biểu đồ SHAP</td><td>307.511 hồ sơ; logistic 0,7493; LightGBM 0,7685; ngưỡng 0,18</td></tr>
+              <tr><td>Phân khúc</td><td>Chỉ nghề, học vấn và ngũ phân vị, so với mức danh mục 8,07%</td><td>Tài xế 11,33%; kế toán 4,83%; Q1 15,21%; Q5 3,59%</td></tr>
+              <tr><td>Vĩ mô</td><td>Chỉ mọi hồ sơ đều khớp vùng, rồi chạy một sốc thất nghiệp và lạm phát</td><td>500 trên 500 khớp; bậc cao từ 77 lên 104</td></tr>
+              <tr><td>Đường ống</td><td>Chỉ số dòng ba lớp và 31 kiểm tra. Nhãn trên màn hình ghi đây là tập con</td><td>799.487 dòng; 31 trên 31 kiểm tra đạt</td></tr>
+              <tr><td>Thẩm định</td><td>Chấm hai hồ sơ giả định, một phép đổi tham số, rồi tra hai mã Gold</td><td>1,67% duyệt thẳng; 50,88% từ chối; chi tiết ở slide sau</td></tr>
             </tbody>
           </table>
-          <p class="note">Màn hình tổng quan và phân khúc đọc kết quả của mô hình 307.511 dòng. Màn hình đường ống đọc báo cáo Spark của tập con. Hai nguồn số này không cùng một lô xử lý.</p>
+          <p class="note">Màn hình tổng quan và phân khúc đọc mô hình 307.511 dòng. Màn hình đường ống đọc báo cáo Spark của tập con. Hai nguồn số không cùng một lô xử lý, nên em không cộng chúng lại.</p>
           <footer class="foot"><span>IT5427 · Tích hợp và xử lý dữ liệu lớn</span><span class="pageno"></span></footer>
         </section>
 
         <section class="slide compact" aria-label="Minh họa thẩm định hồ sơ">
           <p class="kicker">06 · Thẩm định từng hồ sơ</p>
           <h1>Bốn hồ sơ và chiều của giải thích</h1>
+          <p>Hai dòng đầu là hồ sơ giả định, để kiểm tra chiều của mô hình: hồ sơ tốt phải ra xác suất thấp, hồ sơ yếu phải ra xác suất cao. Hai dòng sau là mã đã chấm trên tập con Gold, không phải kết quả của mô hình 307.511 dòng.</p>
           <table>
             <thead>
               <tr><th>Hồ sơ</th><th>Loại</th><th class="num">PD</th><th>Bậc</th><th>Hành động</th><th>Đóng góp nổi bật</th></tr>
@@ -804,18 +847,19 @@
               <tr><td>298157</td><td>Đã chấm ở Gold</td><td class="num">56,31%</td><td>Cao</td><td>Từ chối</td><td>Mã tra cứu của tập con</td></tr>
             </tbody>
           </table>
-          <ul style="margin-top: 12px;">
-            <li>Hồ sơ đủ chuẩn: thu nhập 300.000, dư nợ 500.000, khoản trả 25.000, 42 tuổi, quản lý, 8,5 năm làm việc, đại học, ba điểm ngoài 0,78 / 0,72 / 0,69.</li>
-            <li>Hồ sơ dưới chuẩn: thu nhập 95.000, dư nợ 480.000, khoản trả 38.000, 23 tuổi, lao động phổ thông, một năm làm việc, trung học cơ sở, ba điểm ngoài 0,12 / 0,18 / 0,14.</li>
-            <li>Phép thử độ nhạy, xuất phát từ hồ sơ đủ chuẩn: đưa dư nợ lên 1.500.000, khoản trả lên 95.000 và ba điểm ngoài xuống 0,25. Tài liệu demo ghi bậc rủi ro rời nhóm thấp. Slide không gán một xác suất mới vì lần chạy đó không lưu con số.</li>
+          <ul style="margin-top: 8px;">
+            <li>Hồ sơ đủ chuẩn: thu nhập 300.000, dư nợ 500.000, khoản trả 25.000, 42 tuổi, quản lý, 8,5 năm làm việc, đại học, ba điểm ngoài 0,78, 0,72 và 0,69. Kết quả 1,67%, duyệt thẳng. Trung bình điểm ngoài 0,73 có SHAP −0,6512, tức kéo rủi ro xuống.</li>
+            <li>Hồ sơ dưới chuẩn: thu nhập 95.000, dư nợ 480.000, khoản trả 38.000, 23 tuổi, lao động phổ thông, một năm làm việc, trung học cơ sở, ba điểm ngoài 0,12, 0,18 và 0,14. Kết quả 50,88%, từ chối. Trung bình điểm ngoài 0,1467 có SHAP +0,7345. Tỷ số khoản trả trên dư nợ 0,0792 có SHAP +0,4979. Cả hai đều đẩy rủi ro lên.</li>
+            <li>Hai mã Gold: 277603 cho 3,12%, duyệt thẳng; 298157 cho 56,31%, từ chối. Đây là mô hình của tập con.</li>
+            <li>Phép thử độ nhạy, xuất phát từ hồ sơ đủ chuẩn: đưa dư nợ lên 1.500.000, khoản trả lên 95.000 và ba điểm ngoài xuống 0,25. Tài liệu demo ghi bậc rủi ro rời nhóm thấp. Em không nêu một xác suất mới vì lần chạy đó không lưu con số.</li>
           </ul>
-          <p class="note">Hai hồ sơ giả định kiểm tra chiều của mô hình. Hai mã Gold thuộc mô hình của tập con, không phải kết quả của mô hình 307.511 dòng.</p>
           <footer class="foot"><span>IT5427 · Tích hợp và xử lý dữ liệu lớn</span><span class="pageno"></span></footer>
         </section>
 
         <section class="slide compact" aria-label="Minh họa dòng lệnh và luồng sự kiện">
           <p class="kicker">06 · Dòng lệnh và luồng sự kiện</p>
           <h1>Đối chiếu nhãn lịch sử và độ trễ chạy thử</h1>
+          <p>Hai hồ sơ thật chỉ cho thấy mô hình cùng chiều với đúng hai nhãn đó. Chúng không ước lượng tỷ lệ khớp trên toàn danh mục. Cùng một dịch vụ chấm điểm gọi được từ dòng lệnh, từ API và từ giao diện.</p>
           <table>
             <thead>
               <tr><th>Tình huống</th><th>Đầu vào</th><th>Kết quả đã ghi</th></tr>
@@ -826,10 +870,10 @@
               <tr><td>Năm sự kiện Kafka, chạy khô</td><td>Kiểm lược đồ, chấm điểm, giải thích</td><td>3,24% thấp; 9,57% trung bình; 1,44% thấp; 5,71% trung bình; 15,67% cao</td></tr>
             </tbody>
           </table>
-          <ul style="margin-top: 14px;">
-            <li>Độ trễ trung bình của năm sự kiện là 38,40 ms mỗi bản ghi. Cỡ mẫu là năm sự kiện, không phải một phép đo tải.</li>
-            <li>Hai hồ sơ 100002 và 100003 chỉ cho thấy mô hình cùng chiều với nhãn của đúng hai dòng đó. Chúng không ước lượng tỷ lệ khớp trên toàn danh mục.</li>
-            <li>Cùng logic chấm điểm gọi được từ dòng lệnh, từ API và từ giao diện. Ba lối vào dùng một dịch vụ.</li>
+          <ul style="margin-top: 8px;">
+            <li>Mã 100002 có nhãn vỡ nợ. Mô hình cho 47,48%, bậc cao, từ chối, khớp nhãn. Đóng góp lớn là trung bình điểm ngoài 0,1618, SHAP +0,8800, tức đẩy rủi ro lên.</li>
+            <li>Mã 100003 có nhãn trả nợ. Mô hình cho 4,65%, bậc thấp, duyệt thẳng, cũng khớp nhãn. Tỷ số khoản trả trên dư nợ 0,0276 có SHAP −0,1632, tức kéo rủi ro xuống.</li>
+            <li>Năm sự kiện Kafka chạy khô cho 3,24% thấp, 9,57% trung bình, 1,44% thấp, 5,71% trung bình và 15,67% cao. Độ trễ trung bình 38,40 mili giây mỗi bản ghi, gồm kiểm lược đồ, chấm điểm và giải thích. Cỡ mẫu là năm sự kiện, không phải phép đo tải, và chưa phải cam kết mức dịch vụ.</li>
           </ul>
           <footer class="foot"><span>IT5427 · Tích hợp và xử lý dữ liệu lớn</span><span class="pageno"></span></footer>
         </section>
@@ -837,56 +881,57 @@
         <section class="slide" aria-label="Ứng dụng thực tế">
           <p class="kicker">07 · Ứng dụng</p>
           <h1>Những việc kết quả này cho phép làm</h1>
+          <p>Năm việc sau dùng được trong phạm vi đồ án và dữ liệu Home Credit. Chúng chưa được kiểm chứng trên sổ vay của một tổ chức tín dụng cụ thể.</p>
           <ol>
-            <li>Chia hàng chờ thẩm định. Hồ sơ dưới 5% có thể duyệt thẳng; cán bộ đọc nhóm từ 5% đến dưới 15%. Độ trễ đã đo, gồm cả giải thích, là 38,40 ms trên năm sự kiện chạy thử. Đây chưa phải cam kết mức dịch vụ.</li>
-            <li>Đổi khẩu vị rủi ro bằng tỷ lệ phạt, rồi tính lại ngưỡng và tổn thất kỳ vọng trước khi ban hành. Với tỷ lệ 5:1, ngưỡng tìm được là 0,18 và mức giảm trên tập kiểm định là 15,93%.</li>
-            <li>Soạn lý do từ chối từ các số hạng SHAP đã trả về, ví dụ điểm tín dụng ngoài thấp hoặc khoản trả trên dư nợ cao. Việc xuất bản PDF thông báo từ chối chưa được làm.</li>
-            <li>Xem danh mục dịch chuyển trước khi siết hạn mức theo vùng. Phép thử hiện tại chỉ trên 500 hồ sơ và trên chuỗi vĩ mô mô phỏng: thêm 27 hồ sơ vào bậc cao.</li>
-            <li>Giữ điều kiện tuổi, tỷ lệ nghĩa vụ trên thu nhập và vận tốc hỏi tin ngoài mô hình. Mô hình không thay thế ràng buộc đó.</li>
+            <li>Chia hàng chờ thẩm định. Hồ sơ dưới 5% có thể duyệt thẳng. Cán bộ đọc nhóm từ 5% đến dưới 15%. Từ 15% thì từ chối. Độ trễ đã đo, gồm cả giải thích, là 38,40 mili giây trên năm sự kiện chạy thử. Đây chưa phải cam kết mức dịch vụ.</li>
+            <li>Đổi khẩu vị rủi ro bằng tỷ lệ phạt, rồi tính lại ngưỡng và tổn thất kỳ vọng trước khi ban hành. Với tỷ lệ 5 ăn 1, ngưỡng tìm được là 0,18 và mức giảm trên tập kiểm định là 15,93%.</li>
+            <li>Soạn lý do từ chối từ các số hạng SHAP đã trả về, ví dụ điểm tín dụng ngoài thấp hoặc khoản trả trên dư nợ cao. Việc xuất PDF thông báo từ chối chưa được làm.</li>
+            <li>Xem danh mục dịch chuyển trước khi siết hạn mức theo vùng. Phép thử hiện tại chỉ trên 500 hồ sơ và trên chuỗi vĩ mô mô phỏng: thêm 27 hồ sơ vào bậc cao, từ 77 lên 104.</li>
+            <li>Giữ điều kiện tuổi, tỷ lệ nghĩa vụ trên thu nhập và vận tốc hỏi tin đứng ngoài mô hình. Mô hình không thay thế các ràng buộc đó.</li>
           </ol>
-          <p class="note">Các ứng dụng trên dùng được trong phạm vi đồ án và dữ liệu Home Credit. Chúng chưa được kiểm chứng trên sổ vay của một tổ chức tín dụng cụ thể.</p>
           <footer class="foot"><span>IT5427 · Tích hợp và xử lý dữ liệu lớn</span><span class="pageno"></span></footer>
         </section>
 
         <section class="slide" aria-label="Hiện trạng phát triển">
           <p class="kicker">08 · Hiện trạng</p>
           <h1>Phần đã kiểm tra và phần còn là tập con</h1>
+          <p>Hai số 0,7685 và 0,7331 là của hai mô hình khác nhau. Không lấy trung bình và không thay cho nhau. 0,7685 là LightGBM trên 61.503 hồ sơ kiểm định của mô hình 307.511 dòng. 0,7331 là mô hình Gold trên 4.316 nhãn của tập con.</p>
           <div class="cols">
             <article class="box">
               <h2>Đã chạy và đã kiểm thử</h2>
               <ul>
-                <li>Ba dịch vụ trong Docker Compose, các API đã gọi trả về mã thành công.</li>
-                <li>Thu nhận Kafka và MinIO, hợp đồng lược đồ, hàng đợi lỗi.</li>
-                <li>Spark ba lớp và phát lại luồng trên tập con, 31/31 kiểm tra đạt.</li>
-                <li>KPI, logistic, LightGBM, SHAP và ngưỡng chi phí trên đủ 307.511 hồ sơ.</li>
-                <li>Mô phỏng sốc vĩ mô và năm màn hình thẩm định.</li>
-                <li>20 kiểm thử Python, 13 kiểm thử Java, 4 kiểm thử giao diện.</li>
+                <li>Ba dịch vụ trong Docker Compose. Các API đã gọi trả về mã thành công.</li>
+                <li>Thu nhận bằng Kafka và MinIO, có hợp đồng lược đồ và hàng đợi lỗi.</li>
+                <li>Spark ba lớp và phát lại luồng trên tập con, 31 trên 31 kiểm tra đạt.</li>
+                <li>Chỉ số danh mục, logistic, LightGBM, SHAP và ngưỡng chi phí trên đủ 307.511 hồ sơ.</li>
+                <li>Mô phỏng sốc vĩ mô và năm màn hình thẩm định đều mở được.</li>
+                <li>Đã kiểm thử 20 bài Python, 13 bài Java và 4 bài giao diện.</li>
               </ul>
             </article>
             <article class="box">
               <h2>Chưa phải bản Spark đầy đủ</h2>
               <ul>
-                <li>Giao diện đường ống vẫn ghi nhãn tập con của dữ liệu Home Credit thật.</li>
+                <li>Giao diện đường ống vẫn ghi nhãn tập con của dữ liệu Home Credit thật, không phải toàn bộ hồ sơ.</li>
                 <li>Lớp Gold hiện có 5.000 hồ sơ và 4.316 nhãn, không phải 307.511.</li>
-                <li>Mô hình Gold trên 4.316 nhãn và 131 đặc trưng có ROC-AUC huấn luyện 0,9947 nhưng kiểm định 0,7331, dừng ở vòng 20.</li>
-                <li>Vì chênh lệch đó, chỉ số chính của bài này lấy từ mô hình 307.511 dòng.</li>
-                <li>Lô Colab cho lịch sử con đầy đủ đã có đường chạy, nhưng chưa được hợp nhất bằng tệp kết quả.</li>
+                <li>Mô hình trên 4.316 nhãn và 131 đặc trưng có ROC-AUC huấn luyện 0,9947 nhưng kiểm định chỉ 0,7331, dừng ở vòng 20.</li>
+                <li>Chênh lệch đó lớn, nên chỉ số chính của bài lấy từ mô hình huấn luyện trên đủ hồ sơ có nhãn.</li>
+                <li>Lô Colab cho lịch sử con đầy đủ đã có đường chạy, nhưng tệp kết quả chưa được hợp nhất.</li>
               </ul>
             </article>
           </div>
-          <p class="note">Hai con số 0,7685 và 0,7331 là của hai mô hình khác nhau. Không lấy trung bình và không thay cho nhau.</p>
           <footer class="foot"><span>IT5427 · Tích hợp và xử lý dữ liệu lớn</span><span class="pageno"></span></footer>
         </section>
 
         <section class="slide" aria-label="Hướng phát triển">
           <p class="kicker">08 · Hướng phát triển</p>
           <h1>Việc cần làm sau bản đang chạy</h1>
+          <p>Cả năm mục đều chưa làm trong bản đang trình bày. Mục một và mục hai là việc cần làm trước. Ba mục sau là việc tiếp theo.</p>
           <ol>
-            <li>Hợp nhất lớp Gold đủ 307.511 hồ sơ trên Delta Lake, rồi đưa các tổng hợp cục tín dụng và lịch trả góp vào API chấm điểm. Khi đó đường trực tuyến và đường ngoại tuyến mới cùng một định nghĩa đặc trưng. Có thể đặt bộ nhớ đệm phục vụ độ trễ thấp.</li>
-            <li>Nối Kafka tới Spark Structured Streaming và đẩy số hồ sơ, cảnh báo cách ly, độ trễ lên giao diện bằng sự kiện máy chủ, thay cho việc tải lại trang.</li>
-            <li>Theo dõi hiệu chuẩn theo chu kỳ kinh tế bằng điểm Brier và đường tin cậy; thử ràng buộc đơn điệu cho các biến mà thẩm định yêu cầu chiều tác động cố định; bổ sung suy luận cho nhóm hồ sơ đã bị từ chối khi có kết cục.</li>
-            <li>Đăng ký mô hình để chạy logistic và LightGBM song song, theo dõi trôi phân phối đặc trưng trên luồng Kafka, và kiểm tra chênh lệch lỗi theo tuổi và giới trong quy trình kiểm thử.</li>
-            <li>Thay tài khoản demo bằng xác thực tập trung, lưu quyết định và lý do SHAP ở dạng không sửa được, rồi xuất thông báo từ chối.</li>
+            <li>Hợp nhất lớp Gold đủ 307.511 hồ sơ trên Delta Lake, rồi đưa các tổng hợp cục tín dụng và lịch trả góp vào API chấm điểm. Khi đó đường trực tuyến và đường ngoại tuyến mới cùng một định nghĩa đặc trưng. Có thể đặt bộ nhớ đệm để giữ độ trễ thấp.</li>
+            <li>Nối Kafka tới Spark Structured Streaming và đẩy số hồ sơ, cảnh báo cách ly, độ trễ lên giao diện bằng sự kiện máy chủ, để khỏi phải tải lại trang.</li>
+            <li>Theo dõi hiệu chuẩn theo chu kỳ kinh tế bằng điểm Brier và đường tin cậy. Thử ràng buộc đơn điệu cho các biến mà thẩm định yêu cầu chiều tác động cố định. Bổ sung suy luận cho nhóm hồ sơ đã bị từ chối khi có kết cục.</li>
+            <li>Đăng ký mô hình để chạy logistic và LightGBM song song. Theo dõi trôi phân phối đặc trưng trên luồng Kafka. Kiểm tra chênh lệch lỗi theo tuổi và giới trong quy trình kiểm thử. Chênh lệch giới không được dùng làm quy tắc duyệt.</li>
+            <li>Thay tài khoản demo bằng xác thực tập trung. Lưu quyết định và lý do SHAP ở dạng không sửa được, rồi xuất thông báo từ chối.</li>
           </ol>
           <footer class="foot"><span>IT5427 · Tích hợp và xử lý dữ liệu lớn</span><span class="pageno"></span></footer>
         </section>
@@ -894,13 +939,14 @@
         <section class="slide" aria-label="Kết luận">
           <p class="kicker">08 · Kết luận</p>
           <h1>Những gì đồ án đã thiết lập</h1>
+          <p>Em kết lại bằng bốn ý.</p>
           <ol>
-            <li>Một đường ống dữ liệu lớn cho rủi ro tín dụng bán lẻ, từ hợp đồng dữ liệu và hồ dữ liệu Spark đến xác suất vỡ nợ, ngưỡng theo chi phí và giao diện có giải thích.</li>
-            <li>Trên tập kiểm định 61.503 hồ sơ, LightGBM đạt ROC-AUC 0,7685 so với 0,7493 của thẻ điểm logistic. Ngưỡng 0,18 giảm 15,93% tổn thất kỳ vọng so với ngưỡng 0,50.</li>
-            <li>Điểm tín dụng ngoài EXT_SOURCE_2 tách tỷ lệ vỡ nợ từ 15,21% xuống 3,59% trên các nhóm gần cùng kích thước. Các tỷ số dư nợ, thu nhập và khoản trả đưa bài toán thẩm định vào ma trận đặc trưng.</li>
-            <li>Giới hạn cần nói rõ: thống kê Spark và mô hình Gold vẫn là tập con 5.000 khách hàng. Mô hình tập con đó chưa đủ ổn định để thay mô hình huấn luyện trên toàn bộ hồ sơ có nhãn.</li>
+            <li>Đồ án đã dựng một đường ống dữ liệu lớn cho rủi ro tín dụng bán lẻ, từ hợp đồng dữ liệu và hồ dữ liệu Spark đến xác suất vỡ nợ, ngưỡng theo chi phí, và giao diện có giải thích.</li>
+            <li>Trên tập kiểm định 61.503 hồ sơ, LightGBM đạt ROC-AUC 0,7685, so với 0,7493 của thẻ điểm logistic. Ngưỡng 0,18 giảm 15,93% tổn thất kỳ vọng so với ngưỡng 0,50. Mức giảm này là tổn thất theo hàm chi phí, không phải lợi nhuận đã ghi sổ.</li>
+            <li>Điểm tín dụng ngoài <span class="mono">EXT_SOURCE_2</span> tách tỷ lệ vỡ nợ từ 15,21% xuống 3,59% trên các nhóm gần cùng kích thước. Các tỷ số dư nợ, thu nhập và khoản trả đưa bài toán thẩm định vào ma trận đặc trưng.</li>
+            <li>Giới hạn cần nói cuối: thống kê Spark và mô hình Gold vẫn là tập con 5.000 khách hàng. Mô hình tập con có ROC-AUC kiểm định 0,7331, chưa đủ ổn định để thay mô hình huấn luyện trên toàn bộ hồ sơ có nhãn. Hai số 0,7685 và 0,7331 không thay cho nhau.</li>
           </ol>
-          <p class="note">Số liệu lấy từ báo cáo tổng kết ngày 15.11.2026, README, <span class="mono">outputs/metrics/</span> và <span class="mono">apache-spark/reports/</span>. Chuỗi vĩ mô và hồ sơ giao thông là dữ liệu do dự án sinh.</p>
+          <p class="note">Số liệu lấy từ báo cáo tổng kết ngày 15 tháng 11 năm 2026, README, thư mục outputs/metrics và apache-spark/reports. Chuỗi vĩ mô và hồ sơ giao thông là dữ liệu do dự án sinh. Em xin hết.</p>
           <footer class="foot"><span>IT5427 · Tích hợp và xử lý dữ liệu lớn</span><span class="pageno"></span></footer>
         </section>
 
