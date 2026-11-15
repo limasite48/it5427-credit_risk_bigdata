@@ -108,7 +108,7 @@ def build_schema(src, desc):
         "additionalProperties": False,
         "required": list(env) + ["payload"],
         "properties": {**env, "payload": {
-            "type": "object", "additionalProperties": True, "required": payload_cols, "properties": props}},
+            "type": "object", "additionalProperties": False, "required": payload_cols, "properties": props}},
     }
 
 

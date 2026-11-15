@@ -60,6 +60,61 @@ def regional(rng, dim, key, fe_sigma):
     return (rating + rng.normal(0, fe_sigma, len(dim)))[:, None]
 
 
+DEFAULT_OCC_MEDIANS = {
+    "Accountants": 157500.0,
+    "Cleaning staff": 112500.0,
+    "Cooking staff": 112500.0,
+    "Core staff": 157500.0,
+    "Drivers": 180000.0,
+    "HR staff": 157500.0,
+    "High skill tech staff": 180000.0,
+    "IT staff": 202500.0,
+    "Laborers": 135000.0,
+    "Low-skill Laborers": 112500.0,
+    "Managers": 225000.0,
+    "Medicine staff": 135000.0,
+    "Private service staff": 157500.0,
+    "Realty agents": 180000.0,
+    "Sales staff": 135000.0,
+    "Secretaries": 135000.0,
+    "Security staff": 135000.0,
+    "Waiters/barmen staff": 112500.0,
+    "Missing/Unspecified": 135000.0,
+}
+
+
+def build_occupation_benchmarks() -> pd.DataFrame:
+    """Compute per-occupation median/mean/IQR salary benchmarks from raw application_train.csv when present."""
+    train_csv = C.RAW_DIR / "application_train.csv"
+    if train_csv.exists():
+        app = pd.read_csv(train_csv, usecols=["OCCUPATION_TYPE", "AMT_INCOME_TOTAL"])
+        app["OCCUPATION_TYPE"] = app["OCCUPATION_TYPE"].fillna("Missing/Unspecified")
+        grouped = app.groupby("OCCUPATION_TYPE")["AMT_INCOME_TOTAL"]
+        bench = pd.DataFrame({
+            "OCCUPATION_TYPE": grouped.median().index,
+            "occ_median_salary": grouped.median().round(2).to_numpy(),
+            "occ_mean_salary": grouped.mean().round(2).to_numpy(),
+            "occ_p25_salary": grouped.quantile(0.25).round(2).to_numpy(),
+            "occ_p75_salary": grouped.quantile(0.75).round(2).to_numpy(),
+            "occ_applicant_count": grouped.size().to_numpy(),
+            "salary_scale_source": "application_train.csv",
+        })
+        return bench.sort_values("OCCUPATION_TYPE").reset_index(drop=True)
+
+    rows = []
+    for occ, med in sorted(DEFAULT_OCC_MEDIANS.items()):
+        rows.append({
+            "OCCUPATION_TYPE": occ,
+            "occ_median_salary": med,
+            "occ_mean_salary": round(med * 1.12, 2),
+            "occ_p25_salary": round(med * 0.75, 2),
+            "occ_p75_salary": round(med * 1.35, 2),
+            "occ_applicant_count": 0,
+            "salary_scale_source": "fallback_benchmark",
+        })
+    return pd.DataFrame(rows)
+
+
 def main():
     rng = np.random.default_rng(C.SEED)
     C.SUPP_DIR.mkdir(parents=True, exist_ok=True)
@@ -100,9 +155,11 @@ def main():
     c = pd.DataFrame({"region_code": c.region_code, "month": [f"{p.year}-{p.month:02d}" for p in c.p],
                       "cpi_index": c.value, "cpi_yoy_pct": yoy.ravel().round(2),
                       "release_date": [((p + 1).start_time + pd.Timedelta(days=5)).date() for p in c.p]})
+    occ_bench = build_occupation_benchmarks()
 
     outputs = {"region_dim.csv": dim, "regional_gdp_growth_quarterly.csv": g,
-               "regional_unemployment_quarterly.csv": u, "regional_cpi_monthly.csv": c}
+               "regional_unemployment_quarterly.csv": u, "regional_cpi_monthly.csv": c,
+               "occupation_benchmarks.csv": occ_bench}
     for name, df in outputs.items():
         df.to_csv(C.SUPP_DIR / name, index=False)
         print(f"{name:38s} {len(df):>6,} rows")

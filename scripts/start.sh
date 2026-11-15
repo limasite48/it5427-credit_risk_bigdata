@@ -100,6 +100,7 @@ spawn_detached backend "${ROOT_DIR}/.run/logs/backend.log" \
   RISK_SUMMARY="${ROOT_DIR}/outputs/metrics/risk_summary.json" \
   DEMOGRAPHICS="${ROOT_DIR}/outputs/metrics/demographic_profiles.json" \
   ROC_CURVE="${ROOT_DIR}/outputs/figures/roc_curve.png" \
+  SHAP_SUMMARY="${ROOT_DIR}/outputs/figures/shap_summary.png" \
   MODEL_EVALUATION="${ROOT_DIR}/outputs/metrics/model_evaluation.json" \
   SUPPLEMENTARY_DIR="${ROOT_DIR}/ingestion-minio-kafka/data/supplementary" \
   SPARK_REPORTS_DIR="${ROOT_DIR}/apache-spark/reports" \

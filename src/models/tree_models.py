@@ -18,21 +18,15 @@ def train_lightgbm_model(
     custom_params: Optional[Dict[str, Any]] = None,
 ) -> Tuple[LGBMClassifier, Dict[str, Any]]:
     """
-    Trains a LightGBM Classifier with class weighting and early stopping.
+    Trains a calibrated LightGBM Classifier with early stopping.
+    Uses unweighted binary logloss so predicted probabilities reflect true default rates
+    for the operational risk tiers (< 5% LOW, 5-15% MEDIUM, >= 15% HIGH).
     """
     params = LGBM_PARAMS.copy()
     if custom_params:
         params.update(custom_params)
 
-    # Class imbalance weighting
-    pos_count = int(y_train.sum())
-    neg_count = len(y_train) - pos_count
-    scale_pos = neg_count / max(pos_count, 1)
-
-    model = LGBMClassifier(
-        **params,
-        scale_pos_weight=scale_pos,
-    )
+    model = LGBMClassifier(**params)
 
     model.fit(
         X_train,

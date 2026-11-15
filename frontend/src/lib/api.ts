@@ -129,6 +129,10 @@ export const api = {
     const blob = await request<Blob>('/api/dashboard/figures/roc-curve')
     return URL.createObjectURL(blob)
   },
+  async shapSummaryUrl(): Promise<string> {
+    const blob = await request<Blob>('/api/dashboard/figures/shap-summary')
+    return URL.createObjectURL(blob)
+  },
   regions() {
     return request<RegionsResponse>('/api/insights/regions')
   },

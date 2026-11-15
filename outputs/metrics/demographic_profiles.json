@@ -1,226 +1,266 @@
 {
   "risk_by_occupation": {
-    "Accountants": {
-      "total_count": 143,
-      "default_count": 8,
-      "default_rate": 0.0559,
-      "default_percent": "5.59%"
-    },
-    "Cleaning staff": {
-      "total_count": 71,
-      "default_count": 12,
-      "default_rate": 0.169,
-      "default_percent": "16.90%"
-    },
-    "Cooking staff": {
-      "total_count": 85,
-      "default_count": 6,
-      "default_rate": 0.0706,
-      "default_percent": "7.06%"
-    },
-    "Core staff": {
-      "total_count": 361,
-      "default_count": 17,
-      "default_rate": 0.0471,
-      "default_percent": "4.71%"
-    },
-    "Drivers": {
-      "total_count": 278,
-      "default_count": 30,
-      "default_rate": 0.1079,
-      "default_percent": "10.79%"
-    },
-    "HR staff": {
-      "total_count": 6,
-      "default_count": 0,
-      "default_rate": 0.0,
-      "default_percent": "0.00%"
-    },
-    "High skill tech staff": {
-      "total_count": 137,
-      "default_count": 4,
-      "default_rate": 0.0292,
-      "default_percent": "2.92%"
-    },
-    "IT staff": {
-      "total_count": 5,
-      "default_count": 0,
-      "default_rate": 0.0,
-      "default_percent": "0.00%"
+    "Missing/Unspecified": {
+      "total_count": 96391,
+      "default_count": 6278,
+      "default_rate": 0.0651,
+      "default_percent": "6.51%"
     },
     "Laborers": {
-      "total_count": 805,
-      "default_count": 90,
-      "default_rate": 0.1118,
-      "default_percent": "11.18%"
-    },
-    "Low-skill Laborers": {
-      "total_count": 33,
-      "default_count": 2,
-      "default_rate": 0.0606,
-      "default_percent": "6.06%"
-    },
-    "Managers": {
-      "total_count": 325,
-      "default_count": 21,
-      "default_rate": 0.0646,
-      "default_percent": "6.46%"
-    },
-    "Medicine staff": {
-      "total_count": 111,
-      "default_count": 5,
-      "default_rate": 0.045,
-      "default_percent": "4.50%"
-    },
-    "Missing/Unspecified": {
-      "total_count": 1357,
-      "default_count": 90,
-      "default_rate": 0.0663,
-      "default_percent": "6.63%"
-    },
-    "Private service staff": {
-      "total_count": 43,
-      "default_count": 3,
-      "default_rate": 0.0698,
-      "default_percent": "6.98%"
-    },
-    "Realty agents": {
-      "total_count": 6,
-      "default_count": 1,
-      "default_rate": 0.1667,
-      "default_percent": "16.67%"
+      "total_count": 55186,
+      "default_count": 5838,
+      "default_rate": 0.1058,
+      "default_percent": "10.58%"
     },
     "Sales staff": {
-      "total_count": 418,
-      "default_count": 46,
-      "default_rate": 0.11,
-      "default_percent": "11.00%"
+      "total_count": 32102,
+      "default_count": 3092,
+      "default_rate": 0.0963,
+      "default_percent": "9.63%"
     },
-    "Secretaries": {
-      "total_count": 12,
-      "default_count": 1,
-      "default_rate": 0.0833,
-      "default_percent": "8.33%"
+    "Core staff": {
+      "total_count": 27570,
+      "default_count": 1738,
+      "default_rate": 0.063,
+      "default_percent": "6.30%"
+    },
+    "Managers": {
+      "total_count": 21371,
+      "default_count": 1328,
+      "default_rate": 0.0621,
+      "default_percent": "6.21%"
+    },
+    "Drivers": {
+      "total_count": 18603,
+      "default_count": 2107,
+      "default_rate": 0.1133,
+      "default_percent": "11.33%"
+    },
+    "High skill tech staff": {
+      "total_count": 11380,
+      "default_count": 701,
+      "default_rate": 0.0616,
+      "default_percent": "6.16%"
+    },
+    "Accountants": {
+      "total_count": 9813,
+      "default_count": 474,
+      "default_rate": 0.0483,
+      "default_percent": "4.83%"
+    },
+    "Medicine staff": {
+      "total_count": 8537,
+      "default_count": 572,
+      "default_rate": 0.067,
+      "default_percent": "6.70%"
     },
     "Security staff": {
-      "total_count": 94,
-      "default_count": 12,
-      "default_rate": 0.1277,
-      "default_percent": "12.77%"
+      "total_count": 6721,
+      "default_count": 722,
+      "default_rate": 0.1074,
+      "default_percent": "10.74%"
+    },
+    "Cooking staff": {
+      "total_count": 5946,
+      "default_count": 621,
+      "default_rate": 0.1044,
+      "default_percent": "10.44%"
+    },
+    "Cleaning staff": {
+      "total_count": 4653,
+      "default_count": 447,
+      "default_rate": 0.0961,
+      "default_percent": "9.61%"
+    },
+    "Private service staff": {
+      "total_count": 2652,
+      "default_count": 175,
+      "default_rate": 0.066,
+      "default_percent": "6.60%"
+    },
+    "Low-skill Laborers": {
+      "total_count": 2093,
+      "default_count": 359,
+      "default_rate": 0.1715,
+      "default_percent": "17.15%"
     },
     "Waiters/barmen staff": {
-      "total_count": 26,
-      "default_count": 2,
-      "default_rate": 0.0769,
-      "default_percent": "7.69%"
+      "total_count": 1348,
+      "default_count": 152,
+      "default_rate": 0.1128,
+      "default_percent": "11.28%"
+    },
+    "Secretaries": {
+      "total_count": 1305,
+      "default_count": 92,
+      "default_rate": 0.0705,
+      "default_percent": "7.05%"
+    },
+    "Realty agents": {
+      "total_count": 751,
+      "default_count": 59,
+      "default_rate": 0.0786,
+      "default_percent": "7.86%"
+    },
+    "HR staff": {
+      "total_count": 563,
+      "default_count": 36,
+      "default_rate": 0.0639,
+      "default_percent": "6.39%"
+    },
+    "IT staff": {
+      "total_count": 526,
+      "default_count": 34,
+      "default_rate": 0.0646,
+      "default_percent": "6.46%"
     }
   },
   "risk_by_income_type": {
-    "Businessman": {
-      "total_count": 1,
-      "default_count": 0,
-      "default_rate": 0.0,
-      "default_percent": "0.00%"
+    "Working": {
+      "total_count": 158774,
+      "default_count": 15224,
+      "default_rate": 0.0959,
+      "default_percent": "9.59%"
     },
     "Commercial associate": {
-      "total_count": 995,
-      "default_count": 77,
-      "default_rate": 0.0774,
-      "default_percent": "7.74%"
+      "total_count": 71617,
+      "default_count": 5360,
+      "default_rate": 0.0748,
+      "default_percent": "7.48%"
     },
     "Pensioner": {
-      "total_count": 813,
-      "default_count": 36,
-      "default_rate": 0.0443,
-      "default_percent": "4.43%"
+      "total_count": 55362,
+      "default_count": 2982,
+      "default_rate": 0.0539,
+      "default_percent": "5.39%"
     },
     "State servant": {
-      "total_count": 293,
-      "default_count": 11,
-      "default_rate": 0.0375,
-      "default_percent": "3.75%"
+      "total_count": 21703,
+      "default_count": 1249,
+      "default_rate": 0.0575,
+      "default_percent": "5.75%"
+    },
+    "Unemployed": {
+      "total_count": 22,
+      "default_count": 8,
+      "default_rate": 0.3636,
+      "default_percent": "36.36%"
     },
     "Student": {
-      "total_count": 2,
+      "total_count": 18,
       "default_count": 0,
       "default_rate": 0.0,
       "default_percent": "0.00%"
     },
-    "Unemployed": {
-      "total_count": 1,
-      "default_count": 1,
-      "default_rate": 1.0,
-      "default_percent": "100.00%"
+    "Businessman": {
+      "total_count": 10,
+      "default_count": 0,
+      "default_rate": 0.0,
+      "default_percent": "0.00%"
     },
-    "Working": {
-      "total_count": 2211,
-      "default_count": 225,
-      "default_rate": 0.1018,
-      "default_percent": "10.18%"
+    "Maternity leave": {
+      "total_count": 5,
+      "default_count": 2,
+      "default_rate": 0.4,
+      "default_percent": "40.00%"
     }
   },
   "risk_by_education": {
+    "Secondary / secondary special": {
+      "total_count": 218391,
+      "default_count": 19524,
+      "default_rate": 0.0894,
+      "default_percent": "8.94%"
+    },
+    "Higher education": {
+      "total_count": 74863,
+      "default_count": 4009,
+      "default_rate": 0.0536,
+      "default_percent": "5.36%"
+    },
+    "Incomplete higher": {
+      "total_count": 10277,
+      "default_count": 872,
+      "default_rate": 0.0848,
+      "default_percent": "8.48%"
+    },
+    "Lower secondary": {
+      "total_count": 3816,
+      "default_count": 417,
+      "default_rate": 0.1093,
+      "default_percent": "10.93%"
+    },
     "Academic degree": {
-      "total_count": 1,
+      "total_count": 164,
+      "default_count": 3,
+      "default_rate": 0.0183,
+      "default_percent": "1.83%"
+    }
+  },
+  "risk_by_gender": {
+    "F": {
+      "total_count": 202448,
+      "default_count": 14170,
+      "default_rate": 0.07,
+      "default_percent": "7.00%"
+    },
+    "M": {
+      "total_count": 105059,
+      "default_count": 10655,
+      "default_rate": 0.1014,
+      "default_percent": "10.14%"
+    },
+    "XNA": {
+      "total_count": 4,
       "default_count": 0,
       "default_rate": 0.0,
       "default_percent": "0.00%"
+    }
+  },
+  "risk_by_contract_type": {
+    "Cash loans": {
+      "total_count": 278232,
+      "default_count": 23221,
+      "default_rate": 0.0835,
+      "default_percent": "8.35%"
     },
-    "Higher education": {
-      "total_count": 1029,
-      "default_count": 50,
-      "default_rate": 0.0486,
-      "default_percent": "4.86%"
-    },
-    "Incomplete higher": {
-      "total_count": 133,
-      "default_count": 13,
-      "default_rate": 0.0977,
-      "default_percent": "9.77%"
-    },
-    "Lower secondary": {
-      "total_count": 58,
-      "default_count": 3,
-      "default_rate": 0.0517,
-      "default_percent": "5.17%"
-    },
-    "Secondary / secondary special": {
-      "total_count": 3095,
-      "default_count": 284,
-      "default_rate": 0.0918,
-      "default_percent": "9.18%"
+    "Revolving loans": {
+      "total_count": 29279,
+      "default_count": 1604,
+      "default_rate": 0.0548,
+      "default_percent": "5.48%"
     }
   },
   "risk_by_ext_source_2_quintile": {
+    "Q4": {
+      "total_count": 61377,
+      "default_count": 3293,
+      "default_rate": 0.0537,
+      "default_percent": "5.37%"
+    },
     "Q1 (Lowest)": {
-      "total_count": 862,
-      "default_count": 135,
-      "default_rate": 0.1566,
-      "default_percent": "15.66%"
+      "total_count": 61371,
+      "default_count": 9337,
+      "default_rate": 0.1521,
+      "default_percent": "15.21%"
     },
     "Q2": {
-      "total_count": 861,
-      "default_count": 71,
-      "default_rate": 0.0825,
-      "default_percent": "8.25%"
+      "total_count": 61371,
+      "default_count": 5622,
+      "default_rate": 0.0916,
+      "default_percent": "9.16%"
     },
     "Q3": {
-      "total_count": 862,
-      "default_count": 75,
-      "default_rate": 0.087,
-      "default_percent": "8.70%"
-    },
-    "Q4": {
-      "total_count": 861,
-      "default_count": 47,
-      "default_rate": 0.0546,
-      "default_percent": "5.46%"
+      "total_count": 61371,
+      "default_count": 4320,
+      "default_rate": 0.0704,
+      "default_percent": "7.04%"
     },
     "Q5 (Highest)": {
-      "total_count": 862,
-      "default_count": 22,
-      "default_rate": 0.0255,
-      "default_percent": "2.55%"
+      "total_count": 61361,
+      "default_count": 2201,
+      "default_rate": 0.0359,
+      "default_percent": "3.59%"
     }
   }
 }

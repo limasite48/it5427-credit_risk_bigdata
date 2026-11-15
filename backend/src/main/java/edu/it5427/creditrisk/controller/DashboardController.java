@@ -46,4 +46,12 @@ public class DashboardController {
                 .contentType(MediaType.IMAGE_PNG)
                 .body(resource);
     }
+
+    @GetMapping("/figures/shap-summary")
+    public ResponseEntity<Resource> shapSummary() {
+        Resource resource = figureService.shapSummary();
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_PNG)
+                .body(resource);
+    }
 }

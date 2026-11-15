@@ -28,6 +28,10 @@ export interface OverviewResponse {
   def60SocialCircleRate: number
   modelValAuc: number | null
   baselineValAuc: number | null
+  modelPrAuc?: number | null
+  modelF1?: number | null
+  optimalThreshold?: number | null
+  costReductionPercent?: string | null
   riskDistribution: {
     low: number
     medium: number

@@ -1,5 +1,6 @@
-# Runtime (tested with Python 3.13, OpenJDK 21)
+# Runtime (tested with Python 3.11-3.13, OpenJDK 17/21)
 pyspark==3.5.3
+delta-spark==3.2.1
 pandas>=2.2
 numpy>=1.26
 pyarrow>=15

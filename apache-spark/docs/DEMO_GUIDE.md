@@ -1,80 +1,80 @@
 # DEMO GUIDE
 
-Thời lượng gợi ý: 10–15 phút. Mọi lệnh chạy ở thư mục gốc project.
+Suggested duration: 10–15 minutes. Run all commands from the `apache-spark/` directory.
 
-## 0. Chuẩn bị (làm trước buổi demo)
+## 0. Preparation (Before the Demo)
 
 ```bash
 pip install -r requirements.txt
-# Dataset Kaggle: giải nén 10 file vào data/raw/ (không commit lên GitHub)
+# Kaggle dataset: extract all 10 files into data/raw/ (do not commit to GitHub)
 #   kaggle competitions download -c home-credit-default-risk -p data/raw && unzip data/raw/*.zip -d data/raw
-# Muốn demo nhanh: cắt subset thật 5.000 khách hàng
+# For a fast demo: extract a real 5,000-customer subset
 python -m scripts.make_dev_subset --src data/raw --out data/dev_subset/raw --customers 5000
 docker compose up -d          # MinIO + Kafka + Kafka UI
 ```
 
-Không có dataset hoặc Docker vẫn demo được trên fixture:
-`python -m scripts.make_test_fixture --out data/fixture/raw`, sau đó thêm `--raw-dir data/fixture/raw` vào các lệnh dưới. Nhớ nói rõ với người xem đây là **dữ liệu giả lập để test**.
+Without the Kaggle dataset or Docker, you can still demo using the test fixture:
+`python -m scripts.make_test_fixture --out data/fixture/raw`, then append `--raw-dir data/fixture/raw` to the commands below. Make sure to inform viewers that this is **simulated test fixture data**.
 
-## 1. Profiling (1 phút)
+## 1. Profiling (1 minute)
 
 ```bash
 python -m processing.profiling.profile_raw --raw-dir data/dev_subset/raw
 ```
-Cho người xem:
-- `reports/data_profiling/PROFILING_REPORT.md`: bảng file, mất cân bằng TARGET, bảng quan hệ (orphan, cardinality đo được).
-- `reports/architecture/ERD.md`: ERD có số liệu thực đo.
+Show viewers:
+- `reports/data_profiling/PROFILING_REPORT.md`: file summary, `TARGET` class imbalance, relationship table (orphan rows, measured cardinality).
+- `reports/architecture/ERD.md`: ERD annotated with empirically measured numbers.
 
-## 2. Batch pipeline end-to-end (3–5 phút)
+## 2. End-to-End Batch Pipeline (3–5 minutes)
 
 ```bash
 python -m scripts.run_pipeline --raw-dir data/dev_subset/raw --skip-profiling --sync-minio
 ```
-Cần quan sát:
+What to observe:
 
-| Ở đâu | Kết quả mong đợi |
+| Location | Expected Result |
 |---|---|
-| log `ingestion` | mỗi bảng `SUCCESS` kèm số dòng; chạy lại thì tất cả thành `skipped (same sha256…)` |
-| log `silver` | `reconcile=True` ở mọi bảng (rows_in = out + quarantined + dups) |
-| log `gold` | toàn bộ dòng `check … PASS`, đặc biệt `join …: row count unchanged` và `one row per sk_id_curr` |
-| http://localhost:9001 (minioadmin/minioadmin) | bucket `bronze/original/…`, `bronze/synthetic/…`, `silver/…`, `gold/…` |
-| `docs/DATA_QUALITY_REPORT.md` | trước/sau cleaning, orphan, dòng sau ngày nộp hồ sơ bị loại |
-| `reports/PIPELINE_STATS.md` | dung lượng, số bản ghi, tốc độ ingest, thời gian từng stage, số feature |
+| `ingestion` logs | Each table `SUCCESS` with row count; re-running shows `skipped (same sha256…)` for all |
+| `silver` logs | `reconcile=True` for every table (`rows_in = out + quarantined + dups`) |
+| `gold` logs | All `check … PASS` lines, especially `join …: row count unchanged` and `one row per sk_id_curr` |
+| http://localhost:9001 (`minioadmin`/`minioadmin`) | Buckets `bronze/original/…`, `bronze/synthetic/…`, `silver/…`, `gold/…` |
+| `docs/DATA_QUALITY_REPORT.md` | Before/after cleaning, orphan counts, rows dated after application excluded |
+| `reports/PIPELINE_STATS.md` | Sizes, record counts, ingestion throughput, per-stage duration, feature counts |
 
-Chứng minh tính idempotent: chạy lại đúng lệnh trên, rồi so số dòng Gold trong `reports/PIPELINE_STATS.md` với lần trước. Hai lần phải bằng nhau.
+Demonstrate idempotency: re-run the exact same command, then compare Gold row counts in `reports/PIPELINE_STATS.md` with the previous run. Both runs must match.
 
-## 3. Streaming với Kafka (4–5 phút, 3 terminal)
+## 3. Streaming with Kafka (4–5 minutes, 3 terminals)
 
 ```bash
-# Terminal A - consumer chạy liên tục, trigger 5 giây
+# Terminal A - continuous consumer, 5-second trigger
 python -m streaming.consumers.stream_processor --source kafka --trigger 5 --reset-checkpoint
-# Terminal B - producer 20 event/s, có chèn lỗi
+# Terminal B - producer at 20 events/s with fault injection
 python -m streaming.producers.replay_producer --sink kafka --rate 20 \
    --sources installment_payment_system credit_card_system loan_application_system \
    --dup-rate 0.05 --late-rate 0.02 --malformed-rate 0.01 --from-start
-# Terminal C - điều khiển producer
-python -m streaming.producers.control pause     # Terminal A: các batch không còn event
+# Terminal C - producer control
+python -m streaming.producers.control pause     # Terminal A: subsequent batches receive 0 events
 python -m streaming.producers.control resume
 python -m streaming.producers.control stop
-python -m streaming.consumers.snapshot          # trạng thái hiện tại theo SK_ID_CURR
+python -m streaming.consumers.snapshot          # current aggregated state per SK_ID_CURR
 ```
-Cần quan sát:
-- Kafka UI (http://localhost:8080): message đến các topic `installment_payment_events`, …
-- Terminal A: `batch N: X events {...}, avg latency …s` sau mỗi trigger.
-- `reports/streaming/query_progress.jsonl`: `numDroppedDuplicateRows` (bản trùng bị loại), `numRowsDroppedByWatermark` (event trễ bị loại).
-- `silver/stream_quarantine`: event sai JSON nằm ở đây kèm `reject_reason`.
-- **Khôi phục:** Ctrl-C Terminal A, chạy lại không kèm `--reset-checkpoint`. Consumer tiếp tục từ offset đã commit, không xử lý lại event cũ.
-- **Phát lại:** chạy lại producer với `--from-start`. Event ID tất định nên các event đã thấy bị loại là trùng.
+What to observe:
+- Kafka UI (http://localhost:8081): messages arriving in topics `installment_payment_events`, etc.
+- Terminal A: `batch N: X events {...}, avg latency …s` on each trigger.
+- `reports/streaming/query_progress.jsonl`: `numDroppedDuplicateRows` (duplicates dropped), `numRowsDroppedByWatermark` (late events dropped).
+- `silver/stream_quarantine`: malformed JSON events landed here with `reject_reason`.
+- **Recovery:** Ctrl-C Terminal A, then restart without `--reset-checkpoint`. Consumer resumes from committed offsets without reprocessing old events.
+- **Replay:** re-run producer with `--from-start`. Deterministic `event_id` ensures previously seen events are deduplicated.
 
-Không có Kafka thì dùng chế độ file replay, với cùng logic:
+Without Kafka, use file replay mode with identical processing logic:
 ```bash
 python -m streaming.producers.replay_producer --sink file --rate 0 --max-events 3000 --dup-rate 0.05 --late-rate 0.02 --malformed-rate 0.01 --from-start
 python -m streaming.consumers.stream_processor --source file --trigger available-now --reset-checkpoint
 ```
-Kết quả mong đợi: dòng `stream summary` ở cuối có `duplicates_dropped` bằng đúng tổng `duplicates_injected` mà producer in ra. `quarantined_rows` bằng tổng `malformed_injected`. Event trễ chỉ bị loại từ micro-batch thứ hai trở đi, vì watermark chỉ được đặt sau batch đầu tiên.
+Expected result: `stream summary` at the end shows `duplicates_dropped` matching total `duplicates_injected` printed by the producer, and `quarantined_rows` matching `malformed_injected`. Late events are dropped starting from the second micro-batch onward because the watermark is established after the first batch.
 
-## 4. Test (1 phút)
+## 4. Tests (1 minute)
 
 ```bash
-python -m pytest            # 39 test, khoảng 2 phút
+python -m pytest            # 39 tests, ~2 minutes
 ```

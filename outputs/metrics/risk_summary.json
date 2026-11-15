@@ -1,22 +1,21 @@
 {
   "portfolio_summary": {
-    "total_applications": 4316,
-    "defaults_count": 350,
-    "non_defaults_count": 3966,
-    "npl_default_ratio": 0.0811,
-    "npl_default_percent": "8.11%",
-    "population": "gold_train_subset"
+    "total_applications": 307511,
+    "defaults_count": 24825,
+    "non_defaults_count": 282686,
+    "npl_default_ratio": 0.0807,
+    "npl_default_percent": "8.07%"
   },
   "financial_exposure": {
-    "average_loan_amount": 598128.75,
-    "median_loan_amount": 517459.5,
-    "average_income": 170744.17,
-    "median_income": 144000.0,
-    "average_annuity": 27158.32,
-    "average_credit_to_income_ratio": 3.9
+    "average_loan_amount": 599026.0,
+    "median_loan_amount": 513531.0,
+    "average_income": 168797.92,
+    "median_income": 147150.0,
+    "average_annuity": 27108.57,
+    "average_credit_to_income_ratio": 3.96
   },
   "delinquency_indicators": {
-    "DEF_30_CNT_SOCIAL_CIRCLE_positive_rate": 0.1094,
-    "DEF_60_CNT_SOCIAL_CIRCLE_positive_rate": 0.0809
+    "DEF_30_CNT_SOCIAL_CIRCLE_positive_rate": 0.11435688479436508,
+    "DEF_60_CNT_SOCIAL_CIRCLE_positive_rate": 0.08379862834175038
   }
 }

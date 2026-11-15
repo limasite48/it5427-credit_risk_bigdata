@@ -1,44 +1,44 @@
 # SYNTHETIC DATA – Synthetic Customer Behaviour (traffic profile)
 
-> ⚠️ **SYNTHETIC – KHÔNG PHẢI DỮ LIỆU THẬT.** Đây không phải hồ sơ vi phạm giao thông của bất kỳ ai. Không được dùng hay trình bày như dữ liệu thật. Mục đích duy nhất là minh họa việc tích hợp thêm một nguồn dữ liệu ngoài vào pipeline.
+> ⚠️ **SYNTHETIC – NOT REAL DATA.** These are not real traffic violation records for any person. They must not be used or presented as real data. Their sole purpose is to demonstrate integrating an external data source into the pipeline.
 
-## 1. Vì sao chỉ bổ sung 4 trường
+## 1. Why Only 4 Fields Are Added
 
-Home Credit đã có sẵn thông tin nghề nghiệp, thu nhập, thâm niên, quy mô gia đình, khoản vay và toàn bộ lịch sử tín dụng, trả góp. Nguồn synthetic chỉ thêm một **loại dữ liệu mà Home Credit không có** (hành vi bên ngoài tài chính), ở mức tối thiểu đủ để demo:
+Home Credit already includes occupation, income, employment tenure, household size, loan details, and full credit/installment histories. The synthetic source adds one **non-financial behavioral data domain** missing from Home Credit, at the minimum scope needed to demonstrate multi-source integration:
 
-| Trường | Kiểu | Ý nghĩa |
+| Field | Type | Meaning |
 |---|---|---|
-| TRAFFIC_VIOLATION_COUNT | int | tổng số lần vi phạm |
-| MAJOR_VIOLATION_COUNT | int | số lần vi phạm nghiêm trọng (≤ tổng) |
-| TOTAL_TRAFFIC_FINE | double | tổng tiền phạt (đơn vị giả lập kiểu VND) |
-| ACCIDENT_COUNT | int | số vụ tai nạn |
-| DATA_UPDATED_AT | timestamp | thời điểm "làm mới" giả lập |
-| DATA_ORIGIN | string | luôn bằng `SYNTHETIC` |
-| GENERATOR_VERSION, GENERATOR_SEED | | để tái lập kết quả |
+| `TRAFFIC_VIOLATION_COUNT` | `int` | Total number of traffic violations |
+| `MAJOR_VIOLATION_COUNT` | `int` | Number of major violations (≤ total) |
+| `TOTAL_TRAFFIC_FINE` | `double` | Total fine amount (simulated VND-like units) |
+| `ACCIDENT_COUNT` | `int` | Number of accidents |
+| `DATA_UPDATED_AT` | `timestamp` | Simulated refresh timestamp |
+| `DATA_ORIGIN` | `string` | Always `SYNTHETIC` |
+| `GENERATOR_VERSION`, `GENERATOR_SEED` | | For reproducibility |
 
-## 2. Cách sinh và phân phối
+## 2. Generation Logic & Distributions
 
-| Trường | Phân phối | Ghi chú |
+| Field | Distribution | Notes |
 |---|---|---|
-| TRAFFIC_VIOLATION_COUNT | NegativeBinomial(r=0.6, p=0.6), trung bình 0.4 | nhiều số 0, đuôi dài (over-dispersion) |
-| MAJOR_VIOLATION_COUNT | Binomial(TRAFFIC_VIOLATION_COUNT, 0.12) | đảm bảo ≤ tổng |
-| TOTAL_TRAFFIC_FINE | tổng các mức phạt chọn ngẫu nhiên từ bảng giá cố định: nhẹ {0.3; 0.5; 0.8; 1; 2} triệu, nặng {6; 8; 12; 18} triệu | nhất quán với số vi phạm |
-| ACCIDENT_COUNT | Poisson(0.03 + 0.10 × MAJOR_VIOLATION_COUNT) | chỉ phụ thuộc trường synthetic khác |
-| DATA_UPDATED_AT | đều trong năm 2025 | |
+| `TRAFFIC_VIOLATION_COUNT` | `NegativeBinomial(r=0.6, p=0.6)`, mean 0.4 | Many zeros, long tail (over-dispersion) |
+| `MAJOR_VIOLATION_COUNT` | `Binomial(TRAFFIC_VIOLATION_COUNT, 0.12)` | Guarantees ≤ total |
+| `TOTAL_TRAFFIC_FINE` | Sum of randomly sampled fines from fixed tiers: minor `{0.3; 0.5; 0.8; 1; 2}`M, major `{6; 8; 12; 18}`M | Consistent with violation counts |
+| `ACCIDENT_COUNT` | `Poisson(0.03 + 0.10 × MAJOR_VIOLATION_COUNT)` | Depends only on other synthetic fields |
+| `DATA_UPDATED_AT` | Uniform across year 2025 | |
 
-Đây là các tham số giả định do nhóm tự chọn, không dựa trên thống kê thật.
+These parameters are team-chosen assumptions for demonstration, not derived from real statistics.
 
-## 3. Quy tắc tuân thủ
+## 3. Compliance Rules
 
-- **Chỉ sinh cho SK_ID_CURR có thật** (application_train ∪ application_test), mỗi khách hàng một dòng. Có test kiểm tra.
-- **Không đọc cột Home Credit nào ngoài SK_ID_CURR** và không sửa dữ liệu gốc.
-- **Không tạo tương quan giả với rủi ro tín dụng.** Giá trị được sinh độc lập với TARGET và với mọi thuộc tính Home Credit. Ràng buộc duy nhất là giữa các trường synthetic với nhau (major ≤ total, tai nạn tăng nhẹ theo vi phạm nặng). Vì vậy mọi mô hình học trên nguồn này sẽ thấy **không có** tín hiệu dự báo: đó là hành vi đúng.
-- **Tái lập được:** mỗi khách hàng dùng một bộ sinh số ngẫu nhiên có seed = (seed toàn cục, SK_ID_CURR). Chạy lại cho cùng kết quả, và thêm khách hàng mới không làm đổi giá trị của khách hàng cũ (có test kiểm tra tính tất định).
-- **Lưu tách biệt:** `data/synthetic/` → `bronze/synthetic/…`, cột `_origin = SYNTHETIC` ở Silver, nhãn "(SYNTHETIC)" trong DATA_DICTIONARY. Gold có thêm cờ `has_synthetic_profile`.
+- **Generated only for real `SK_ID_CURR` keys** (`application_train` ∪ `application_test`), one row per customer (verified by tests).
+- **Never reads any Home Credit column other than `SK_ID_CURR`** and never modifies original data.
+- **No spurious correlation with credit risk.** Values are generated independently of `TARGET` and all Home Credit attributes. Dependencies exist only among synthetic fields (`major <= total`, accidents slightly increase with major violations). Any model trained on this source will find **no** predictive signal—which is the intended behavior.
+- **Reproducible:** each customer uses a per-customer RNG seeded with `(global_seed, SK_ID_CURR)`. Re-runs yield identical outputs, and adding new customers does not alter existing customers' values (verified by determinism tests).
+- **Stored separately:** `data/synthetic/` → `bronze/synthetic/…`, `_origin = SYNTHETIC` in Silver, `(SYNTHETIC)` label in `DATA_DICTIONARY`. Gold adds a `has_synthetic_profile` flag.
 
-## 4. Lệnh
+## 4. Command
 
 ```bash
 python -m ingestion.synthetic_source.generator --raw-dir data/raw --out data/synthetic --seed 20261113
 ```
-Kết quả gồm `synthetic_traffic_profile.csv` và `synthetic_traffic_profile.meta.json` (thống kê mô tả của lần sinh).
+Outputs `synthetic_traffic_profile.csv` and `synthetic_traffic_profile.meta.json` (summary statistics of the run).

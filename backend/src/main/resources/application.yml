@@ -46,6 +46,7 @@ app:
   risk-summary: ${RISK_SUMMARY:../outputs/metrics/risk_summary.json}
   demographics: ${DEMOGRAPHICS:../outputs/metrics/demographic_profiles.json}
   roc-curve: ${ROC_CURVE:../outputs/figures/roc_curve.png}
+  shap-summary: ${SHAP_SUMMARY:../outputs/figures/shap_summary.png}
   model-evaluation: ${MODEL_EVALUATION:../outputs/metrics/model_evaluation.json}
   supplementary-dir: ${SUPPLEMENTARY_DIR:../ingestion-minio-kafka/data/supplementary}
   spark-reports-dir: ${SPARK_REPORTS_DIR:../apache-spark/reports}

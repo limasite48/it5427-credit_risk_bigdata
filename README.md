@@ -47,18 +47,20 @@ docker compose down
 
 ### Docs
 
-- [docs/DEMO.md](docs/DEMO.md) — walkthrough and expected sample behavior  
-- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — system design  
-- [docs/SECURITY.md](docs/SECURITY.md) — authn/authz and production gaps  
-- [docs/FEATURE_BACKLOG.md](docs/FEATURE_BACKLOG.md) — seven high-impact integration features (APIs, UI, reuse map)  
+- [docs/DEMO.md](docs/DEMO.md) — walkthrough and expected sample behavior
+- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — unified system design & data flow
+- [docs/PROJECT_SUMMARY.md](docs/PROJECT_SUMMARY.md) — unified technical summary across all modules
+- [docs/SECURITY.md](docs/SECURITY.md) — authn/authz and production gaps
+- [docs/track_b_requirements.md](docs/track_b_requirements.md) — unified Kafka, Spark Medallion, and feature store data contracts
+- [docs/dashboard_interface_spec.md](docs/dashboard_interface_spec.md) — downstream API DTOs & visualization artifacts
 
-Portfolio KPIs use `risk_summary.json` (N=5,000, NPL **7.72%**). Risk-tier charts and lookup use the scored CSV (N=500). Kafka/Spark/MinIO are optional and not required to run the dashboard.
+Portfolio KPIs, segment rates, ROC/PR curves, SHAP summary figures, and application lookups synchronize cleanly from the Spark Gold integrated dataset (`outputs/`), while the interactive underwriting form calls the real-time FastAPI ML service (`ml-service/`). For full **307,511-row** Spark + LightGBM + SHAP execution, see `notebooks/colab_full_pipeline.ipynb` and `scripts/run_colab_full_pipeline.py`.
 
 ---
 
 ## Table of Contents
 1. [Project Overview & System Architecture](#1-project-overview--system-architecture)
-2. [Completed vs. Pending Tasks Matrix](#2-completed-vs-pending-tasks-matrix)
+2. [Platform Capabilities & Components](#2-completed-vs-pending-tasks-matrix)
 3. [Technical Summary & Performance Benchmarks](#3-technical-summary--performance-benchmarks)
 4. [Technical Guidelines & Deployment Strategy](#4-technical-guidelines--deployment-strategy)
 5. [Guidance on Files and Content (Key Files Reference)](#5-guidance-on-files-and-content-key-files-reference)
@@ -67,7 +69,7 @@ Portfolio KPIs use `risk_summary.json` (N=5,000, NPL **7.72%**). Risk-tier chart
    * [6.2 Features Used for LightGBM](#62-features-used-for-lightgbm)
    * [6.3 Credit Risk Assessment Criteria & Data Mapping](#63-credit-risk-assessment-criteria--data-mapping)
    * [6.4 Parameter Impact on Risk Assessment](#64-parameter-impact-on-risk-assessment)
-   * [6.5 Baseline Model: Logistic Regression Scorecard (ROC-AUC 0.7168)](#65-baseline-model-logistic-regression-scorecard-roc-auc-07168)
+   * [6.5 Baseline Model: Logistic Regression Scorecard](#65-baseline-model-logistic-regression-scorecard-roc-auc-07168)
    * [6.6 LightGBM Gradient Boosting Model](#66-lightgbm-gradient-boosting-model)
    * [6.7 Business Policy Rules & Operational Underwriting Matrix](#67-business-policy-rules--operational-underwriting-matrix)
 7. [Step-by-Step Manual Testing Instructions](#7-step-by-step-manual-testing-instructions)
@@ -84,41 +86,40 @@ Portfolio KPIs use `risk_summary.json` (N=5,000, NPL **7.72%**). Risk-tier chart
 
 Credit risk assessment is a foundational problem in modern retail banking. When applicants apply for consumer loans, financial institutions must accurately estimate their **Probability of Default ($PD$)** to protect loan capital while maximizing financial inclusion for underbanked populations.
 
-This project implements an end-to-end Big Data intelligence pipeline:
-$$\text{Ingest (Kafka)} \longrightarrow \text{Store (MinIO S3)} \longrightarrow \text{Process (Spark)} \longrightarrow \text{Analyze & Predict (LightGBM/SHAP)} \longrightarrow \text{Decide (Dashboard)}$$
+This project implements a unified end-to-end Big Data intelligence pipeline:
+$$\text{Ingest (Kafka/MinIO)} \longrightarrow \text{Process (Spark Medallion)} \longrightarrow \text{Analyze \& Predict (LightGBM/SHAP)} \longrightarrow \text{Decide (React + Spring Boot UI)}$$
 
 ```mermaid
 flowchart TD
-    subgraph S1["1. Ingestion & Storage (Member 1)"]
-        RawCSV["Raw Kaggle CSVs\n(_data/*.csv)"] --> Stage["Deterministic Staging\n(104-Week Timeline)"]
-        Stage --> MinIOLake["MinIO Lakehouse\n(landing, bronze, reference, quarantine)"]
-        Stage --> Kafka["Kafka Brokers (KRaft)\n(7 Source Topics + DLQ)"]
-        MacroSim["gen_macro.py"] --> MacroData["Regional GDP, Unemp, CPI\n(82 Regions, 2016-2025)"]
+    subgraph S1["1. Ingestion, Lakehouse & Supplementary Data"]
+        RawCSV["Raw Kaggle CSVs (_data/*.csv)"] --> Stage["Deterministic Staging (104-Week Timeline)"]
+        Stage --> MinIOLake["MinIO Lakehouse (Bronze / Silver / Gold)"]
+        Stage --> Kafka["Kafka Brokers (KRaft, 7 Source Topics + DLQ)"]
+        MacroSim["gen_macro.py"] --> MacroData["82-Region Macro + Occupation Salary Benchmarks"]
     end
 
-    subgraph S2["2. Processing & ETL (Member 2)"]
-        MinIOLake --> Spark["Apache Spark & Delta Lake\n(Local or Google Colab)"]
-        Spark --> AggFeats["6-Table Aggregations\n(bureau, pos, card, installments)"]
-        AggFeats --> ProcessedStore["Feature Store\n(processed_train.parquet)"]
+    subgraph S2["2. Apache Spark Medallion Processing"]
+        MinIOLake --> Spark["PySpark + Delta Lake / Parquet (Local or Google Colab)"]
+        Spark --> AggFeats["Pre-Join Multi-Table Aggregations (bureau, prev, pos, cc, inst)"]
+        AggFeats --> GoldStore["Gold Feature Store (integrated_credit_profile + training_labels)"]
     end
 
-    subgraph S3["3. Analytics & ML Core (Our Role)"]
-        RawCSV --> Preproc["Feature Preprocessor\n(Domain Ratios, Imputation)"]
-        MacroData --> MacroJoin["MacroFeatureJoiner\n(Point-in-Time Join)"]
-        Preproc --> ModelLGBM["LightGBM Classifier\n(scale_pos_weight, 500 trees)"]
-        ModelLGBM --> CostOpt["Cost-Sensitive Matrix\n(5:1 FN:FP Loss Optimization)"]
-        CostOpt --> XAI["TreeSHAP Engine\n(Global & Local Attribution)"]
-        XAI --> ScoringEngine["CreditRiskScoringService\n(PD -> Risk Tier -> Top Drivers)"]
-        Kafka -.-> RealTimeConsumer["RealTimeCreditScorer\n(Kafka Consumer < 32ms)"]
-        ScoringEngine --> RealTimeConsumer
+    subgraph S3["3. Analytics, Modeling & Explainability"]
+        GoldStore --> GoldTrain["Gold LightGBM + Logistic Baseline + 5:1 Cost Opt"]
+        RawCSV --> RealTimeTrain["Interactive Application Scorer (credit_risk_model.joblib)"]
+        MacroData --> MacroJoin["MacroFeatureJoiner (Point-in-Time as-of Join)"]
+        GoldTrain --> XAI["TreeSHAP Engine (Global & Local Drivers)"]
+        Kafka -.-> RealTimeConsumer["RealTimeCreditScorer (Kafka / Dry-Run)"]
     end
 
-    subgraph S4["4. Decision UI (Member 3)"]
-        ScoringEngine --> DashUI["Underwriting Dashboard\n(Streamlit / Dash)"]
-        ModelLGBM -.-> ModelArtifact["outputs/models/\ncredit_risk_model.joblib"]
-        XAI -.-> Figures["outputs/figures/\n(shap_summary.png, roc_curve.png)"]
-        ModelArtifact --> DashUI
-        Figures --> DashUI
+    subgraph S4["4. Decision Platform (React + Spring Boot + FastAPI)"]
+        RealTimeTrain --> MLAdapter["FastAPI ML Adapter (:8000 internal)"]
+        GoldTrain --> Outputs["Standardized outputs/ (CSV, JSON, ROC/PR, SHAP)"]
+        XAI --> Outputs
+        MLAdapter --> Gateway["Spring Boot 4 REST Gateway (:8080)"]
+        Outputs --> Gateway
+        MacroData --> Gateway
+        Gateway --> DashUI["React TypeScript Dashboard (:5173 / :8088)"]
     end
 ```
 
@@ -126,30 +127,20 @@ flowchart TD
 
 ## 2. Completed vs. Pending Tasks Matrix
 
-The division of responsibilities across the course project team is tracked below:
+The unified platform covers every layer of the Big Data credit-risk architecture:
 
-| Track / Team Member | Specific Responsibility | Status | Artifacts & Deliverables |
+| Platform Layer | Capability | Status | Key Modules & Artifacts |
 | :--- | :--- | :---: | :--- |
-| **Track A (Our Role)** | **Exploratory Data Analysis & Baseline Risk Metrics** | **Completed** | `outputs/metrics/risk_summary.json` (sample N=5,000; NPL: 7.72%, Avg Loan: ~598k) |
-| **Track A (Our Role)** | **Demographic & Occupation Profiling** | **Completed** | `outputs/metrics/demographic_profiles.json` (Risk by occupation/income) |
-| **Track A (Our Role)** | **Banking Domain Feature Engineering** | **Completed** | `src/data/preprocessor.py` (Anomalies handled, debt ratios, bureau means) |
-| **Track A (Our Role)** | **Dual-Model Benchmark & Imbalance Handling** | **Completed** | `src/models/baseline.py` (LR) & `src/models/tree_models.py` (LGBM) |
-| **Track A (Our Role)** | **Cost-Sensitive Decision Optimization** | **Completed** | `src/models/evaluation.py` (5:1 FN:FP penalty; on current sample, $p^* = 0.50$) |
-| **Track A (Our Role)** | **Explainable AI (TreeSHAP Attribution)** | **Completed** | `src/models/explainability.py` & `outputs/figures/shap_summary.png` |
-| **Track A (Our Role)** | **Operational Customer Risk Tiering** | **Completed** | `src/service/scoring_service.py` (LOW: <5%, MEDIUM: 5-15%, HIGH: $\ge$15%) |
-| **Track A (Our Role)** | **Downstream UI Interface Contract** | **Completed** | `docs/dashboard_interface_spec.md`, `outputs/models/credit_risk_model.joblib` |
-| **Track A (Our Role)** | **Manual Testing & Evaluation CLI Tool** | **Completed** | `evaluate_profile.py` (`--lookup-id`, `--interactive`, `--input-json`) |
-| **Ingestion Bridge (Our Role)**| **Member 1 Code Standardization & English Translation**| **Completed** | `ingestion-minio-kafka/docs/INGESTION_MINIO_KAFKA.md` (100% English) |
-| **Ingestion Bridge (Our Role)**| **Zero-Copy Path Resolution** | **Completed** | `common.py` auto-detects root `_data/` (eliminates 2.5 GB duplication) |
-| **Ingestion Bridge (Our Role)**| **Point-in-Time Macroeconomic Joiner** | **Completed** | `src/data/macro_loader.py` (GDP, unemployment, CPI across 82 regions) |
-| **Ingestion Bridge (Our Role)**| **Real-Time Streaming Scoring Engine** | **Completed** | `src/integration/kafka_consumer_scorer.py` (<32ms latency) |
-| **Member 1 (Data Ingestion)** | **MinIO Lakehouse Architecture & IAM Policies** | **Completed** | `infra/docker-compose.yml`, `init-buckets.sh` (8 buckets, 4 service accounts) |
-| **Member 1 (Data Ingestion)** | **Deterministic Timeline Simulation & Staging** | **Completed** | `ingestion/stage.py` (BLAKE2b hash, 104 weeks, `LIVE_START = 2025-12-01`) |
-| **Member 1 (Data Ingestion)** | **Kafka Event Streaming & JSON Schema Contracts** | **Completed** | `schemas/*.schema.json`, `ingestion/producer.py`, `kafka_to_bronze.py` |
-| **Member 2 (Processing/ETL)** | **Spark Multi-Table Aggregations (6 Auxiliary Tables)**| *Pending* | Aggregating `bureau`, `POS_CASH`, `installments` into `processed_train.parquet` |
-| **Track B (Our Role)** | **Model Retraining on Full 200-Feature Store** | *Pending* | Standby awaiting Member 2’s Spark output (expected ROC-AUC $\approx$ 0.80) |
-| **Track B (Our Role)** | **Out-of-Time Live Holdout Validation** | *Pending* | Standby awaiting final training (evaluating on 11,717 post-2025-12-01 loans) |
-| **Member 3 (Dashboard/UI)** | **Decision Support Dashboard Frontend** | **Completed** | React + Spring Boot 4 + FastAPI underwriting platform (`frontend/`, `backend/`, `ml-service/`) |
+| **Ingestion & Storage** | **Zero-Copy Raw Data Resolution & EDA** | **Implemented** | `ingestion-minio-kafka/ingestion/common.py`, `scripts/eda.py` |
+| **Ingestion & Storage** | **MinIO Lakehouse Architecture & IAM Policies** | **Implemented** | `ingestion-minio-kafka/infra/docker-compose.yml`, `init-buckets.sh` |
+| **Ingestion & Storage** | **Kafka Event Streaming & Draft 2020-12 Contracts** | **Implemented** | `schemas/*.schema.json`, `producer.py`, `kafka_to_bronze.py` (with DLQ + tombstone guard) |
+| **Enrichment** | **Point-in-Time Macro & Occupation Benchmarks** | **Implemented** | `gen_macro.py` (`occupation_benchmarks.csv`), `src/data/macro_loader.py` (`merge_asof`) |
+| **Spark Processing** | **3-Layer Medallion ETL & Leakage-Free Joins** | **Implemented** | `apache-spark/processing/{profiling,cleaning,integration}` (Parquet + Delta Lake) |
+| **Spark Processing** | **Structured Streaming Replay & Deduplication** | **Implemented** | `apache-spark/streaming/{producers,consumers}` (`snapshot.py`, `stream_processor.py`) |
+| **ML & Explainability** | **Dual-Model Training, 5:1 Cost Opt & TreeSHAP** | **Implemented** | `scripts/train_gold_model.py`, `run_track_a.py`, `src/models/{baseline,evaluation,explainability}.py` |
+| **ML & Explainability** | **Real-Time Kafka Dry-Run & Live Scoring** | **Implemented** | `src/service/scoring_service.py`, `src/integration/kafka_consumer_scorer.py` |
+| **Full-Scale Runner** | **307,511-Row Google Colab Execution Pipeline** | **Implemented** | `notebooks/colab_full_pipeline.ipynb`, `scripts/run_colab_full_pipeline.py` |
+| **Web Decision UI** | **React + Spring Boot 4 + FastAPI Platform** | **Implemented** | `frontend/`, `backend/`, `ml-service/` (Overview + SHAP, Segments, Macro Stress, Pipeline, Underwriting) |
 
 ---
 
@@ -157,39 +148,24 @@ The division of responsibilities across the course project team is tracked below
 
 ### 3.1 Technology Stack
 
-```
-Core Language      : Python 3.10+ (see pyproject.toml / requirements.txt)
-Machine Learning   : lightgbm>=4.0.0, scikit-learn>=1.3.0
-Explainable AI     : shap>=0.44.0 (TreeExplainer)
-Data Engineering   : pandas>=2.0.0, pyarrow>=15.0.0, numpy>=1.24.0
-Schema Validation  : JSON Schema Draft 2020-12 (jsonschema>=4.20.0)
-Streaming & Storage: Apache Kafka 3.9.0 (KRaft mode), Bitnami MinIO (S3 API), Docker Compose
-Packaging & Tests  : setuptools, pyproject.toml, pytest>=8.0.0
+```text
+Core ML / Python   : Python 3.10+, lightgbm>=4.0.0, scikit-learn>=1.3.0, shap>=0.44.0
+Big Data Processing: PySpark 3.5.3, Delta Lake 3.2.1 (CRB_LAKE_FORMAT=delta), Parquet
+Streaming & Store  : Apache Kafka 3.9.0 (KRaft), MinIO (S3 API), Draft 2020-12 JSON Schema
+Backend & UI       : Java 25 (Spring Boot 4.1, JWT), FastAPI, React 19 + TypeScript + Recharts + Tailwind
 ```
 
-### 3.2 Model Performance Benchmarks
+### 3.2 Model Performance & Gold Standardization
 
-Current artifacts in `outputs/metrics/model_evaluation.json` were produced on a **5,000-row sample** of `application_train.csv` (re-run with `python run_track_a.py` for the full 307,511 rows):
-
-| Model Architecture | Training ROC-AUC | Validation ROC-AUC | PR-AUC | Operational Role |
-| :--- | :---: | :---: | :---: | :--- |
-| **Baseline Logistic Regression** | 0.8092 | **0.7168** | — | Traditional linear credit scorecard benchmark |
-| **Production LightGBM Classifier**| 0.9644 | **0.7361** | **0.2332** | High-performance non-linear model (+0.0193 val AUC vs baseline) |
-
-*Diagnostic curves: [`outputs/figures/roc_curve.png`](outputs/figures/roc_curve.png).*
+Both the interactive real-time application scorer (`outputs/models/credit_risk_model.joblib`) and the integrated Spark Gold model (`outputs/models/gold_credit_risk_model.joblib`) are benchmarked against L2 Logistic Regression using ROC-AUC, PR-AUC, F1, 5:1 FN:FP cost-matrix optimization (`src/models/evaluation.py`), and TreeSHAP explainability (`src/models/explainability.py`). Executing `notebooks/colab_full_pipeline.ipynb` (or `python scripts/run_colab_full_pipeline.py`) refreshes all metrics and figures across the complete **307,511** training rows and child history tables.
 
 ### 3.3 Financial Loss Reduction via Cost-Sensitive Matrix
 
-Standard classification sets a naive cutoff of $p = 0.50$, which can be financially suboptimal in credit lending where approving a defaulter (False Negative) is far costlier than rejecting a good customer (False Positive).
-
-Under the approved banking penalty ratio of **$C(FN) : C(FP) = 5 : 1$** (`src/models/evaluation.py`):
-* On the current 5,000-row sample, the cost optimizer selects **$p^* = 0.50$** (same as the standard cutoff; expected loss **326** cost units; **0%** further reduction on this sample).
-* On larger holdouts the optimal cutoff can shift above 0.50; re-run Track A on the full dataset to refresh these figures.
-* Specificity at the applied threshold ($p = 0.50$): **96.64%** (from `model_evaluation.json`).
+Under the banking penalty ratio **$C(FN) : C(FP) = 5 : 1$** (`src/models/evaluation.py`), thresholds are swept across `0.01..0.99` on validation probabilities to minimize `Loss(p) = 5 * FN(p) + 1 * FP(p)`.
 
 ### 3.4 Inference Latency
-* **Batch / pipeline:** Depends on `--sample-size` (or full train). Use `python run_track_a.py` and check the printed elapsed time.
-* **Real-Time Single Applicant Inference:** Target **<32ms** average latency per applicant in the Kafka dry-run path (domain ratios, LightGBM PD, risk tier, local SHAP).
+* **Batch / Gold Pipeline:** Run via Google Colab (`notebooks/colab_full_pipeline.ipynb`) with 10 GB Spark driver memory.
+* **Real-Time Single Applicant Inference:** Low-latency scoring via FastAPI `/score` and Kafka consumer dry-run (`python src/integration/kafka_consumer_scorer.py --dry-run --limit 10`).
 
 ---
 
@@ -216,57 +192,55 @@ The codebase supports two execution targets controlled by the `LAKE_MODE` enviro
    * Writes Parquet files directly to the local filesystem (`lake/` directory).
    * Enabled automatically when Docker is stopped or on resource-constrained laptops, ensuring that unit tests, ML training, and manual evaluations execute with zero external container dependencies.
 
-### 4.3 Hardware Stability & Google Colab Division of Work
+### 4.3 Hardware Allocation & Google Colab Full-Scale Execution
 
-Empirical diagnostics executed on the local laptop:
-* **System RAM:** 16.89 GB Total | **~4.09 GB Available Free RAM**
-* **CPU:** 10 Physical Cores / 12 Threads | **GPU:** CPU-only (CUDA False)
-
-#### Recommended Architecture Partitioning:
-* **Run on Local Laptop:**
-  * Ingestion staging, timeline simulation, and Kafka producer (`ingestion-minio-kafka/`)
-  * Analytics, domain preprocessing, LightGBM training, and SHAP explainability (`src/`)
-  * Manual profile evaluation CLI (`evaluate_profile.py`)
-  * Streamlit / Dash underwriting dashboard (Member 3)
-* **Offload to Google Colab (Strongly Recommended for Member 2):**
-  * Member 2’s Apache Spark ETL: Joining and aggregating 7 relational tables across 55+ million rows (`bureau_balance` with 27M rows, `installments_payments` with 13.6M rows) requires **8–16 GB of JVM heap**. Running Spark on a laptop with only 4 GB free RAM carries a high risk of out-of-memory crashes and system freezing.
-  * **Handoff workflow:** Member 2 runs PySpark ETL on Google Colab (leveraging Colab’s 12.7 GB free RAM), exports the final aggregated `processed_train.parquet` (~150 MB), and brings that parquet back to the laptop for our Track B model retraining.
+Because running Apache Spark Medallion aggregations across all **307,511** training applicants and ~55M child records (`bureau_balance`, `installments_payments`, `POS_CASH_balance`, `credit_card_balance`, `previous_application`) requires **8–12 GB JVM heap**:
+* **Google Colab (`notebooks/colab_full_pipeline.ipynb` / `scripts/run_colab_full_pipeline.py`):** Runs the full 307,511-row Spark Bronze -> Silver -> Gold + Structured Streaming + Delta smoke check + full Gold LightGBM + ROC/PR + TreeSHAP training and exports `credit_risk_full_artifacts.zip`.
+* **Local Machine / Docker Compose:** Hosts the lightweight operational web stack (`frontend/`, `backend/`, `ml-service/`) and runs fast unit/integration checks against the synced `outputs/` and `apache-spark/reports/` artifacts.
 
 ---
 
 ## 5. Guidance on Files and Content (Key Files Reference)
 
-```
+```text
 it5427-credit_risk_bigdata/
 ├── _data/                                     # Raw Kaggle CSVs (application_train/test, bureau, etc.)
 ├── pyproject.toml                             # Standard packaging manifest & CLI console scripts
 ├── requirements.txt                           # Unified Python dependencies
-├── run_track_a.py                             # Master Track A training & evaluation execution driver
-├── evaluate_profile.py                        # Dedicated interactive manual testing CLI tool
-├── sample_applicant.json                      # Reference JSON applicant profile for testing
-├── README.md                                  # Comprehensive project documentation (this file)
+├── docker-compose.yml                         # Root Docker Compose (frontend :8088, backend :8080, ml-service :8000)
+├── notebooks/colab_full_pipeline.ipynb        # End-to-end Google Colab runner for the full 307k dataset
+├── scripts/                                   # Platform ops, training, standardization & Colab drivers
+│   ├── run_colab_full_pipeline.py             # Master full-dataset Colab pipeline driver
+│   ├── train_gold_model.py                    # Gold LightGBM + Baseline LR + 5:1 Cost Opt + ROC + SHAP
+│   ├── standardize_dashboard.py               # Syncs Gold metrics/figures into dashboard artifacts
+│   └── {setup,start,stop,test,smoke}.sh       # Local lifecycle & smoke test scripts
+├── run_track_a.py                             # Real-time application scorer & baseline training driver
+├── evaluate_profile.py                        # Interactive manual testing CLI tool
+├── README.md                                  # Project documentation (this file)
 │
-├── docs/                                      # Cross-team architecture & interface specifications
-│   ├── track_b_requirements.md                # Data contract specifying required Spark aggregations
-│   └── dashboard_interface_spec.md            # Interface contract & scoring schema for Member 3 UI
+├── docs/                                      # Unified architecture, demo & data contracts
+│   ├── ARCHITECTURE.md                        # System architecture & networking overview
+│   ├── DEMO.md                                # Dashboard walkthrough & sample verification
+│   ├── PROJECT_SUMMARY.md                     # Consolidated project summary
+│   ├── track_b_requirements.md                # Unified Kafka, Spark Medallion & feature store contract
+│   └── dashboard_interface_spec.md            # Downstream REST API DTOs & visualization contract
 │
-├── ingestion-minio-kafka/                     # Ingestion Layer (Member 1)
-│   ├── docs/INGESTION_MINIO_KAFKA.md          # 100% English technical documentation
-│   ├── infra/                                 # Docker Compose (Kafka 3.9.0 + Bitnami MinIO)
-│   │   ├── docker-compose.yml                 # Service definitions and container networking
-│   │   ├── kafka/create-topics.sh             # Topic provisioning (7 sources + DLQ)
-│   │   └── minio/init-buckets.sh              # 8-bucket Medallion setup & IAM policy assignment
-│   ├── ingestion/                             # Data pipeline scripts
-│   │   ├── common.py                          # Auto-resolves _data/, S3/local lake filesystem abstraction
-│   │   ├── stage.py                           # 104-week simulation, BLAKE2b event_id hashing
-│   │   ├── gen_macro.py                       # 82-region GDP, unemployment, CPI simulator
-│   │   ├── gen_schemas.py                     # JSON Schema Draft 2020-12 generator & self-checker
-│   │   ├── backfill.py                        # Batch history loader (< 2025-12-01) into MinIO bronze
-│   │   ├── producer.py                        # Real-time event streamer (>= 2025-12-01) to Kafka
-│   │   └── kafka_to_bronze.py                 # Stream consumer sink writing Parquet micro-batches
-│   ├── data/supplementary/                    # Generated macro files (region_dim, gdp, unemp, cpi)
-│   └── schemas/                               # JSON Schemas and example event payloads per topic
+├── ingestion-minio-kafka/                     # Ingestion Layer & Supplementary Generators
+│   ├── infra/                                 # Docker Compose (Kafka + MinIO), topic & bucket init
+│   ├── ingestion/                             # common, stage, gen_macro, gen_schemas, backfill, producer, kafka_to_bronze
+│   ├── data/supplementary/                    # 82-region macro CSVs + occupation_benchmarks.csv
+│   └── schemas/                               # Draft 2020-12 JSON Schemas and sample event payloads
 │
+├── apache-spark/                              # Apache Spark Medallion ETL & Structured Streaming
+│   ├── docker-compose.yml                     # MinIO (:9000/:9001), Kafka (:9092), Kafka UI (:8081)
+│   ├── configs/                               # pipeline.yaml & sources.yaml (Parquet & Delta Lake)
+│   ├── processing/                            # Profiling, Silver cleaning/quarantine, Gold integration & DQ
+│   ├── streaming/                             # Replay producer, Structured Streaming consumer & snapshot
+│   └── reports/                               # pipeline_stats.json, DATA_QUALITY_REPORT.md, PROFILING_REPORT.md
+│
+├── backend/                                   # Java 25 / Spring Boot 4 REST API Gateway (:8080)
+├── frontend/                                  # React 19 + TypeScript + Vite Dashboard (:5173 / :8088)
+├── ml-service/                                # FastAPI ML Inference Adapter (:8000 internal)
 ├── src/                                       # Core Analytics & Machine Learning Package
 │   ├── config.py                              # Centralized paths, risk tier thresholds, cost weights
 │   ├── analytics/                             # Statistical & portfolio risk profiling

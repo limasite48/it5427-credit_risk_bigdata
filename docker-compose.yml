@@ -38,6 +38,7 @@ services:
       RISK_SUMMARY: /app/outputs/metrics/risk_summary.json
       DEMOGRAPHICS: /app/outputs/metrics/demographic_profiles.json
       ROC_CURVE: /app/outputs/figures/roc_curve.png
+      SHAP_SUMMARY: /app/outputs/figures/shap_summary.png
       MODEL_EVALUATION: /app/outputs/metrics/model_evaluation.json
       SUPPLEMENTARY_DIR: /app/supplementary
       SPARK_REPORTS_DIR: /app/spark-reports

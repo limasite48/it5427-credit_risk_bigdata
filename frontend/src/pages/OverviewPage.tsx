@@ -35,22 +35,34 @@ export function OverviewPage() {
     queryFn: () => api.pipeline(),
   })
   const [rocUrl, setRocUrl] = useState<string | null>(null)
+  const [shapUrl, setShapUrl] = useState<string | null>(null)
 
   useEffect(() => {
     let active = true
-    let objectUrl: string | null = null
+    let rocObjectUrl: string | null = null
+    let shapObjectUrl: string | null = null
     api
       .rocCurveUrl()
       .then((url) => {
-        objectUrl = url
+        rocObjectUrl = url
         if (active) setRocUrl(url)
       })
       .catch(() => {
         if (active) setRocUrl(null)
       })
+    api
+      .shapSummaryUrl()
+      .then((url) => {
+        shapObjectUrl = url
+        if (active) setShapUrl(url)
+      })
+      .catch(() => {
+        if (active) setShapUrl(null)
+      })
     return () => {
       active = false
-      if (objectUrl) URL.revokeObjectURL(objectUrl)
+      if (rocObjectUrl) URL.revokeObjectURL(rocObjectUrl)
+      if (shapObjectUrl) URL.revokeObjectURL(shapObjectUrl)
     }
   }, [])
 
@@ -158,6 +170,13 @@ export function OverviewPage() {
                   (+{aucLift.toFixed(4)} vs baseline {data.baselineValAuc.toFixed(4)})
                 </>
               )}
+              {data.modelPrAuc != null && <> · PR-AUC {data.modelPrAuc.toFixed(4)}</>}
+              {data.costReductionPercent && data.optimalThreshold != null && (
+                <>
+                  {' '}
+                  · 5:1 cost opt {data.costReductionPercent} at p*={data.optimalThreshold.toFixed(2)}
+                </>
+              )}
               .
             </>
           ) : (
@@ -208,7 +227,7 @@ export function OverviewPage() {
           <CardHeader>
             <CardTitle>Default vs repaid</CardTitle>
             <CardDescription>
-              Outcome counts from the integrated subset ({formatNumber(data.totalApplications)} labeled
+              Outcome counts across labeled applications ({formatNumber(data.totalApplications)} labeled
               applications)
             </CardDescription>
           </CardHeader>
@@ -277,9 +296,9 @@ export function OverviewPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Model ROC curve</CardTitle>
+            <CardTitle>Model ROC &amp; PR curves</CardTitle>
             <CardDescription>
-              Discrimination curve
+              Discrimination &amp; precision-recall curve
               {data.modelValAuc != null ? ` · val AUC ${data.modelValAuc.toFixed(4)}` : ''}
             </CardDescription>
           </CardHeader>
@@ -296,6 +315,27 @@ export function OverviewPage() {
           </CardContent>
         </Card>
       </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Global SHAP feature importance</CardTitle>
+          <CardDescription>
+            TreeSHAP beeswarm impact across top predictive features
+            {data.modelF1 != null ? ` · F1 ${data.modelF1.toFixed(4)}` : ''}
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {shapUrl ? (
+            <img
+              src={shapUrl}
+              alt="SHAP global feature importance summary"
+              className="max-h-96 w-full rounded border border-border object-contain bg-white"
+            />
+          ) : (
+            <p className="text-sm text-navy-muted">SHAP summary figure unavailable.</p>
+          )}
+        </CardContent>
+      </Card>
 
       <div className="grid gap-4 md:grid-cols-3">
         <Card>

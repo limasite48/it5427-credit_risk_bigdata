@@ -17,10 +17,22 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 
-from common.config import load_config, path_of
+from common.config import PROJECT_ROOT, load_config, path_of
 from common.logging_utils import get_logger
 
 log = get_logger("pipeline")
+
+
+def _portable_path(p: str | Path) -> str:
+    """Serialize paths relative to apache-spark/ or the repo root when possible."""
+    path = Path(p)
+    repo_root = PROJECT_ROOT.parent
+    for base in (PROJECT_ROOT, repo_root):
+        try:
+            return path.resolve().relative_to(base.resolve()).as_posix()
+        except ValueError:
+            continue
+    return str(p)
 
 
 def _stage(name: str, fn, timings: dict):
@@ -38,7 +50,7 @@ def run(raw_dir: Path | None, skip_profiling: bool, sync_minio: bool, streaming_
     cfg = load_config()
     raw_dir = path_of(cfg, "raw_dir")
     timings: dict[str, float] = {}
-    stats: dict = {"started_at": datetime.now(timezone.utc).isoformat(timespec="seconds"), "raw_dir": str(raw_dir)}
+    stats: dict = {"started_at": datetime.now(timezone.utc).isoformat(timespec="seconds"), "raw_dir": _portable_path(raw_dir)}
 
     from processing.profiling.profile_raw import detect_label
     stats["dataset_label"] = detect_label(raw_dir)
@@ -64,6 +76,8 @@ def run(raw_dir: Path | None, skip_profiling: bool, sync_minio: bool, streaming_
     _stage("cleaning_silver", clean_silver.run, timings)
     from processing.integration import build_gold
     gold = _stage("integration_gold", build_gold.run, timings)
+    if isinstance(gold, dict) and isinstance(gold.get("outputs"), dict):
+        gold["outputs"] = {k: _portable_path(v) for k, v in gold["outputs"].items()}
     stats["gold"] = gold
 
     if sync_minio:

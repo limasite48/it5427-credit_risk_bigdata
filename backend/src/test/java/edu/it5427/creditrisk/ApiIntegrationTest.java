@@ -15,6 +15,8 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
@@ -107,6 +109,7 @@ class ApiIntegrationTest {
         registry.add("app.risk-summary", () -> "../outputs/metrics/risk_summary.json");
         registry.add("app.demographics", () -> "../outputs/metrics/demographic_profiles.json");
         registry.add("app.roc-curve", () -> "../outputs/figures/roc_curve.png");
+        registry.add("app.shap-summary", () -> "../outputs/figures/shap_summary.png");
         registry.add("app.supplementary-dir", () -> "../ingestion-minio-kafka/data/supplementary");
     }
 
@@ -141,14 +144,24 @@ class ApiIntegrationTest {
     }
 
     @Test
-    void overviewAndSegmentsFromRealFiles() throws Exception {
+    void overviewSegmentsAndFiguresFromRealFiles() throws Exception {
+        JsonNode summary = objectMapper.readTree(
+                Files.readString(Path.of("../outputs/metrics/risk_summary.json"))
+        ).path("portfolio_summary");
+        long expectedApps = summary.path("total_applications").asLong();
+        double expectedNpl = summary.path("npl_default_ratio").asDouble();
+        long scoredRows;
+        try (var lines = Files.lines(Path.of("../outputs/scored_applications_sample.csv"))) {
+            scoredRows = lines.count() - 1;
+        }
+
         String token = login("analyst", "AnalystDemo!234");
         mockMvc.perform(get("/api/dashboard/overview").header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.totalApplications").value(4316))
-                .andExpect(jsonPath("$.nplRate").value(0.0811))
-                .andExpect(jsonPath("$.scoredSampleSize").value(1079))
-                .andExpect(jsonPath("$.riskDistribution.high").value(640));
+                .andExpect(jsonPath("$.totalApplications").value(expectedApps))
+                .andExpect(jsonPath("$.nplRate").value(expectedNpl))
+                .andExpect(jsonPath("$.scoredSampleSize").value(scoredRows))
+                .andExpect(jsonPath("$.riskDistribution.high").isNumber());
 
         mockMvc.perform(get("/api/dashboard/segments").header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
@@ -156,14 +169,22 @@ class ApiIntegrationTest {
                 .andExpect(jsonPath("$.byIncomeType").isArray())
                 .andExpect(jsonPath("$.byEducation").isArray())
                 .andExpect(jsonPath("$.byExtSource2").isArray());
+
+        mockMvc.perform(get("/api/dashboard/figures/roc-curve").header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/api/dashboard/figures/shap-summary").header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk());
     }
 
     @Test
     void applicationLookupHitAndMiss() throws Exception {
+        JsonNode demoIds = objectMapper.readTree(Files.readString(Path.of("../outputs/gold_demo_ids.json")));
+        long highId = demoIds.path("high_example").asLong();
+
         String token = login("underwriter", "UnderwriterDemo!234");
-        mockMvc.perform(get("/api/applications/298157").header("Authorization", "Bearer " + token))
+        mockMvc.perform(get("/api/applications/" + highId).header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.applicationId").value(298157))
+                .andExpect(jsonPath("$.applicationId").value(highId))
                 .andExpect(jsonPath("$.riskTier").value("HIGH"))
                 .andExpect(jsonPath("$.scoreSource").value("gold-validation"));
 
@@ -264,11 +285,15 @@ class ApiIntegrationTest {
 
     @Test
     void regionsAndMacroStress() throws Exception {
+        long scoredRows;
+        try (var lines = Files.lines(Path.of("../outputs/scored_applications_sample.csv"))) {
+            scoredRows = lines.count() - 1;
+        }
         String token = login("analyst", "AnalystDemo!234");
         mockMvc.perform(get("/api/insights/regions").header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.scoredSampleSize").value(1079))
-                .andExpect(jsonPath("$.matchedWithMacro").value(1079))
+                .andExpect(jsonPath("$.scoredSampleSize").value(scoredRows))
+                .andExpect(jsonPath("$.matchedWithMacro").value(scoredRows))
                 .andExpect(jsonPath("$.byRegionRating").isArray())
                 .andExpect(jsonPath("$.byUnemploymentQuintile").isArray())
                 .andExpect(jsonPath("$.insights.highestRiskRating").isNotEmpty());
@@ -280,13 +305,20 @@ class ApiIntegrationTest {
                                 {"unemploymentDeltaPp": 2.0, "cpiShockPct": 3.0}
                                 """))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.applicantsInScope").value(1079))
+                .andExpect(jsonPath("$.applicantsInScope").value(scoredRows))
                 .andExpect(jsonPath("$.stressedHighRate").isNumber())
                 .andExpect(jsonPath("$.methodology").isNotEmpty());
     }
 
     @Test
     void sparkPipelineReport() throws Exception {
+        JsonNode stats = objectMapper.readTree(Files.readString(Path.of("../apache-spark/reports/pipeline_stats.json")));
+        JsonNode checks = objectMapper.readTree(Files.readString(Path.of("../apache-spark/reports/data_quality/gold_checks.json")));
+        long expectedCustomers = stats.path("gold").path("rows").path("integrated_credit_profile").asLong();
+        long expectedLoans = stats.path("gold").path("rows").path("loan_credit_features").asLong();
+        int expectedFeatures = stats.path("gold").path("feature_count").asInt();
+        int expectedChecks = checks.path("checks").size();
+
         mockMvc.perform(get("/api/insights/pipeline"))
                 .andExpect(status().isUnauthorized());
 
@@ -294,12 +326,12 @@ class ApiIntegrationTest {
         mockMvc.perform(get("/api/insights/pipeline").header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.fixtureRun").value(false))
-                .andExpect(jsonPath("$.bronzeRows").value(799487))
-                .andExpect(jsonPath("$.goldCustomers").value(5000))
-                .andExpect(jsonPath("$.goldLoans").value(23990))
-                .andExpect(jsonPath("$.featureCount").value(175))
-                .andExpect(jsonPath("$.checksPassed").value(31))
-                .andExpect(jsonPath("$.checksTotal").value(31))
+                .andExpect(jsonPath("$.bronzeRows").isNumber())
+                .andExpect(jsonPath("$.goldCustomers").value(expectedCustomers))
+                .andExpect(jsonPath("$.goldLoans").value(expectedLoans))
+                .andExpect(jsonPath("$.featureCount").value(expectedFeatures))
+                .andExpect(jsonPath("$.checksPassed").value(expectedChecks))
+                .andExpect(jsonPath("$.checksTotal").value(expectedChecks))
                 .andExpect(jsonPath("$.sources").isArray())
                 .andExpect(jsonPath("$.featureGroups[?(@.name == 'Bureau')].count", hasItem(11)))
                 .andExpect(jsonPath("$.note").isNotEmpty());

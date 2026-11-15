@@ -20,9 +20,17 @@ public class FigureService {
     }
 
     public Resource rocCurve() {
-        Path path = Path.of(props.rocCurve()).toAbsolutePath().normalize();
+        return loadPng(props.rocCurve(), "ROC curve not available");
+    }
+
+    public Resource shapSummary() {
+        return loadPng(props.shapSummary(), "SHAP summary not available");
+    }
+
+    private Resource loadPng(String configuredPath, String errorMessage) {
+        Path path = Path.of(configuredPath).toAbsolutePath().normalize();
         if (!Files.isRegularFile(path)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ROC curve not available");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, errorMessage);
         }
         return new FileSystemResource(path);
     }

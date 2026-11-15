@@ -156,7 +156,7 @@ export function SegmentsPage() {
   }
 
   const data = query.data
-  const benchmark = overviewQuery.data?.nplRate ?? 0.0772
+  const benchmark = overviewQuery.data?.nplRate ?? 0.0807
 
   return (
     <div className="space-y-4">

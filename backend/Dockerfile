@@ -2,7 +2,7 @@ FROM eclipse-temurin:25-jdk AS build
 WORKDIR /workspace/backend
 COPY backend/mvnw backend/pom.xml ./
 COPY backend/.mvn ./.mvn
-RUN chmod +x mvnw
+RUN sed -i 's/\r$//' mvnw && chmod +x mvnw
 COPY backend/src ./src
 # Unit tests read ../outputs from the backend module directory.
 COPY outputs /workspace/outputs

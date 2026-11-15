@@ -40,7 +40,9 @@ def text_cols(df):
 def overview(name, df, key):
     miss = df.isna().mean()
     dup = df.duplicated(key).sum()
-    print(f"{name:26s} {len(df):>11,} rows x {df.shape[1]:>3} cols | missing cells {df.isna().to_numpy().mean():5.1%}"
+    file_path = RAW / f"{name}.csv"
+    size_mb = file_path.stat().st_size / (1024 * 1024) if file_path.exists() else 0.0
+    print(f"{name:26s} {len(df):>11,} rows x {df.shape[1]:>3} cols ({size_mb:6.1f} MB) | missing cells {df.isna().to_numpy().mean():5.1%}"
           f" | cols with missing {int((miss > 0).sum()):>3} | cols >50% missing {int((miss > 0.5).sum()):>3}"
           f" | duplicate key {key}: {dup:,}")
 

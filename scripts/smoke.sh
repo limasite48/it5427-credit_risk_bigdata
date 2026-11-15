@@ -22,9 +22,32 @@ TOKEN="$(python3 -c 'import json,sys; print(json.load(sys.stdin)["accessToken"])
 AUTH=( -H "Authorization: Bearer ${TOKEN}" )
 echo "login OK"
 
-curl -fsS "${AUTH[@]}" "${BACKEND}/api/dashboard/overview" | python3 -c 'import json,sys; d=json.load(sys.stdin); assert d["totalApplications"]==5000; assert abs(d["nplRate"]-0.0772)<1e-9; print("overview OK")'
+curl -fsS "${AUTH[@]}" "${BACKEND}/api/dashboard/overview" | python3 -c '
+import json, sys
+d = json.load(sys.stdin)
+summary = json.load(open("'"${ROOT_DIR}/outputs/metrics/risk_summary.json"'"))["portfolio_summary"]
+assert d["totalApplications"] == summary["total_applications"], (d["totalApplications"], summary["total_applications"])
+assert abs(d["nplRate"] - summary["npl_default_ratio"]) < 1e-6, (d["nplRate"], summary["npl_default_ratio"])
+print(f"overview OK (n={d[\"totalApplications\"]}, npl={d[\"nplRate\"]})")
+'
 curl -fsS "${AUTH[@]}" "${BACKEND}/api/dashboard/segments" | python3 -c 'import json,sys; d=json.load(sys.stdin); assert d["byOccupation"]; print("segments OK")'
-curl -fsS "${AUTH[@]}" "${BACKEND}/api/applications/101676" | python3 -c 'import json,sys; d=json.load(sys.stdin); assert d["applicationId"]==101676; print("lookup OK")'
+curl -fsS -o /dev/null "${AUTH[@]}" "${BACKEND}/api/dashboard/figures/roc-curve" && echo "roc-curve OK"
+curl -fsS -o /dev/null "${AUTH[@]}" "${BACKEND}/api/dashboard/figures/shap-summary" && echo "shap-summary OK"
+
+DEMO_ID="$(python3 -c '
+import csv, json, pathlib
+root = pathlib.Path("'"${ROOT_DIR}"'")
+ids_file = root / "outputs" / "gold_demo_ids.json"
+if ids_file.exists():
+    data = json.loads(ids_file.read_text())
+    val = data.get("high_example") or data.get("low_example")
+    if val:
+        print(val)
+        raise SystemExit(0)
+with open(root / "outputs" / "scored_applications_sample.csv", newline="") as f:
+    print(next(csv.DictReader(f))["SK_ID_CURR"])
+')"
+curl -fsS "${AUTH[@]}" "${BACKEND}/api/applications/${DEMO_ID}" | python3 -c "import json,sys; d=json.load(sys.stdin); assert str(d['applicationId'])=='${DEMO_ID}'; print('lookup OK:', d['applicationId'], d['riskTier'])"
 
 score_one() {
   local file="$1"

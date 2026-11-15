@@ -1,5 +1,5 @@
 """
-Master Execution Driver for Track A: Credit Risk Analytics & ML Pipeline
+Application Scoring & Baseline ML Pipeline Driver (Credit Risk Intelligence Platform)
 """
 import argparse
 import json
@@ -35,7 +35,7 @@ from src.service.scoring_service import CreditRiskScoringService
 def run_pipeline(sample_size: int = None, fast_mode: bool = False, include_macro: bool = False):
     start_time = time.time()
     print("=" * 70)
-    print(" IT5427 Big Data: Track A Credit Risk Analytics & ML Pipeline")
+    print(" IT5427 Credit Risk Intelligence: Application Scoring & Baseline Pipeline")
     print("=" * 70)
 
     # 1. Ingestion

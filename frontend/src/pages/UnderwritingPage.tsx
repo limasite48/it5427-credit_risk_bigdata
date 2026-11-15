@@ -86,7 +86,7 @@ const emptyDefaults: FormValues = {
 export function UnderwritingPage() {
   const [baseApplicant, setBaseApplicant] = useState<ApplicantPayload | null>(null)
   const [result, setResult] = useState<ScoreResponse | null>(null)
-  const [lookupId, setLookupId] = useState('101676')
+  const [lookupId, setLookupId] = useState('298157')
   const [lookupResult, setLookupResult] = useState<ApplicationResponse | null>(null)
   const [lookupError, setLookupError] = useState<string | null>(null)
 
@@ -311,7 +311,7 @@ export function UnderwritingPage() {
           <CardHeader>
             <CardTitle>Application lookup</CardTitle>
             <CardDescription>
-              Track A sample, or a Gold-model score when the id was in the Home Credit subset
+              Pre-scored Gold integrated credit profile lookup (or scored validation sample)
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">

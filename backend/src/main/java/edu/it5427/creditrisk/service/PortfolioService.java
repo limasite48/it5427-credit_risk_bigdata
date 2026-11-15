@@ -64,11 +64,29 @@ public class PortfolioService {
 
             Double modelAuc = null;
             Double baselineAuc = null;
+            Double modelPrAuc = null;
+            Double modelF1 = null;
+            Double optimalThreshold = null;
+            String costReductionPercent = null;
             Path evalPath = Path.of(props.modelEvaluation()).toAbsolutePath().normalize();
             if (Files.isRegularFile(evalPath)) {
                 JsonNode eval = objectMapper.readTree(Files.readString(evalPath));
-                modelAuc = eval.path("lightgbm_classifier").path("val_roc_auc").asDouble();
-                baselineAuc = eval.path("baseline_logistic_regression").path("val_roc_auc").asDouble();
+                if (eval.has("lightgbm_classifier")) {
+                    modelAuc = nullableDouble(eval.path("lightgbm_classifier").path("val_roc_auc"));
+                } else if (eval.has("val_roc_auc")) {
+                    modelAuc = nullableDouble(eval.path("val_roc_auc"));
+                }
+                if (eval.has("baseline_logistic_regression")) {
+                    baselineAuc = nullableDouble(eval.path("baseline_logistic_regression").path("val_roc_auc"));
+                }
+                JsonNode detailed = eval.path("detailed_lightgbm_evaluation");
+                if (detailed.isObject()) {
+                    modelPrAuc = nullableDouble(detailed.path("pr_auc"));
+                    modelF1 = nullableDouble(detailed.path("f1_score"));
+                    optimalThreshold = nullableDouble(detailed.path("cost_optimization").path("optimal_threshold"));
+                    String red = detailed.path("cost_optimization").path("cost_reduction_percent").asText("");
+                    costReductionPercent = red.isBlank() ? null : red;
+                }
             }
 
             TierCounts tiers = countTiers(csvPath);
@@ -88,6 +106,10 @@ public class PortfolioService {
                     def60,
                     modelAuc,
                     baselineAuc,
+                    modelPrAuc,
+                    modelF1,
+                    optimalThreshold,
+                    costReductionPercent,
                     new DashboardDtos.RiskDistribution(tiers.low, tiers.medium, tiers.high),
                     tiers.total
             );
@@ -168,7 +190,12 @@ public class PortfolioService {
         checks.put("scoredCsv", Files.isRegularFile(Path.of(props.scoredCsv())));
         checks.put("demographics", Files.isRegularFile(Path.of(props.demographics())));
         checks.put("rocCurve", Files.isRegularFile(Path.of(props.rocCurve())));
+        checks.put("shapSummary", Files.isRegularFile(Path.of(props.shapSummary())));
         return checks;
+    }
+
+    private static Double nullableDouble(JsonNode node) {
+        return node.isNumber() ? node.asDouble() : null;
     }
 
     private record TierCounts(long low, long medium, long high, long total) {}

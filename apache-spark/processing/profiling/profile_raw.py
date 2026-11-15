@@ -1,4 +1,4 @@
-"""Data profiling of the raw Home Credit files with Spark (Giai đoạn 1).
+"""Data profiling of the raw Home Credit files with Spark (Phase 1).
 
 Measures, per file: size, rows, columns, declared types and cast failures, missing rate per column,
 exact duplicates, primary-key uniqueness, numeric distributions (min/max/mean/p50/p99, negatives,

@@ -1,10 +1,10 @@
 # ARCHITECTURE – Credit Risk Intelligence
 
-## 1. Kiến trúc tổng thể
+## 1. Overall Architecture
 
 ```mermaid
 flowchart LR
-  subgraph SRC["Logical sources (mô phỏng từ Home Credit)"]
+  subgraph SRC["Logical sources (simulated from Home Credit)"]
     S1[Loan Application System<br/>application_train/test]
     S2[External Credit Bureau<br/>bureau, bureau_balance]
     S3[Previous Loan System<br/>previous_application]
@@ -22,7 +22,7 @@ flowchart LR
 
   subgraph STREAM["Streaming path"]
     PRD["replay_producer<br/>rate / pause / resume / replay"]
-    BUS[("Kafka topics<br/>hoặc file landing")]
+    BUS[("Kafka topics<br/>or file landing")]
     SSS["Spark Structured Streaming<br/>parse → quarantine<br/>watermark + dedup event_id<br/>foreachBatch"]
   end
 
@@ -38,37 +38,37 @@ flowchart LR
   B --> PRD --> BUS --> SSS
   SSS --> SV
   SSS --> G
-  G --> ML["ML / BI (ngoài phạm vi)"]
+  G --> ML["ML / BI (downstream)"]
 ```
 
-Đọc sơ đồ: dữ liệu lịch sử đi theo đường batch Bronze → Silver → Gold. Đường streaming phát lại chính các bản ghi Bronze thành event, xử lý theo micro-batch và ghi vào cùng một Data Lake.
+Diagram summary: historical data flows along the batch path Bronze → Silver → Gold. The streaming path replays those same Bronze records as events, processes them in micro-batches, and writes into the same Data Lake.
 
-## 2. Luồng dữ liệu và grain
+## 2. Data Flow and Grain
 
 ```mermaid
 flowchart TB
-  BB["bureau_balance<br/>grain: SK_ID_BUREAU × tháng"] -->|"join SK_ID_BUREAU,<br/>agg"| BU["bureau<br/>grain: SK_ID_BUREAU"]
-  BU -->|agg theo SK_ID_CURR| C["customer_credit_features<br/>1 dòng / SK_ID_CURR"]
-  IP["installments_payments<br/>grain: dòng thanh toán"] -->|"agg → 1 dòng / kỳ trả góp<br/>(SK_ID_PREV, version, number)"| IL["installment level"]
-  IL -->|agg SK_ID_PREV| L["loan_credit_features<br/>1 dòng / SK_ID_PREV"]
+  BB["bureau_balance<br/>grain: SK_ID_BUREAU × month"] -->|"join SK_ID_BUREAU,<br/>agg"| BU["bureau<br/>grain: SK_ID_BUREAU"]
+  BU -->|agg by SK_ID_CURR| C["customer_credit_features<br/>1 row / SK_ID_CURR"]
+  IP["installments_payments<br/>grain: payment line"] -->|"agg → 1 row / installment<br/>(SK_ID_PREV, version, number)"| IL["installment level"]
+  IL -->|agg SK_ID_PREV| L["loan_credit_features<br/>1 row / SK_ID_PREV"]
   IL -->|agg SK_ID_CURR| C
-  POS["POS_CASH_balance<br/>SK_ID_PREV × tháng"] -->|agg| L
+  POS["POS_CASH_balance<br/>SK_ID_PREV × month"] -->|agg| L
   POS -->|agg| C
-  CC["credit_card_balance<br/>SK_ID_PREV × tháng"] -->|agg| L
+  CC["credit_card_balance<br/>SK_ID_PREV × month"] -->|agg| L
   CC -->|agg| C
   PA["previous_application<br/>grain: SK_ID_PREV"] --> L
   PA -->|agg| C
-  SY["synthetic_traffic_profile<br/>1 dòng / SK_ID_CURR"] --> C
-  APP["application_train ∪ test<br/>1 dòng / SK_ID_CURR"] -->|LEFT JOIN, kiểm tra số dòng| P["integrated_credit_profile<br/>1 dòng / SK_ID_CURR, KHÔNG có TARGET"]
+  SY["synthetic_traffic_profile<br/>1 row / SK_ID_CURR"] --> C
+  APP["application_train ∪ test<br/>1 row / SK_ID_CURR"] -->|LEFT JOIN, row count check| P["integrated_credit_profile<br/>1 row / SK_ID_CURR, NO TARGET"]
   C -->|LEFT JOIN| P
-  APP -->|chỉ train| T["training_labels<br/>(sk_id_curr, target)"]
+  APP -->|train only| T["training_labels<br/>(sk_id_curr, target)"]
 ```
 
-Quy tắc bắt buộc: không bảng nhiều dòng nào được JOIN thẳng vào application. Mỗi bảng con được tổng hợp về đúng khóa trước. Sau mỗi JOIN, pipeline kiểm tra số dòng trước/sau và tính duy nhất của khóa; chỉ cần sai một lần là pipeline dừng (`IntegrationError`).
+Mandatory rule: no multi-row child table may be joined directly onto `application`. Each child table is aggregated to the parent key first. After every join, the pipeline asserts row counts before/after and key uniqueness; any single failure raises `IntegrationError` and halts the pipeline.
 
-Riêng installments có thêm một tầng trung gian. Một kỳ trả góp có thể có nhiều dòng thanh toán từng phần. Vì vậy phải gom về mức kỳ trả góp trước, rồi mới đếm số kỳ trễ hạn. Đếm trực tiếp trên dòng thanh toán sẽ làm phồng `installment_count`.
+`installments_payments` has an extra intermediate stage because a single installment can have multiple partial payment rows. Rows are aggregated to the installment level first before counting late installments; counting directly on raw payment lines would inflate `installment_count`.
 
-## 3. Quan hệ giữa các bảng (ERD)
+## 3. Table Relationships (ERD)
 
 ```mermaid
 erDiagram
@@ -81,54 +81,54 @@ erDiagram
   APPLICATION ||--o| SYNTHETIC_TRAFFIC_PROFILE : "SK_ID_CURR (SYNTHETIC)"
 ```
 
-Bản ERD có số liệu đo thực tế đi kèm từng cạnh (số orphan, số con tối đa trên mỗi cha) được sinh tự động tại `reports/architecture/ERD.md` mỗi lần chạy profiling. Các bảng installments, POS và credit card còn mang thêm cột SK_ID_CURR dư thừa. Profiling kiểm tra cột này có trùng với SK_ID_CURR của previous_application (tra qua SK_ID_PREV) hay không; kết quả nằm ở mục *consistency* trong PROFILING_REPORT.
+An ERD annotated with empirically measured numbers (orphan counts, max children per parent) is auto-generated at `reports/architecture/ERD.md` on every profiling run. `installments_payments`, `POS_CASH_balance`, and `credit_card_balance` also carry a redundant `SK_ID_CURR` column; profiling verifies whether it matches `previous_application.SK_ID_CURR` (via `SK_ID_PREV`), with results reported under *consistency* in `PROFILING_REPORT.md`.
 
-## 4. Data Lake – bucket và thư mục
+## 4. Data Lake – Buckets and Directories
 
-| Bucket / thư mục | Nội dung | Định dạng | Partition / số file |
+| Bucket / Directory | Contents | Format | Partitioning / File Count |
 |---|---|---|---|
-| `bronze/original/<source_id>/<table>/ingest_id=<id>/` | file Kaggle nguyên trạng + `_metadata.json` | CSV (byte-identical, sha256) | theo `ingest_id` (snapshot) |
-| `bronze/synthetic/<source_id>/<table>/ingest_id=<id>/` | dữ liệu SYNTHETIC, tách riêng | CSV | theo `ingest_id` |
-| `bronze/_manifests/<table>.jsonl` | lịch sử mọi lần ingest (SUCCESS/SKIPPED/FAILED) | JSONL | — |
-| `silver/<table>/` | dữ liệu đã chuẩn hóa, có flag + lineage | Parquet (snappy) | không partition; repartition ≈ kích thước/128 MB |
-| `silver/_quarantine/<table>/` | dòng bị loại kèm `_reject_reason` | Parquet | 1 file |
-| `silver/stream_events/` | event streaming đã dedup | Parquet | `source_id`, `batch_id` |
-| `silver/stream_quarantine/` | event lỗi định dạng | Parquet (file sink) | — |
-| `gold/integrated_credit_profile/`, `gold/customer_credit_features/` | bảng tích hợp | Parquet | `dataset_split` (train/test) |
-| `gold/loan_credit_features/`, `gold/training_labels/`, `gold/data_quality_report/` | | Parquet | 1–2 file |
-| `gold/stream_customer_activity_delta/`, `gold/stream_batch_metrics/` | kết quả streaming | Parquet | `batch_id` |
-| `gold/stream_customer_snapshot/` | trạng thái hiện tại theo khách hàng | Parquet | 1 file |
+| `bronze/original/<source_id>/<table>/ingest_id=<id>/` | Byte-identical Kaggle file + `_metadata.json` | CSV (byte-identical, sha256) | By `ingest_id` (snapshot) |
+| `bronze/synthetic/<source_id>/<table>/ingest_id=<id>/` | `SYNTHETIC` data, stored separately | CSV | By `ingest_id` |
+| `bronze/_manifests/<table>.jsonl` | Ingestion run history (`SUCCESS`/`SKIPPED`/`FAILED`) | JSONL | — |
+| `silver/<table>/` | Standardized data with DQ flags + lineage | Parquet (snappy) | Unpartitioned; repartitioned ≈ size / 128 MB |
+| `silver/_quarantine/<table>/` | Rejected rows with `_reject_reason` | Parquet | 1 file |
+| `silver/stream_events/` | Deduplicated streaming events | Parquet | `source_id`, `batch_id` |
+| `silver/stream_quarantine/` | Malformed events | Parquet (file sink) | — |
+| `gold/integrated_credit_profile/`, `gold/customer_credit_features/` | Integrated tables | Parquet | `dataset_split` (`train`/`test`) |
+| `gold/loan_credit_features/`, `gold/training_labels/`, `gold/data_quality_report/` | Loan features, labels, DQ report | Parquet | 1–2 files |
+| `gold/stream_customer_activity_delta/`, `gold/stream_batch_metrics/` | Streaming micro-batch outputs | Parquet | `batch_id` |
+| `gold/stream_customer_snapshot/` | Current cumulative customer state | Parquet | 1 file |
 
-Lý do chọn partition:
-- Không partition theo SK_ID_CURR, vì sẽ tạo hàng trăm nghìn thư mục nhỏ.
-- `dataset_split` chỉ có 2 giá trị, và ML luôn lọc theo nó.
-- Streaming partition theo `batch_id` để mỗi micro-batch ghi đè được chính phần output của nó (idempotent).
+Partitioning rationale:
+- Avoid partitioning by `SK_ID_CURR`, which would create hundreds of thousands of tiny directories.
+- `dataset_split` has only 2 values and ML pipelines always filter on it.
+- Streaming outputs partition by `batch_id` so each micro-batch overwrites its own partition idempotently.
 
-Delta Lake là tùy chọn (`CRB_LAKE_FORMAT=delta`); mặc định là Parquet.
+Delta Lake is optional (`CRB_LAKE_FORMAT=delta`); Parquet is the default.
 
-## 5. Batch, streaming và micro-batch
+## 5. Batch, Streaming, and Micro-Batch Comparison
 
 | | Batch | Streaming (micro-batch) |
 |---|---|---|
-| Đầu vào | snapshot Bronze mới nhất của mỗi bảng | event từ Kafka topic, hoặc file JSONL trong landing zone |
-| Phạm vi | toàn bộ dữ liệu lịch sử | từng event khi đến |
+| Input | Latest Bronze snapshot per table | Events from Kafka topics or JSONL landing files |
+| Scope | Full historical dataset | Individual events as they arrive |
 | Engine | Spark DataFrame API (`processing/*`) | Spark Structured Streaming (`streaming/consumers/stream_processor.py`) |
-| Kích hoạt | chạy theo lệnh (`scripts/run_pipeline.py`) | `--trigger 5` (mỗi 5 s) hoặc `--trigger available-now` (xử lý hết dữ liệu đang có rồi dừng) |
-| Trùng lặp | dedup theo bản ghi; PK dedup | `dropDuplicatesWithinWatermark(event_id)`; state lưu trong checkpoint |
-| Dữ liệu trễ | không áp dụng | watermark 10 phút trên `event_time`; event trễ hơn bị loại và được đếm |
-| Khôi phục | chạy lại idempotent (sha256 + snapshot mới nhất) | checkpoint + ghi đè theo partition `batch_id` |
-| Đầu ra | silver/*, gold/* | silver/stream_events, gold/stream_* |
+| Trigger | On-demand (`scripts/run_pipeline.py`) | `--trigger 5` (every 5s) or `--trigger available-now` (drain available data and stop) |
+| Deduplication | Exact-row dedup; PK dedup | `dropDuplicatesWithinWatermark(event_id)`; state stored in checkpoint |
+| Late data | N/A | 10-minute watermark on `event_time`; late events dropped and counted |
+| Recovery | Idempotent re-run (`sha256` + latest snapshot) | Checkpoint + partition overwrite by `batch_id` |
+| Output | `silver/*`, `gold/*` | `silver/stream_events`, `gold/stream_*` |
 
-Structured Streaming không xử lý từng event riêng lẻ. Nó gom event thành các micro-batch nhỏ (một batch mỗi lần trigger), và mỗi micro-batch được xử lý như một DataFrame. Vì vậy cùng một logic DataFrame (từ JSON → kiểm tra → aggregate) dùng được cho cả hai chế độ.
+Structured Streaming groups incoming events into small micro-batches (one DataFrame per trigger), allowing the same DataFrame transformation logic (JSON parsing → validation → aggregation) to be shared across batch and streaming paths.
 
-## 6. Kiểm soát leakage (TARGET và thông tin tương lai)
+## 6. Leakage Control (`TARGET` and Future Information)
 
-1. **TARGET chỉ nằm trong `gold/training_labels`.** Có kiểm tra cấm cột `target` trong mọi bảng feature, và file `feature_columns.json` không chứa TARGET (có test).
-2. **Producer loại bỏ TARGET** khỏi payload. Consumer cũng chuyển vào quarantine mọi event có `TARGET` trong payload (`forbidden_field:TARGET`).
-3. **Point-in-time:** mọi cột thời gian tương đối (`DAYS_*`, `MONTHS_BALANCE`) được so với ngày nộp hồ sơ hiện tại. Dòng có giá trị > 0, tức xảy ra sau ngày nộp, bị gắn flag `_after_application` ở Silver và bị loại trước khi aggregate ở Gold. Số dòng bị loại được ghi trong DQ report.
-4. **Train/test:** dùng đúng cách chia của Kaggle (`dataset_split`). Nhãn chỉ có cho train. Giai đoạn ML cần cross-validation trên train; không được dùng thống kê của test (ví dụ để chuẩn hóa) khi huấn luyện.
-5. **Dữ liệu SYNTHETIC** được sinh độc lập với TARGET và với mọi thuộc tính Home Credit, nên không tạo ra tín hiệu rủi ro giả (xem `SYNTHETIC_DATA.md`).
+1. **`TARGET` is isolated to `gold/training_labels`.** Automated checks prohibit `target` in any feature table, and `feature_columns.json` contains no `TARGET` column (verified by tests).
+2. **Producer strips `TARGET`** from event payloads. The consumer also quarantines any incoming event containing `TARGET` (`forbidden_field:TARGET`).
+3. **Point-in-time filtering:** relative time columns (`DAYS_*`, `MONTHS_BALANCE`) are anchored to the current application date. Rows with values `> 0` (occurring after application) are flagged `_after_application` in Silver and excluded before Gold aggregation, with counts logged in the DQ report.
+4. **Train/test split:** preserves Kaggle's `dataset_split`. Labels exist only for `train`. ML pipelines must perform cross-validation within `train` and never leak `test` statistics during preprocessing/training.
+5. **`SYNTHETIC` data** is generated independently of `TARGET` and all Home Credit attributes so it introduces no spurious risk signal (see `SYNTHETIC_DATA.md`).
 
-Rủi ro còn lại cần nêu trong báo cáo:
-- `CREDIT_DAY_OVERDUE`, `AMT_CREDIT_SUM_DEBT` của bureau là giá trị "tại thời điểm nộp hồ sơ" theo mô tả của Kaggle. Pipeline giữ nguyên các cột này vì không có cách kiểm chứng độc lập thời điểm cập nhật.
-- `DAYS_CREDIT_ENDDATE` > 0 là ngày kết thúc theo hợp đồng (đã biết từ trước), không phải sự kiện tương lai, nên không bị loại.
+Remaining risks to document in the final report:
+- `bureau.CREDIT_DAY_OVERDUE` and `AMT_CREDIT_SUM_DEBT` are documented by Kaggle as values "at the time of application." The pipeline retains them because their exact update timestamps cannot be independently verified.
+- `DAYS_CREDIT_ENDDATE > 0` represents the scheduled contractual maturity date (known ex ante), not a future event, so it is not excluded.

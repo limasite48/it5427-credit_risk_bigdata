@@ -41,7 +41,10 @@ ARTIFACTS=(
   "outputs/metrics/risk_summary.json"
   "outputs/metrics/demographic_profiles.json"
   "outputs/scored_applications_sample.csv"
+  "outputs/gold_scored_applications.csv"
   "outputs/figures/roc_curve.png"
+  "outputs/figures/shap_summary.png"
+  "apache-spark/reports/pipeline_stats.json"
 )
 for rel in "${ARTIFACTS[@]}"; do
   if [[ ! -f "${ROOT_DIR}/${rel}" ]]; then

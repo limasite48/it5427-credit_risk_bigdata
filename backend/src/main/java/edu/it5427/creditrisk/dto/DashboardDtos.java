@@ -24,6 +24,10 @@ public final class DashboardDtos {
             double def60SocialCircleRate,
             Double modelValAuc,
             Double baselineValAuc,
+            Double modelPrAuc,
+            Double modelF1,
+            Double optimalThreshold,
+            String costReductionPercent,
             RiskDistribution riskDistribution,
             long scoredSampleSize
     ) {}

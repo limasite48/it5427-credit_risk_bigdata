@@ -1,0 +1,20 @@
+OCCUPATION_TYPE,occ_median_salary,occ_mean_salary,occ_p25_salary,occ_p75_salary,occ_applicant_count,salary_scale_source
+Accountants,178650.0,194578.36,130500.0,225000.0,9813,application_train.csv
+Cleaning staff,112500.0,130790.9,90000.0,157500.0,4653,application_train.csv
+Cooking staff,126000.0,138396.51,90000.0,171000.0,5946,application_train.csv
+Core staff,157500.0,172656.7,112500.0,202500.0,27570,application_train.csv
+Drivers,180000.0,187011.61,135000.0,225000.0,18603,application_train.csv
+HR staff,158400.0,188916.28,135000.0,225000.0,563,application_train.csv
+High skill tech staff,157500.0,182842.05,112500.0,225000.0,11380,application_train.csv
+IT staff,180000.0,213465.6,135000.0,247500.0,526,application_train.csv
+Laborers,157500.0,166357.48,112500.0,202500.0,55186,application_train.csv
+Low-skill Laborers,121500.0,133228.0,90000.0,157500.0,2093,application_train.csv
+Managers,225000.0,260336.68,157500.0,315000.0,21371,application_train.csv
+Medicine staff,135000.0,149709.64,99000.0,180000.0,8537,application_train.csv
+Missing/Unspecified,135000.0,153516.03,90000.0,180000.0,96391,application_train.csv
+Private service staff,157500.0,182334.81,121500.0,225000.0,2652,application_train.csv
+Realty agents,180000.0,195003.99,135000.0,225000.0,751,application_train.csv
+Sales staff,135000.0,152302.87,103500.0,180000.0,32102,application_train.csv
+Secretaries,135000.0,160541.66,107284.5,180000.0,1305,application_train.csv
+Security staff,135000.0,149662.7,103500.0,180000.0,6721,application_train.csv
+Waiters/barmen staff,135000.0,144272.58,90000.0,180000.0,1348,application_train.csv

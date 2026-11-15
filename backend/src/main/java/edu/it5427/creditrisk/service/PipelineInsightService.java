@@ -160,10 +160,10 @@ public class PipelineInsightService {
 
         String note = fixtureRun
                 ? "These figures come from the Spark test fixture, not the full Home Credit extract. "
-                + "The underwriting form still scores with the Track A application model."
-                : "These figures come from a real Home Credit subset in the Spark lake. "
-                + "Underwriting lookup uses the LightGBM trained on the gold profile when the id is in that subset. "
-                + "The manual form still scores with the Track A application model.";
+                + "The underwriting form scores interactively using the real-time application scoring model."
+                : "These figures come from the integrated Spark Medallion lake. "
+                + "Application lookup serves pre-scored LightGBM predictions on the multi-source Gold profile when available; "
+                + "the manual underwriting form scores live via the real-time application scoring service.";
 
         return new PipelineDtos.PipelineResponse(
                 datasetLabel,

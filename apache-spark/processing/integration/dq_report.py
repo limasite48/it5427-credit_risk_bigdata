@@ -12,6 +12,7 @@ from datetime import datetime, timezone
 from common.config import load_config, path_of
 from common.lake import write_table
 from common.logging_utils import get_logger
+from processing.profiling.profile_raw import detect_label
 
 log = get_logger("dq")
 
@@ -25,9 +26,18 @@ def build_dq_report(spark, cfg=None) -> str:
     rep = path_of(cfg, "reports_dir")
     silver = _load(rep / "data_quality" / "silver_metrics.json") or []
     gold = _load(rep / "data_quality" / "gold_checks.json") or {"checks": [], "excluded_rows": {}, "stats": {}}
+    raw_dir = path_of(cfg, "raw_dir")
+    current_label = detect_label(raw_dir) if raw_dir.exists() else "unknown (raw directory missing)"
     profile = _load(rep / "data_profiling" / "profile.json")
+    if profile and profile.get("dataset_label") != current_label:
+        log.warning(
+            "Ignoring stale profile.json (%r) because current raw dataset is %r",
+            profile.get("dataset_label"),
+            current_label,
+        )
+        profile = None
     run_at = datetime.now(timezone.utc).isoformat(timespec="seconds")
-    label = profile["dataset_label"] if profile else "unknown (profiling not run)"
+    label = profile["dataset_label"] if profile else current_label
 
     rows = []
     for m in silver:

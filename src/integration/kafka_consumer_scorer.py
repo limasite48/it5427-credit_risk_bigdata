@@ -84,7 +84,10 @@ class RealTimeCreditScorer:
                     print(f"Consumer error: {msg.error()}")
                     break
 
-                event = json.loads(msg.value().decode("utf-8"))
+                raw = msg.value()
+                if raw is None:
+                    continue
+                event = json.loads(raw.decode("utf-8"))
                 decision = self.process_event(event)
                 count += 1
                 print(
@@ -100,37 +103,54 @@ class RealTimeCreditScorer:
 
     def run_dry_run_simulation(self, sample_limit: int = 10):
         """
-        Simulates real-time streaming using rows from application_test.csv without requiring Kafka.
+        Simulates real-time streaming from staged live application events (if built)
+        or falls back to application_test.csv without requiring Kafka.
         """
         import pandas as pd
 
         print("=" * 70)
         print(" SIMULATED REAL-TIME CREDIT SCORING STREAM (Offline Mode)")
         print("=" * 70)
-        print(f"Streaming {sample_limit} applications from {TEST_DATA_PATH.name}...\n")
 
-        df = pd.read_csv(TEST_DATA_PATH, nrows=sample_limit)
+        if sample_limit <= 0:
+            print("No records requested (sample_limit <= 0).")
+            return []
+
+        staged_app = BASE_DIR / "ingestion-minio-kafka" / "data" / "staged" / "application.parquet"
+        if staged_app.exists():
+            df = pd.read_parquet(staged_app).head(sample_limit)
+            source_name = staged_app.name
+        else:
+            df = pd.read_csv(TEST_DATA_PATH, nrows=sample_limit)
+            source_name = TEST_DATA_PATH.name
+
+        print(f"Streaming {len(df)} applications from {source_name}...\n")
+
         decisions = []
+        latencies = []
 
         for idx, row in df.iterrows():
             payload = row.to_dict()
+            event_id = payload.pop("event_id", f"sim_{idx:08d}")
+            cust_id = int(payload.get("customer_id") or row["SK_ID_CURR"])
             event = {
-                "event_id": f"sim_{idx:08d}",
-                "event_type": "loan_application.submitted",
-                "customer_id": int(row["SK_ID_CURR"]),
+                "event_id": str(event_id),
+                "event_type": str(payload.pop("event_type", "loan_application.submitted")),
+                "customer_id": cust_id,
                 "payload": payload,
             }
 
             t0 = time.perf_counter()
             decision = self.process_event(event)
             latency_ms = (time.perf_counter() - t0) * 1000
+            latencies.append(latency_ms)
 
             top_drivers = ", ".join(
                 [d["feature"] for d in decision.get("top_risk_drivers", [])]
             )
 
             print(
-                f"[App #{idx+1:02d}] Customer: {decision['SK_ID_CURR']} | "
+                f"[App #{len(decisions)+1:02d}] Customer: {decision['SK_ID_CURR']} | "
                 f"PD: {decision['default_probability']:.4f} | "
                 f"Tier: {decision['risk_tier']:6s} | "
                 f"Action: {decision['action']:14s} | "
@@ -138,8 +158,9 @@ class RealTimeCreditScorer:
             )
             decisions.append(decision)
 
+        avg_latency = sum(latencies) / len(latencies) if latencies else 0.0
         print("\n" + "=" * 70)
-        print(f"Simulated streaming complete. Average latency: {latency_ms:.2f}ms/record.")
+        print(f"Simulated streaming complete. Average latency: {avg_latency:.2f}ms/record.")
         print("=" * 70)
         return decisions
 

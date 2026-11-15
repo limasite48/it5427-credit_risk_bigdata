@@ -117,8 +117,9 @@ def main():
                     buffers[topic].append(row)
                     stats[topic] += 1
                 except Exception as e:  # noqa: BLE001 - any data error goes to the DLQ instead of stopping the sink
+                    raw_value = raw.decode("utf-8", "replace") if raw is not None else "<null>"
                     record = {"original_topic": topic, "partition": msg.partition(), "offset": msg.offset(),
-                              "error": str(e)[:500], "raw_value": raw.decode("utf-8", "replace"),
+                              "error": str(e)[:500], "raw_value": raw_value,
                               "failed_at": datetime.now(C.TZ).isoformat(timespec="milliseconds")}
                     bad.append(record)
                     dlq.produce(C.DLQ_TOPIC, key=msg.key(), value=json.dumps(record, ensure_ascii=False).encode())

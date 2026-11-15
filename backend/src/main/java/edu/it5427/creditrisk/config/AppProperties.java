@@ -11,6 +11,7 @@ public record AppProperties(
         String riskSummary,
         String demographics,
         String rocCurve,
+        String shapSummary,
         String modelEvaluation,
         String supplementaryDir,
         String sparkReportsDir,

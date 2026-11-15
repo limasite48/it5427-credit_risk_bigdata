@@ -1,196 +1,196 @@
 # Credit Risk Intelligence – Big Data Data Pipeline
 
-Bài tập lớn môn **Big Data Integration and Processing (IT5427)**.
-Đề tài: *Tích hợp và phân tích dữ liệu lớn đa nguồn cho đánh giá rủi ro tín dụng*, trên bộ dữ liệu **Home Credit Default Risk** (Kaggle).
-Phạm vi: hai module **Data Collection & Storage** và **Data Integration & Processing**.
+Course project for **Big Data Integration and Processing (IT5427)**.  
+Topic: *Multi-Source Big Data Integration and Analytics for Credit Risk Assessment*, using the **Home Credit Default Risk** dataset (Kaggle).  
+Scope: **Data Collection & Storage** and **Data Integration & Processing** modules.
 
 ---
 
-## 1. Dự án đã làm gì
+## 1. What This Module Implements
 
-Từ 10 file CSV của Home Credit, dự án dựng một hệ thống mô phỏng môi trường dữ liệu tài chính thực tế. Hệ thống có nhiều nguồn nghiệp vụ độc lập, dữ liệu đi qua Data Lake 3 tầng, và có cả luồng batch lẫn streaming.
+From the 10 Home Credit CSV files, this module builds a system simulating a realistic financial data environment across multiple independent operational sources, a 3-layer Data Lake, and both batch and streaming pipelines.
 
 ```
  7 logical sources ──► Ingestion ──► BRONZE ──► Cleaning/DQ ──► SILVER ──► Integration ──► GOLD
- (6 gốc + 1 synthetic)  (Python)     (CSV gốc)    (Spark)        (Parquet)   (Spark)       (feature 1 dòng/khách hàng)
+ (6 original + 1 synthetic) (Python) (raw CSV)   (Spark)        (Parquet)   (Spark)       (1 row/customer features)
                                          │
                                          └──► Replay producer ──► Kafka ──► Spark Structured Streaming ──► SILVER/GOLD
-                         Lưu trữ: MinIO (buckets bronze / silver / gold)
+                         Storage: MinIO (buckets: bronze / silver / gold)
 ```
 
-| # | Thành phần | Đã làm | File chính |
+| # | Component | Summary | Key Files |
 |---|---|---|---|
-| 1 | **Khảo sát dữ liệu (profiling)** | Đo số dòng, kiểu, missing, trùng lặp, outlier, tỷ lệ TARGET. **Kiểm tra trên dữ liệu thật** từng quan hệ khóa (orphan, cardinality), không JOIN chỉ vì trùng tên cột. Sinh báo cáo và ERD có số liệu đo. | `processing/profiling/profile_raw.py` |
-| 2 | **Mô phỏng nhiều nguồn** | 8 file được chia thành 6 hệ thống nghiệp vụ độc lập (Loan Application, Credit Bureau, Previous Loan, Installment, POS/Cash, Credit Card). Mỗi hệ thống có module ingestion, schema, metadata, tần suất và quy tắc kiểm tra riêng. | `configs/sources.yaml`, `common/schemas.py`, `ingestion/*_source/` |
-| 3 | **Nguồn SYNTHETIC** | Hồ sơ giao thông giả lập (số vi phạm, vi phạm nặng, tiền phạt, tai nạn). Chỉ sinh cho SK_ID_CURR có thật, có seed, độc lập với TARGET, gắn nhãn `SYNTHETIC`, lưu tách khỏi dữ liệu gốc. | `ingestion/synthetic_source/generator.py`, `docs/SYNTHETIC_DATA.md` |
-| 4 | **Ingestion → Bronze** | Chép file nguyên trạng (sha256), đọc theo chunk, ghi manifest cho mỗi lần nạp. **Idempotent:** nạp lại file cũ thì tự bỏ qua. Phát hiện schema drift; một nguồn lỗi không làm dừng nguồn khác. | `ingestion/base.py`, `ingestion/run_ingestion.py` |
-| 5 | **Cleaning & Data Quality → Silver** | Ép kiểu, chuẩn hóa tên cột/giá trị (365243→NULL + cờ, XNA→NULL, Y/N→1/0). Bỏ bản trùng tuyệt đối; bản trùng khóa đưa vào quarantine. **Gắn cờ, không xóa:** orphan, outlier, giá trị âm, dòng có ngày sau ngày nộp hồ sơ. Đối soát: số dòng vào = ra + loại. | `processing/cleaning/` |
-| 6 | **Integration → Gold** | **Gom từng bảng con về đúng grain trước** (bureau_balance→bureau→khách hàng; dòng thanh toán→kỳ trả góp→khoản vay→khách hàng), **rồi mới LEFT JOIN**. Kiểm tra số dòng sau **mỗi** JOIN; sai là dừng pipeline. | `processing/aggregation/`, `processing/integration/build_gold.py` |
-| 7 | **Feature engineering** | 37 feature tổng hợp theo đề, cộng 13 feature kỹ thuật (debt-to-income, loan-to-income, payment delay ratio, credit utilization, total outstanding debt, has_previous_overdue, …) có công thức và ý nghĩa nghiệp vụ. | `processing/feature_engineering/features.py` |
-| 8 | **Chống leakage** | TARGET chỉ nằm ở `gold/training_labels`. Loại dữ liệu xảy ra sau ngày nộp hồ sơ. Producer không phát TARGET; consumer đưa vào quarantine event nào có TARGET. | `build_gold.py`, `stream_processor.py` |
-| 9 | **Data Lake trên MinIO** | 3 bucket bronze/silver/gold; Parquet, partition hợp lý; Delta Lake là tùy chọn. | `common/lake.py`, `storage/minio/`, `docker-compose.yml` |
-| 10 | **Streaming** | Producer phát lại dữ liệu lịch sử thành event (đổi được tốc độ, pause/resume/stop, replay, chèn lỗi). Spark Structured Streaming xử lý: quarantine event lỗi, **dedup theo `event_id`**, **watermark** cho event trễ, **checkpoint** để khôi phục, gom theo SK_ID_CURR. | `streaming/` |
-| 11 | **Test & tài liệu** | 39 test pytest phủ 12 yêu cầu của đề. Có README, kiến trúc, lineage, data dictionary (tự sinh), DQ report, hướng dẫn demo, nhật ký từng giai đoạn. | `tests/`, `docs/`, `reports/` |
+| 1 | **Data profiling** | Measures row counts, types, missingness, duplicates, outliers, `TARGET` rate. **Empirically tests** every key relationship (orphan rows, cardinality) on real data rather than joining on column names alone. Generates reports and a measured ERD. | `processing/profiling/profile_raw.py` |
+| 2 | **Multi-source simulation** | Splits 8 source tables into 6 independent operational systems (Loan Application, Credit Bureau, Previous Loan, Installment, POS/Cash, Credit Card), each with its own ingestion package, schema, metadata, cadence, and validation rules. | `configs/sources.yaml`, `common/schemas.py`, `ingestion/*_source/` |
+| 3 | **SYNTHETIC source** | Simulated traffic behavior profile (violation counts, major violations, fines, accidents). Generated only for real `SK_ID_CURR` keys, seeded, independent of `TARGET`, labeled `SYNTHETIC`, stored separately from original data. | `ingestion/synthetic_source/generator.py`, `docs/SYNTHETIC_DATA.md` |
+| 4 | **Ingestion → Bronze** | Byte-identical file copy (`sha256`), chunked scanning, per-run manifest logging. **Idempotent:** re-ingesting an unchanged file is automatically skipped. Detects schema drift; failure in one source does not halt others. | `ingestion/base.py`, `ingestion/run_ingestion.py` |
+| 5 | **Cleaning & Data Quality → Silver** | Type casting, column/value normalization (`365243`→NULL + flag, `XNA`→NULL, `Y/N`→`1/0`). Drops exact duplicates; quarantines primary-key duplicates. **Flags without dropping:** orphan rows, outliers, negatives, post-application dates. Reconciles: `rows_in = out + quarantined + dups`. | `processing/cleaning/` |
+| 6 | **Integration → Gold** | **Aggregates every child table to the target grain first** (`bureau_balance`→`bureau`→customer; payment lines→installment→loan→customer), **then LEFT JOINs**. Asserts row counts after **every** join; halts pipeline on mismatch. | `processing/aggregation/`, `processing/integration/build_gold.py` |
+| 7 | **Feature engineering** | 37 aggregated cross-source features plus 13 engineered financial features (`debt_to_income`, `loan_to_income`, `payment_delay_ratio`, `credit_utilization`, `total_outstanding_debt`, `has_previous_overdue`, …) with documented business formulas. | `processing/feature_engineering/features.py` |
+| 8 | **Leakage prevention** | `TARGET` is isolated to `gold/training_labels`. Excludes events dated after the application date. Replay producer strips `TARGET`; streaming consumer quarantines any payload containing `TARGET`. | `build_gold.py`, `stream_processor.py` |
+| 9 | **Data Lake on MinIO** | 3 buckets (`bronze`/`silver`/`gold`); Parquet with appropriate partitioning; Delta Lake optional (`CRB_LAKE_FORMAT=delta`). | `common/lake.py`, `storage/minio/`, `docker-compose.yml` |
+| 10 | **Streaming** | Replay producer emits historical records as events (configurable rate, pause/resume/stop, replay, fault injection). Spark Structured Streaming handles malformed quarantine, **`event_id` deduplication**, **watermarking** for late events, **checkpoint** recovery, and per-customer aggregation. | `streaming/` |
+| 11 | **Tests & documentation** | 39 pytest tests covering 12 pipeline requirements. Includes README, architecture, lineage, auto-generated data dictionary, DQ report, demo guide, and phase log. | `tests/`, `docs/`, `reports/` |
 
-**Đầu ra Gold**
+**Gold Outputs**
 
-| Bảng | Grain | Nội dung |
+| Table | Grain | Contents |
 |---|---|---|
-| `integrated_credit_profile` | 1 dòng / SK_ID_CURR | thông tin hồ sơ + feature tổng hợp + feature kỹ thuật, **không có TARGET** |
-| `customer_credit_features` | 1 dòng / SK_ID_CURR | feature tổng hợp từ 7 nguồn |
-| `loan_credit_features` | 1 dòng / SK_ID_PREV | hành vi trả nợ theo từng khoản vay cũ |
-| `training_labels` | 1 dòng / SK_ID_CURR (chỉ train) | TARGET, chỉ dùng làm nhãn |
-| `data_quality_report` | 1 dòng / chỉ số | kết quả kiểm tra chất lượng |
+| `integrated_credit_profile` | 1 row / `SK_ID_CURR` | Application attributes + aggregated features + engineered features, **no `TARGET`** |
+| `customer_credit_features` | 1 row / `SK_ID_CURR` | Aggregated features across 7 sources |
+| `loan_credit_features` | 1 row / `SK_ID_PREV` | Repayment behavior per prior Home Credit loan |
+| `training_labels` | 1 row / `SK_ID_CURR` (train only) | `TARGET` label only |
+| `data_quality_report` | 1 row / metric | Data quality check results |
 
-### Phân loại dữ liệu
+### Data Classification
 
-| Loại | Ở đâu | Ghi chú |
+| Type | Location | Notes |
 |---|---|---|
-| Original historical data | `data/raw/` → `bronze/original/` | 10 file Kaggle, không bao giờ bị sửa |
+| Original historical data | `data/raw/` → `bronze/original/` | 10 Kaggle CSVs, never modified |
 | Synthetic data | `data/synthetic/` → `bronze/synthetic/` | `DATA_ORIGIN = SYNTHETIC` |
-| Simulated streaming data | Kafka topic hoặc `data/_stream_landing/` | `event_time` là thời gian **replay** (`time_semantics = SYNTHETIC_REPLAY`), không phải thời điểm giao dịch thật |
-| Test fixture | sinh vào thư mục tạm khi chạy test | giá trị ngẫu nhiên theo schema Home Credit, **không phải dữ liệu thật** |
+| Simulated streaming data | Kafka topic or `data/_stream_landing/` | `event_time` is **replay** time (`time_semantics = SYNTHETIC_REPLAY`), not real transaction timestamps |
+| Test fixture | Generated in temp dir during tests | Random values matching Home Credit schema, **not real data** |
 
-### Ánh xạ với môn học
+### Course Concept Mapping
 
-| Bước | Bài | Khái niệm |
+| Step | Lecture | Concept |
 |---|---|---|
-| Lấy subset theo khóa | 4 | AQP: lấy mẫu, vấn đề sample khi JOIN |
-| Profiling, kiểm tra quan hệ khóa | 5, 2 | Source profiling (Bellman), instance-based matching |
-| Ingestion theo từng nguồn | 1, 5, 2 | Wrapper, source description, nguồn tự trị (autonomous) |
-| Thêm nguồn synthetic | 2 | GAV: chi phí thay đổi mapping khi thêm nguồn |
-| Cleaning Silver | 1 | Heterogeneity cú pháp / ngữ nghĩa / dữ liệu, Veracity |
-| Dedup, kiểm tra khóa ngoại | 3 | Entity Resolution (exact match bằng khóa chung SK_ID_*) |
-| Gold | 1, 2, 4 | Mediated schema, GAV vật chất hóa (warehouse), data fusion, các thuật toán join, gom trước khi join |
-| DQ, leakage | 5, 1 | Source quality, heterogeneity thời gian |
-| Streaming | 4 | Adaptive processing, time-to-first-tuple, partial results, chịu lỗi |
+| Key-preserving subsetting | 4 | AQP: sampling, join-sampling pitfalls |
+| Profiling, key relationship checks | 5, 2 | Source profiling (Bellman), instance-based matching |
+| Per-source ingestion | 1, 5, 2 | Wrappers, source descriptions, autonomous sources |
+| Adding synthetic source | 2 | GAV: mapping maintenance cost when adding a source |
+| Silver cleaning | 1 | Syntactic / semantic / data heterogeneity, Veracity |
+| Dedup, FK checks | 3 | Entity Resolution (exact match on shared `SK_ID_*` keys) |
+| Gold | 1, 2, 4 | Mediated schema, materialized GAV (warehouse), data fusion, join algorithms, pre-join aggregation |
+| DQ, leakage | 5, 1 | Source quality, temporal heterogeneity |
+| Streaming | 4 | Adaptive processing, time-to-first-tuple, partial results, fault tolerance |
 
 ---
 
-## 2. Cài đặt
+## 2. Setup
 
-Yêu cầu: Python 3.11+ (đã chạy trên 3.13), **Java 17 hoặc 21**, Docker. Khuyến nghị RAM ≥ 8 GB khi chạy dữ liệu đầy đủ.
+Requirements: Python 3.11+ (tested on 3.13), **Java 17 or 21**, Docker. Recommended RAM ≥ 8 GB for full dataset execution.
 
 ```bash
 python -m venv .venv && source .venv/bin/activate        # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
-docker compose up -d          # MinIO :9000/:9001 · Kafka :9092 · Kafka UI :8080
-docker compose ps             # minio, kafka, kafka-ui ở trạng thái running
+docker compose up -d          # MinIO :9000/:9001 · Kafka :9092 · Kafka UI :8081
+docker compose ps             # verify minio, kafka, kafka-ui are running
 ```
 
-Tải dataset từ https://www.kaggle.com/competitions/home-credit-default-risk/data, rồi giải nén **10 file CSV vào `data/raw/`**. Pipeline chỉ đọc thư mục này, không ghi vào và không tải lại dataset.
+Download the dataset from https://www.kaggle.com/competitions/home-credit-default-risk/data and extract all **10 CSV files into `data/raw/`**. The pipeline reads from this directory only and never modifies or re-downloads it.
 
 ---
 
-## 3. Cách chạy
+## 3. Running the Pipeline
 
-Mọi lệnh chạy ở thư mục gốc dự án.
+Run all commands from the `apache-spark/` directory.
 
-### 3.1. Chạy thử nhanh trên subset (khuyến nghị làm trước)
+### 3.1. Quick Run on a Real Subset (Recommended First)
 ```bash
-python -m scripts.make_dev_subset --customers 5000        # 5.000 khách hàng thật kèm toàn bộ dữ liệu liên quan
+python -m scripts.make_dev_subset --customers 5000        # 5,000 real customers with all linked records
 export CRB_PATHS_RAW_DIR=data/dev_subset/raw              # Windows PowerShell: $env:CRB_PATHS_RAW_DIR="data/dev_subset/raw"
 python -m scripts.run_pipeline --sync-minio
 ```
 
-### 3.2. Chạy toàn bộ dữ liệu
+### 3.2. Run on the Full Dataset
 ```bash
 unset CRB_PATHS_RAW_DIR
 CRB_SPARK_DRIVER_MEMORY=6g python -m scripts.run_pipeline --sync-minio
 ```
-`run_pipeline` lần lượt chạy: profiling → sinh synthetic → ingestion (Bronze) → cleaning (Silver) → integration (Gold + DQ) → đồng bộ MinIO → data dictionary. Mỗi stage được đo thời gian; stage nào lỗi thì dừng.
-Thêm `--streaming-demo` để chạy luôn một vòng streaming ở chế độ file; `--skip-profiling` để bỏ bước profiling.
+`run_pipeline` executes sequentially: profiling → synthetic generation → ingestion (Bronze) → cleaning (Silver) → integration (Gold + DQ) → MinIO sync → data dictionary. Each stage is timed; the pipeline halts if any stage fails.  
+Add `--streaming-demo` to run a file-mode streaming pass; add `--skip-profiling` to skip profiling.
 
-### 3.3. Chạy từng bước (dễ quan sát dữ liệu chảy qua các tầng)
+### 3.3. Step-by-Step Execution
 
-| # | Lệnh | Mục đích |
+| # | Command | Purpose |
 |---|---|---|
-| 1 | `python -m processing.profiling.profile_raw` | khảo sát dữ liệu, kiểm tra quan hệ khóa |
-| 2 | `python -m ingestion.synthetic_source.generator` | sinh nguồn SYNTHETIC |
-| 3 | `python -m ingestion.run_ingestion` | nạp 7 nguồn vào Bronze (chạy lại sẽ thấy `skipped`) |
-| 4 | `python -m processing.cleaning.clean_silver` | làm sạch, kiểm tra chất lượng → Silver |
-| 5 | `python -m processing.integration.build_gold` | gom, join, tạo feature → Gold + DQ report |
-| 6 | `python -m storage.minio.sync_lake` | đẩy 3 tầng lên MinIO |
-| 7 | `python -m scripts.generate_data_dictionary` | sinh `docs/DATA_DICTIONARY.md` từ schema thật |
+| 1 | `python -m processing.profiling.profile_raw` | Profile raw files and verify key relationships |
+| 2 | `python -m ingestion.synthetic_source.generator` | Generate `SYNTHETIC` source |
+| 3 | `python -m ingestion.run_ingestion` | Ingest 7 sources into Bronze (re-running reports `skipped`) |
+| 4 | `python -m processing.cleaning.clean_silver` | Clean and validate data quality → Silver |
+| 5 | `python -m processing.integration.build_gold` | Aggregate, join, engineer features → Gold + DQ report |
+| 6 | `python -m storage.minio.sync_lake` | Sync all 3 layers to MinIO |
+| 7 | `python -m scripts.generate_data_dictionary` | Generate `docs/DATA_DICTIONARY.md` from actual lake schemas |
 
-Có thể chạy riêng một nguồn: `python -m ingestion.run_ingestion --sources external_credit_bureau [--force]`, hoặc riêng vài bảng: `python -m processing.cleaning.clean_silver --tables bureau bureau_balance`.
+You can run a single source (`python -m ingestion.run_ingestion --sources external_credit_bureau [--force]`) or specific tables (`python -m processing.cleaning.clean_silver --tables bureau bureau_balance`).
 
-### 3.4. Streaming (mở 3 terminal; phải chạy batch trước để có dữ liệu Bronze)
+### 3.4. Streaming (3 Terminals; Requires Batch Run First for Bronze Data)
 ```bash
-# Terminal A – consumer: Spark Structured Streaming, micro-batch mỗi 5 giây
+# Terminal A – consumer: Spark Structured Streaming, 5-second micro-batch trigger
 python -m streaming.consumers.stream_processor --source kafka --trigger 5 --reset-checkpoint
 
-# Terminal B – producer: phát lại dữ liệu lịch sử, 10 event/giây, có chèn bản trùng, event trễ, event lỗi
+# Terminal B – producer: replays historical data at 10 events/s with fault injection
 python -m streaming.producers.replay_producer --sink kafka --rate 10 \
     --dup-rate 0.05 --late-rate 0.02 --malformed-rate 0.01 --from-start
 
-# Terminal C – điều khiển và xem kết quả
+# Terminal C – control & inspect state
 python -m streaming.producers.control pause | resume | stop | status
-python -m streaming.consumers.snapshot          # trạng thái gom hiện tại theo SK_ID_CURR
+python -m streaming.consumers.snapshot          # current aggregated state per SK_ID_CURR
 ```
-Không dùng Kafka: thay `kafka` bằng `file` ở cả A và B. Logic xử lý giữ nguyên.
-Thử khôi phục: Ctrl-C terminal A, rồi chạy lại lệnh A **không có** `--reset-checkpoint`. Consumer chạy tiếp, không xử lý lại event cũ.
+Without Kafka: replace `kafka` with `file` in both Terminal A and Terminal B (processing logic is identical).  
+Fault recovery test: Ctrl-C Terminal A, then restart Terminal A **without** `--reset-checkpoint`. The consumer resumes without reprocessing previously committed events.
 
-### 3.5. Test
+### 3.5. Tests
 ```bash
-python -m pytest        # 39 test, khoảng 2 phút; chạy trên fixture trong thư mục tạm, không đụng data/
+python -m pytest        # 39 tests, ~2 minutes; runs on temp-dir fixtures without touching data/
 ```
 
-### 3.6. Cấu hình
-Mọi tham số nằm trong `configs/pipeline.yaml` và ghi đè được bằng biến môi trường `CRB_<SECTION>_<KEY>`. Ví dụ:
-- `CRB_PATHS_RAW_DIR=...`: đổi thư mục dữ liệu đầu vào.
-- `CRB_SPARK_DRIVER_MEMORY=6g`: tăng RAM cho Spark.
-- `CRB_LAKE_BACKEND=s3a`: ghi thẳng lên MinIO.
-- `CRB_LAKE_FORMAT=delta`: dùng Delta Lake.
+### 3.6. Configuration
+All parameters are in `configs/pipeline.yaml` and can be overridden via `CRB_<SECTION>_<KEY>` environment variables. Examples:
+- `CRB_PATHS_RAW_DIR=...`: override raw input directory.
+- `CRB_SPARK_DRIVER_MEMORY=6g`: increase Spark driver memory.
+- `CRB_LAKE_BACKEND=s3a`: write directly to MinIO.
+- `CRB_LAKE_FORMAT=delta`: enable Delta Lake format.
 
 ---
 
-## 4. Theo dõi hệ thống
+## 4. Monitoring & Observability
 
-| Muốn xem | Ở đâu |
+| What to Inspect | Where |
 |---|---|
-| Log khi chạy | terminal, `reports/logs/pipeline.log` |
-| Kết quả khảo sát, ERD có số liệu | `reports/data_profiling/PROFILING_REPORT.md`, `reports/architecture/ERD.md` |
-| Lịch sử nạp dữ liệu | `data/bronze/_manifests/*.jsonl` |
-| Dòng bị loại và lý do | `data/silver/_quarantine/<bảng>/` |
-| Chất lượng dữ liệu trước/sau xử lý | `docs/DATA_QUALITY_REPORT.md` |
-| Thống kê: dung lượng, số dòng, tốc độ, thời gian, số feature | `reports/PIPELINE_STATS.md` |
-| Kế hoạch thực thi Spark (thấy bước gom nằm trước JOIN) | http://localhost:4040 → tab **SQL / DataFrame** (chỉ có khi job đang chạy) |
-| Biểu đồ tốc độ streaming | http://localhost:4040 → tab **Structured Streaming** |
-| Event trong Kafka | Kafka UI http://localhost:8080 → Topics → Messages |
-| Dữ liệu trong lake | MinIO http://localhost:9001 (đăng nhập `minioadmin` / `minioadmin`) |
-| Streaming theo từng micro-batch | `reports/streaming/batch_metrics.jsonl`, `query_progress.jsonl` (bản trùng và event trễ bị loại) |
+| Execution logs | Terminal, `reports/logs/pipeline.log` |
+| Profiling results & measured ERD | `reports/data_profiling/PROFILING_REPORT.md`, `reports/architecture/ERD.md` |
+| Ingestion history | `data/bronze/_manifests/*.jsonl` |
+| Quarantined rows & reasons | `data/silver/_quarantine/<table>/` |
+| Before/after data quality | `docs/DATA_QUALITY_REPORT.md` |
+| Pipeline stats (size, rows, throughput, timings, features) | `reports/PIPELINE_STATS.md` |
+| Spark execution plan (pre-join aggregation visible) | http://localhost:4040 → **SQL / DataFrame** tab (while job is running) |
+| Streaming rate charts | http://localhost:4040 → **Structured Streaming** tab |
+| Kafka events | Kafka UI http://localhost:8081 → Topics → Messages |
+| Lake objects | MinIO http://localhost:9001 (`minioadmin` / `minioadmin`) |
+| Per-micro-batch streaming metrics | `reports/streaming/batch_metrics.jsonl`, `query_progress.jsonl` (dropped duplicates & late events) |
 
-**Dấu hiệu chạy đúng:**
-- Log `silver` có `reconcile=True` ở mọi bảng.
-- Log `gold` toàn bộ `check … PASS`.
-- Chạy lại ingestion thì các bảng báo `skipped`.
-- Streaming: `duplicates_dropped` khớp với số bản trùng producer đã chèn.
+**Healthy Run Signals:**
+- `silver` logs show `reconcile=True` for every table.
+- `gold` logs show `check … PASS` for all checks.
+- Re-running ingestion reports `skipped` for unchanged tables.
+- Streaming `duplicates_dropped` matches injected duplicate count from producer.
 
-Lần theo một khách hàng qua các tầng:
+Trace one customer across layers:
 ```bash
 python -c "
-import pandas as pd; ID=100002   # đổi thành một SK_ID_CURR có trong dữ liệu của bạn
-print(len(pd.read_parquet('data/silver/installments_payments', filters=[('sk_id_curr','=',ID)])), 'dòng thanh toán ở Silver')
-print(pd.read_parquet('data/gold/customer_credit_features', filters=[('sk_id_curr','=',ID)]).T)   # 1 dòng đã tổng hợp ở Gold
+import pandas as pd; ID=100002   # replace with an SK_ID_CURR present in your dataset
+print(len(pd.read_parquet('data/silver/installments_payments', filters=[('sk_id_curr','=',ID)])), 'installment rows in Silver')
+print(pd.read_parquet('data/gold/customer_credit_features', filters=[('sk_id_curr','=',ID)]).T)   # 1 aggregated row in Gold
 "
 ```
 
 ---
 
-## 5. Cấu trúc thư mục
+## 5. Directory Structure
 
 ```
-credit-risk-bigdata/
-├── common/            config, Spark session, đọc/ghi lake, schema registry (khóa, grain, kiểu, quan hệ)
-├── configs/           pipeline.yaml (tham số), sources.yaml (7 logical sources)
-├── data/              raw | synthetic | bronze | silver | gold   (không commit lên GitHub)
-├── ingestion/         base.py + 1 package cho mỗi nguồn + run_ingestion.py
+apache-spark/
+├── common/            config, Spark session, lake I/O, schema registry (keys, grain, types, relations)
+├── configs/           pipeline.yaml (settings), sources.yaml (7 logical sources)
+├── data/              raw | synthetic | bronze | silver | gold   (gitignored)
+├── ingestion/         base.py + 1 package per source + run_ingestion.py
 ├── processing/        profiling | cleaning | aggregation | feature_engineering | integration
-├── streaming/         schemas (hợp đồng event) | producers | consumers
+├── streaming/         schemas (event contract) | producers | consumers
 ├── storage/minio/     client.py, sync_lake.py
 ├── scripts/           run_pipeline, make_dev_subset, make_test_fixture, generate_data_dictionary
-├── tests/             39 test pytest
+├── tests/             39 pytest tests
 ├── docs/              ARCHITECTURE, DATA_LINEAGE, DATA_DICTIONARY, DATA_QUALITY_REPORT, DEMO_GUIDE, SYNTHETIC_DATA
 ├── reports/           profiling, data_quality, architecture (ERD), streaming, PIPELINE_STATS, PHASE_LOG
 ├── docker-compose.yml
@@ -199,25 +199,25 @@ credit-risk-bigdata/
 
 ---
 
-## 6. Trạng thái kiểm chứng và giới hạn
+## 6. Verification Status & Known Limitations
 
-Môi trường build không truy cập được Kaggle, Docker Hub và Maven Central. Vì vậy mọi kiểm chứng dưới đây chạy trên **test fixture**. Các file trong `docs/` và `reports/` kèm theo gói này cũng là số liệu của fixture. **Hãy chạy lại pipeline trên dữ liệu thật để có số liệu đưa vào báo cáo**; các file đó sẽ được ghi đè.
+The original build environment lacked access to Kaggle, Docker Hub, and Maven Central, so initial verification ran on the **test fixture** (later updated with a 5,000-customer real Home Credit subset in `reports/` and `docs/`). Re-run `python -m scripts.run_pipeline` on the full Kaggle dataset to refresh all metrics for the final report.
 
-| Thành phần | Trạng thái |
+| Component | Status |
 |---|---|
-| Profiling, ingestion, Silver, Gold, synthetic, feature, DQ | ✅ chạy được, có test |
-| Streaming chế độ file (dedup, watermark, quarantine, checkpoint, khôi phục, replay) | ✅ chạy được, có test |
-| Đẩy lên S3 / MinIO bằng Python (sync, ingestion ghi thẳng) | ✅ chạy được với S3 server tương thích; chưa thử với MinIO thật |
-| `docker-compose.yml`, Kafka producer/consumer thật | 🟡 có code; chưa chạy trên máy build |
-| Spark ghi thẳng `s3a://`, Delta Lake | 🟡 có code và cấu hình; lần đầu cần internet để tải jar |
-| Chạy trên dữ liệu Home Credit thật | ⏳ chạy theo mục 3 |
+| Profiling, ingestion, Silver, Gold, synthetic, features, DQ | ✅ Working, tested |
+| File-mode streaming (dedup, watermark, quarantine, checkpoint, recovery, replay) | ✅ Working, tested |
+| Python S3 / MinIO upload (sync, direct ingestion) | ✅ Tested against S3-compatible mock (`moto`); needs live MinIO verification |
+| `docker-compose.yml`, live Kafka producer/consumer | 🟡 Code present; requires Docker verification |
+| Spark direct `s3a://` writes, Delta Lake | 🟡 Code & config present; first run requires internet for JAR download |
+| Full Home Credit dataset run | ⏳ Run per Section 3.2 |
 
-**Giới hạn đã biết:**
-- `event_time` của streaming là thời gian replay. Ngày trong Home Credit là ngày tương đối so với từng hồ sơ, nên không thể đặt chúng lên một lịch chung mà không bịa ngày.
-- Producer phát theo thứ tự dòng trong file, không sắp xếp toàn cục theo thời gian.
-- Dedup streaming chỉ có hiệu lực trong cửa sổ watermark (10 phút).
-- `bureau_total_debt` cộng dư nợ của mọi loại tiền tệ.
-- Không làm Entity Resolution mờ, vì nguồn có khóa chung. Cũng không làm virtual integration hay AQP (xem bảng ánh xạ môn học ở mục 1).
+**Known Limitations:**
+- Streaming `event_time` represents replay time. Home Credit `DAYS_*` columns are relative to each application date, so records cannot be placed on an absolute calendar timeline without fabricating dates.
+- Replay producer emits rows in file order rather than globally sorted by timestamp.
+- Streaming deduplication is bounded by the watermark window (10 minutes).
+- `bureau_total_debt` sums debt across all currencies without FX conversion.
+- Fuzzy Entity Resolution is omitted because sources share exact `SK_ID_*` keys; virtual integration and AQP are also out of scope (see Course Concept Mapping in Section 1).
 
-## 7. Tài liệu khác
-[Kiến trúc](docs/ARCHITECTURE.md) · [Lineage](docs/DATA_LINEAGE.md) · [Data dictionary](docs/DATA_DICTIONARY.md) · [Chất lượng dữ liệu](docs/DATA_QUALITY_REPORT.md) · [Hướng dẫn demo](docs/DEMO_GUIDE.md) · [Dữ liệu synthetic](docs/SYNTHETIC_DATA.md) · [Nhật ký từng giai đoạn](reports/PHASE_LOG.md)
+## 7. Additional Documentation
+[Architecture](docs/ARCHITECTURE.md) · [Lineage](docs/DATA_LINEAGE.md) · [Data Dictionary](docs/DATA_DICTIONARY.md) · [Data Quality](docs/DATA_QUALITY_REPORT.md) · [Demo Guide](docs/DEMO_GUIDE.md) · [Synthetic Data](docs/SYNTHETIC_DATA.md) · [Phase Log](reports/PHASE_LOG.md)
