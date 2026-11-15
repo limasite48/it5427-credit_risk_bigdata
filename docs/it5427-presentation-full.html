@@ -15,10 +15,12 @@
     --bar: #243044;
     --bar-soft: #b7b2a9;
     --frame: #e4e1da;
+    --sans: "Segoe UI", Arial, sans-serif;
+    --mono: Consolas, "Courier New", monospace;
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; height: 100%; background: var(--frame); color: var(--ink); }
-  body { font-family: Georgia, "Times New Roman", Times, serif; }
+  body { font-family: "Times New Roman", Times, serif; }
   button, input { font: inherit; }
   #viewport { height: 100%; display: flex; flex-direction: column; }
   #progress { height: 2px; background: #d5d0c8; flex: none; }
@@ -37,7 +39,7 @@
   }
   .slide.active { display: flex; }
   .kicker {
-    font-family: Helvetica, Arial, sans-serif;
+    font-family: var(--sans);
     font-size: 12px;
     letter-spacing: 0.11em;
     text-transform: uppercase;
@@ -45,7 +47,7 @@
     margin: 0 0 6px;
   }
   h1 {
-    font-family: Helvetica, Arial, sans-serif;
+    font-family: var(--sans);
     font-weight: 600;
     font-size: 28px;
     line-height: 1.25;
@@ -54,7 +56,7 @@
     color: var(--ink);
   }
   h2 {
-    font-family: Helvetica, Arial, sans-serif;
+    font-family: var(--sans);
     font-size: 16px;
     font-weight: 600;
     margin: 0 0 8px;
@@ -76,24 +78,24 @@
     gap: 16px;
     border-top: 1px solid var(--line);
     padding-top: 7px;
-    font-family: Helvetica, Arial, sans-serif;
+    font-family: var(--sans);
     font-size: 12px;
     color: var(--muted);
   }
   .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; align-items: start; }
   .cols-3 { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 26px; align-items: start; }
-  table { width: 100%; border-collapse: collapse; font-family: Helvetica, Arial, sans-serif; font-size: 14.5px; line-height: 1.35; }
+  table { width: 100%; border-collapse: collapse; font-family: var(--sans); font-size: 14.5px; line-height: 1.35; }
   th { text-align: left; font-weight: 600; border-bottom: 1.5px solid var(--rule); padding: 5px 8px; vertical-align: bottom; }
   td { border-bottom: 1px solid var(--line); padding: 5px 8px; vertical-align: top; }
   .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
   .compact table { font-size: 13.5px; }
   .compact th, .compact td { padding: 4px 7px; }
-  code, .mono { font-family: "SFMono-Regular", ui-monospace, Menlo, Consolas, monospace; font-size: 0.92em; }
+  code, .mono { font-family: var(--mono); font-size: 0.92em; }
   .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin: 4px 0 14px; }
   .kpi { border-top: 2px solid var(--rule); padding-top: 8px; }
   .kpi b {
     display: block;
-    font-family: Helvetica, Arial, sans-serif;
+    font-family: var(--sans);
     font-size: 26px;
     font-weight: 600;
     font-variant-numeric: tabular-nums;
@@ -107,14 +109,39 @@
   .src { font-size: 14.5px; margin-bottom: 10px; }
   .flow { display: grid; grid-template-columns: repeat(4, 1fr); }
   .node + .node { border-left: none; }
-  .idx { font-family: Helvetica, Arial, sans-serif; font-size: 12px; letter-spacing: 0.08em; color: var(--muted); }
+  .idx { font-family: var(--sans); font-size: 12px; letter-spacing: 0.08em; color: var(--muted); }
   .node h2, .arm h2, .tier h2, .mode h2 { font-size: 16px; margin: 4px 0 6px; }
   .node p, .arm p, .tier p, .mode p, .box p { margin: 0; font-size: 14.5px; line-height: 1.38; }
   .medallion { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 10px; }
   .medallion .node h2 { font-size: 15px; }
+  .pipe { display: flex; flex-direction: column; gap: 8px; }
+  .pipe-row { display: grid; grid-template-columns: 1fr 26px 1fr 26px 1fr; align-items: stretch; }
+  .pipe-node { border: 1px solid var(--rule); padding: 8px 11px 9px; }
+  .pipe-node h2 { font-size: 16px; margin: 2px 0 4px; }
+  .pipe-node .tech {
+    margin: 0 0 6px;
+    font-family: var(--sans);
+    font-size: 12.5px;
+    line-height: 1.3;
+    color: var(--muted);
+  }
+  .pipe-node p { font-size: 14px; line-height: 1.34; }
+  .pipe-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .pipe-arrow svg { width: 22px; height: 12px; }
+  .pipe-elbow { display: block; width: 100%; height: 26px; }
+  .pack { border: 1px solid var(--rule); padding: 8px 10px 10px; }
+  .pack-head { margin-bottom: 8px; }
+  .pack-head h2 { margin: 0 0 2px; font-size: 15px; }
+  .pack-head p { margin: 0; font-family: var(--sans); font-size: 13px; color: var(--muted); }
+  .checks { border: 1px solid var(--rule); padding: 8px 10px 10px; }
+  .checks .medallion { margin-top: 6px; }
   .arms { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
   .tiers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-  .stack-legend { display: flex; justify-content: space-between; font-family: Helvetica, Arial, sans-serif; font-size: 13px; color: var(--muted); margin-top: 4px; }
+  .stack-legend { display: flex; justify-content: space-between; font-family: var(--sans); font-size: 13px; color: var(--muted); margin-top: 4px; }
   figure { margin: 0; }
   figcaption { font-size: 13.5px; line-height: 1.4; color: #3e3a34; margin-top: 6px; }
   svg { display: block; width: 100%; height: auto; }
@@ -122,7 +149,7 @@
   .title-slide h1 { font-size: 40px; line-height: 1.2; max-width: 18em; margin-bottom: 12px; }
   .lede { font-size: 18px; max-width: 46em; color: #2a2723; }
   .meta { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-top: 28px; border-top: 1px solid var(--line); padding-top: 14px; }
-  .meta dt { font-family: Helvetica, Arial, sans-serif; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .meta dt { font-family: var(--sans); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
   .meta dd { margin: 4px 0 0; font-size: 16px; }
   .toc { list-style: none; padding: 0; margin: 4px 0 0; display: grid; grid-template-columns: 1fr 1fr; gap: 0 36px; }
   .toc li { margin: 0; }
@@ -139,11 +166,11 @@
     text-align: left;
     cursor: pointer;
     color: var(--ink);
-    font-family: Georgia, "Times New Roman", Times, serif;
+    font-family: "Times New Roman", Times, serif;
     font-size: 16.5px;
   }
-  .toc button em { font-style: normal; font-family: Helvetica, Arial, sans-serif; font-size: 13px; color: var(--muted); white-space: nowrap; }
-  .cm { display: grid; grid-template-columns: 148px 1fr 1fr; gap: 0; font-family: Helvetica, Arial, sans-serif; margin-top: 8px; }
+  .toc button em { font-style: normal; font-family: var(--sans); font-size: 13px; color: var(--muted); white-space: nowrap; }
+  .cm { display: grid; grid-template-columns: 148px 1fr 1fr; gap: 0; font-family: var(--sans); margin-top: 8px; }
   .cm div { border-bottom: 1px solid var(--line); border-right: 1px solid var(--line); padding: 8px 10px; min-height: 52px; }
   .cm .hd { font-size: 12px; color: var(--muted); border-top: 1.5px solid var(--rule); }
   .cm b { display: block; font-size: 20px; font-variant-numeric: tabular-nums; }
@@ -155,7 +182,7 @@
     align-items: center;
     justify-content: space-between;
     padding: 0 16px;
-    font-family: Helvetica, Arial, sans-serif;
+    font-family: var(--sans);
     font-size: 13px;
     color: #3e3a34;
   }
@@ -167,7 +194,7 @@
   }
   #chrome button:disabled { opacity: 0.4; cursor: default; }
   #chrome button:focus-visible, .toc button:focus-visible { outline: 2px solid var(--rule); outline-offset: 2px; }
-  .legend { display: flex; gap: 16px; font-family: Helvetica, Arial, sans-serif; font-size: 12.5px; color: #3e3a34; margin: 2px 0 6px; }
+  .legend { display: flex; gap: 16px; font-family: var(--sans); font-size: 12.5px; color: #3e3a34; margin: 2px 0 6px; }
   .sw { display: inline-block; width: 12px; height: 12px; border: 1px solid var(--rule); vertical-align: -1px; margin-right: 5px; }
   .sw.d { background: var(--bar); }
   .sw.s { background: var(--bar-soft); }
@@ -246,8 +273,8 @@
               <title>Cơ cấu 307.511 hồ sơ có nhãn</title>
               <rect x="0" y="28" width="1011.2" height="32" fill="#e7e4de" stroke="#243044"/>
               <rect x="1011.2" y="28" width="88.8" height="32" fill="#243044"/>
-              <text x="12" y="18" font-family="Helvetica, Arial, sans-serif" font-size="14" fill="#1c1c1c">91,93% trả nợ đúng hạn · 282.686 hồ sơ</text>
-              <text x="1096" y="18" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="14" fill="#1c1c1c">8,07% vỡ nợ · 24.825</text>
+              <text x="12" y="18" font-family="Segoe UI, Arial, sans-serif" font-size="14" fill="#1c1c1c">91,93% trả nợ đúng hạn · 282.686 hồ sơ</text>
+              <text x="1096" y="18" text-anchor="end" font-family="Segoe UI, Arial, sans-serif" font-size="14" fill="#1c1c1c">8,07% vỡ nợ · 24.825</text>
             </svg>
           </figure>
           <p>Một quy tắc gán mọi hồ sơ vào lớp đa số đạt độ chính xác khoảng 92% nhưng không phát hiện khoản vỡ nợ nào. Vì vậy đề tài không dùng độ chính xác làm hàm mục tiêu.</p>
@@ -417,24 +444,82 @@
           <footer class="foot"><span>IT5427 · Tích hợp và xử lý dữ liệu lớn</span><span class="pageno"></span></footer>
         </section>
 
-        <section class="slide compact" aria-label="Hạng mục đã triển khai">
+        <section class="slide" aria-label="Hạng mục đã triển khai">
           <p class="kicker">04 · Hạng mục đã triển khai</p>
           <h1>Công nghệ theo từng lớp</h1>
-          <table>
-            <thead>
-              <tr><th>Lớp</th><th>Công nghệ</th><th>Việc đã chạy được</th></tr>
-            </thead>
-            <tbody>
-              <tr><td>Thu nhận</td><td>Kafka 3.9, JSON Schema, MinIO</td><td>Sinh sự kiện, kiểm lược đồ, hàng đợi lỗi, chính sách quyền trên bucket</td></tr>
-              <tr><td>Hồ dữ liệu</td><td>PySpark 3.5.3, Delta Lake 3.2.1, Parquet</td><td>Ba lớp, đối soát số dòng, 31 kiểm tra, phát lại luồng</td></tr>
-              <tr><td>Mô hình</td><td>LightGBM, scikit-learn, SHAP</td><td>Logistic L2, LightGBM dừng sớm ở vòng 346, quét ngưỡng, biểu đồ SHAP</td></tr>
-              <tr><td>Chấm điểm</td><td>FastAPI, Python</td><td>Nhận một hồ sơ, trả xác suất, bậc rủi ro và đóng góp đặc trưng</td></tr>
-              <tr><td>Cổng API</td><td>Java 25, Spring Boot 4, JWT</td><td>Tổng quan, phân khúc, stress vĩ mô, pipeline, tra cứu, chấm điểm</td></tr>
-              <tr><td>Giao diện</td><td>React 19, TypeScript</td><td>Năm màn hình sau đăng nhập; Nginx ở cổng 8088</td></tr>
-              <tr><td>Đóng gói</td><td>Docker Compose</td><td>Ba dịch vụ: giao diện 8088, cổng API 8080, mô hình 8000</td></tr>
-              <tr><td>Kiểm thử</td><td>pytest, Maven, Vitest</td><td>20 kiểm thử Python, 13 kiểm thử Java, 4 kiểm thử giao diện</td></tr>
-            </tbody>
-          </table>
+          <div class="pipe" role="group" aria-label="Luồng từ thu nhận đến giao diện">
+            <div class="pipe-row">
+              <article class="pipe-node">
+                <p class="idx">01</p>
+                <h2>Thu nhận</h2>
+                <p class="tech">Kafka 3.9, JSON Schema, MinIO</p>
+                <p>Sinh sự kiện, kiểm lược đồ, hàng đợi lỗi, chính sách quyền trên bucket</p>
+              </article>
+              <div class="pipe-arrow" aria-hidden="true"><svg viewBox="0 0 22 12"><path d="M0 6H16M11 1.5 16.5 6 11 10.5" fill="none" stroke="#243044" stroke-width="1.4"/></svg></div>
+              <article class="pipe-node">
+                <p class="idx">02</p>
+                <h2>Hồ dữ liệu</h2>
+                <p class="tech">PySpark 3.5.3, Delta Lake 3.2.1, Parquet</p>
+                <p>Ba lớp, đối soát số dòng, 31 kiểm tra, phát lại luồng</p>
+              </article>
+              <div class="pipe-arrow" aria-hidden="true"><svg viewBox="0 0 22 12"><path d="M0 6H16M11 1.5 16.5 6 11 10.5" fill="none" stroke="#243044" stroke-width="1.4"/></svg></div>
+              <article class="pipe-node">
+                <p class="idx">03</p>
+                <h2>Mô hình</h2>
+                <p class="tech">LightGBM, scikit-learn, SHAP</p>
+                <p>Logistic L2, LightGBM dừng sớm ở vòng 346, quét ngưỡng, biểu đồ SHAP</p>
+              </article>
+            </div>
+            <svg class="pipe-elbow" viewBox="0 0 1188 26" aria-hidden="true">
+              <polyline points="999,0 999,12 196,12 196,18" fill="none" stroke="#243044" stroke-width="1.4"/>
+              <polygon points="189,18 203,18 196,26" fill="#243044"/>
+            </svg>
+            <div class="pack">
+              <div class="pack-head">
+                <h2>Đóng gói · Docker Compose</h2>
+                <p>Ba dịch vụ: giao diện 8088, cổng API 8080, mô hình 8000</p>
+              </div>
+              <div class="pipe-row">
+                <article class="pipe-node">
+                  <p class="idx">04 · cổng 8000</p>
+                  <h2>Chấm điểm</h2>
+                  <p class="tech">FastAPI, Python</p>
+                  <p>Nhận một hồ sơ, trả xác suất, bậc rủi ro và đóng góp đặc trưng</p>
+                </article>
+                <div class="pipe-arrow" aria-hidden="true"><svg viewBox="0 0 22 12"><path d="M0 6H16M11 1.5 16.5 6 11 10.5" fill="none" stroke="#243044" stroke-width="1.4"/></svg></div>
+                <article class="pipe-node">
+                  <p class="idx">05 · cổng 8080</p>
+                  <h2>Cổng API</h2>
+                  <p class="tech">Java 25, Spring Boot 4, JWT</p>
+                  <p>Tổng quan, phân khúc, stress vĩ mô, pipeline, tra cứu, chấm điểm</p>
+                </article>
+                <div class="pipe-arrow" aria-hidden="true"><svg viewBox="0 0 22 12"><path d="M0 6H16M11 1.5 16.5 6 11 10.5" fill="none" stroke="#243044" stroke-width="1.4"/></svg></div>
+                <article class="pipe-node">
+                  <p class="idx">06 · cổng 8088</p>
+                  <h2>Giao diện</h2>
+                  <p class="tech">React 19, TypeScript</p>
+                  <p>Năm màn hình sau đăng nhập; Nginx ở cổng 8088</p>
+                </article>
+              </div>
+            </div>
+            <div class="checks">
+              <p class="idx">Kiểm thử · pytest, Maven, Vitest</p>
+              <div class="medallion">
+                <article class="node">
+                  <h2>pytest</h2>
+                  <p>20 kiểm thử Python</p>
+                </article>
+                <article class="node">
+                  <h2>Maven</h2>
+                  <p>13 kiểm thử Java</p>
+                </article>
+                <article class="node">
+                  <h2>Vitest</h2>
+                  <p>4 kiểm thử giao diện</p>
+                </article>
+              </div>
+            </div>
+          </div>
           <p class="note">LightGBM tối ưu logloss không nhân trọng số lớp. Trọng số lớp khoảng 11,4 lần làm xác suất nhóm rủi ro thấp vượt mốc 5% dù tần suất danh mục chỉ là 8,07%, nên đã được bỏ.</p>
           <footer class="foot"><span>IT5427 · Tích hợp và xử lý dữ liệu lớn</span><span class="pageno"></span></footer>
         </section>
@@ -488,27 +573,27 @@
               <svg viewBox="0 0 640 228" role="img" aria-label="Tỷ lệ vỡ nợ theo sáu nhóm nghề">
                 <title>Tỷ lệ vỡ nợ theo nghề</title>
                 <line x1="230" y1="198" x2="480" y2="198" stroke="#d8d3cb"/>
-                <text x="230" y="214" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#5c574f">0</text>
-                <text x="355" y="214" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#5c574f">7%</text>
-                <text x="480" y="214" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#5c574f">14%</text>
-                <text x="222" y="24" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#1c1c1c">Tài xế · 18.603</text>
+                <text x="230" y="214" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#5c574f">0</text>
+                <text x="355" y="214" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#5c574f">7%</text>
+                <text x="480" y="214" text-anchor="end" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#5c574f">14%</text>
+                <text x="222" y="24" text-anchor="end" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#1c1c1c">Tài xế · 18.603</text>
                 <rect x="230" y="12" width="202.3" height="16" fill="#243044"/>
-                <text x="560" y="24" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#1c1c1c">11,33%</text>
-                <text x="222" y="56" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#1c1c1c">Bảo vệ · 6.721</text>
+                <text x="560" y="24" text-anchor="end" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#1c1c1c">11,33%</text>
+                <text x="222" y="56" text-anchor="end" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#1c1c1c">Bảo vệ · 6.721</text>
                 <rect x="230" y="44" width="191.8" height="16" fill="#243044"/>
-                <text x="560" y="56" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#1c1c1c">10,74%</text>
-                <text x="222" y="88" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#1c1c1c">LĐ phổ thông · 55.186</text>
+                <text x="560" y="56" text-anchor="end" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#1c1c1c">10,74%</text>
+                <text x="222" y="88" text-anchor="end" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#1c1c1c">LĐ phổ thông · 55.186</text>
                 <rect x="230" y="76" width="188.9" height="16" fill="#243044"/>
-                <text x="560" y="88" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#1c1c1c">10,58%</text>
-                <text x="222" y="120" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#1c1c1c">Quản lý · 21.371</text>
+                <text x="560" y="88" text-anchor="end" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#1c1c1c">10,58%</text>
+                <text x="222" y="120" text-anchor="end" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#1c1c1c">Quản lý · 21.371</text>
                 <rect x="230" y="108" width="110.9" height="16" fill="#b7b2a9"/>
-                <text x="560" y="120" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#1c1c1c">6,21%</text>
-                <text x="222" y="152" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#1c1c1c">Kỹ thuật cao · 11.380</text>
+                <text x="560" y="120" text-anchor="end" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#1c1c1c">6,21%</text>
+                <text x="222" y="152" text-anchor="end" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#1c1c1c">Kỹ thuật cao · 11.380</text>
                 <rect x="230" y="140" width="110.0" height="16" fill="#b7b2a9"/>
-                <text x="560" y="152" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#1c1c1c">6,16%</text>
-                <text x="222" y="184" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#1c1c1c">Kế toán · 9.813</text>
+                <text x="560" y="152" text-anchor="end" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#1c1c1c">6,16%</text>
+                <text x="222" y="184" text-anchor="end" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#1c1c1c">Kế toán · 9.813</text>
                 <rect x="230" y="172" width="86.3" height="16" fill="#b7b2a9"/>
-                <text x="560" y="184" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#1c1c1c">4,83%</text>
+                <text x="560" y="184" text-anchor="end" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#1c1c1c">4,83%</text>
                 <line x1="374.1" y1="4" x2="374.1" y2="198" stroke="#ffffff" stroke-width="3"/>
                 <line x1="374.1" y1="4" x2="374.1" y2="198" stroke="#243044" stroke-dasharray="3 3"/>
               </svg>
@@ -518,24 +603,24 @@
               <svg viewBox="0 0 640 196" role="img" aria-label="Tỷ lệ vỡ nợ theo trình độ học vấn">
                 <title>Tỷ lệ vỡ nợ theo học vấn</title>
                 <line x1="230" y1="166" x2="480" y2="166" stroke="#d8d3cb"/>
-                <text x="230" y="182" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#5c574f">0</text>
-                <text x="355" y="182" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#5c574f">7%</text>
-                <text x="480" y="182" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#5c574f">14%</text>
-                <text x="222" y="24" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#1c1c1c">THCS · 3.816</text>
+                <text x="230" y="182" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#5c574f">0</text>
+                <text x="355" y="182" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#5c574f">7%</text>
+                <text x="480" y="182" text-anchor="end" font-family="Segoe UI, Arial, sans-serif" font-size="11" fill="#5c574f">14%</text>
+                <text x="222" y="24" text-anchor="end" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#1c1c1c">THCS · 3.816</text>
                 <rect x="230" y="12" width="195.2" height="16" fill="#243044"/>
-                <text x="560" y="24" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#1c1c1c">10,93%</text>
-                <text x="222" y="56" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#1c1c1c">TH, trung cấp · 218.391</text>
+                <text x="560" y="24" text-anchor="end" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#1c1c1c">10,93%</text>
+                <text x="222" y="56" text-anchor="end" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#1c1c1c">TH, trung cấp · 218.391</text>
                 <rect x="230" y="44" width="159.6" height="16" fill="#243044"/>
-                <text x="560" y="56" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#1c1c1c">8,94%</text>
-                <text x="222" y="88" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#1c1c1c">ĐH dở dang · 10.277</text>
+                <text x="560" y="56" text-anchor="end" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#1c1c1c">8,94%</text>
+                <text x="222" y="88" text-anchor="end" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#1c1c1c">ĐH dở dang · 10.277</text>
                 <rect x="230" y="76" width="151.4" height="16" fill="#243044"/>
-                <text x="560" y="88" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#1c1c1c">8,48%</text>
-                <text x="222" y="120" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#1c1c1c">Đại học · 74.863</text>
+                <text x="560" y="88" text-anchor="end" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#1c1c1c">8,48%</text>
+                <text x="222" y="120" text-anchor="end" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#1c1c1c">Đại học · 74.863</text>
                 <rect x="230" y="108" width="95.7" height="16" fill="#b7b2a9"/>
-                <text x="560" y="120" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#1c1c1c">5,36%</text>
-                <text x="222" y="152" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#1c1c1c">Học vị cao · 164</text>
+                <text x="560" y="120" text-anchor="end" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#1c1c1c">5,36%</text>
+                <text x="222" y="152" text-anchor="end" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#1c1c1c">Học vị cao · 164</text>
                 <rect x="230" y="140" width="32.7" height="16" fill="#b7b2a9"/>
-                <text x="560" y="152" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#1c1c1c">1,83%</text>
+                <text x="560" y="152" text-anchor="end" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#1c1c1c">1,83%</text>
                 <line x1="374.1" y1="4" x2="374.1" y2="166" stroke="#ffffff" stroke-width="3"/>
                 <line x1="374.1" y1="4" x2="374.1" y2="166" stroke="#243044" stroke-dasharray="3 3"/>
               </svg>
@@ -554,28 +639,28 @@
             <svg viewBox="0 0 1100 264" role="img" aria-label="Tỷ lệ vỡ nợ giảm từ 15,21 phần trăm ở ngũ phân vị thấp nhất xuống 3,59 phần trăm ở ngũ phân vị cao nhất">
               <title>Tỷ lệ vỡ nợ theo ngũ phân vị EXT_SOURCE_2</title>
               <line x1="250" y1="232" x2="870" y2="232" stroke="#d8d3cb"/>
-              <text x="250" y="250" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#5c574f">0</text>
-              <text x="457" y="250" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#5c574f">6%</text>
-              <text x="663" y="250" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#5c574f">12%</text>
-              <text x="870" y="250" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#5c574f">18%</text>
-              <text x="240" y="46" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="15" fill="#1c1c1c">Q1 thấp nhất · 61.371</text>
+              <text x="250" y="250" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#5c574f">0</text>
+              <text x="457" y="250" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#5c574f">6%</text>
+              <text x="663" y="250" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#5c574f">12%</text>
+              <text x="870" y="250" text-anchor="end" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#5c574f">18%</text>
+              <text x="240" y="46" text-anchor="end" font-family="Segoe UI, Arial, sans-serif" font-size="15" fill="#1c1c1c">Q1 thấp nhất · 61.371</text>
               <rect x="250" y="28" width="524.1" height="22" fill="#243044"/>
-              <text x="1040" y="45" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="15" fill="#1c1c1c">15,21%</text>
-              <text x="240" y="90" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="15" fill="#1c1c1c">Q2 · 61.371</text>
+              <text x="1040" y="45" text-anchor="end" font-family="Segoe UI, Arial, sans-serif" font-size="15" fill="#1c1c1c">15,21%</text>
+              <text x="240" y="90" text-anchor="end" font-family="Segoe UI, Arial, sans-serif" font-size="15" fill="#1c1c1c">Q2 · 61.371</text>
               <rect x="250" y="72" width="315.5" height="22" fill="#243044"/>
-              <text x="1040" y="89" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="15" fill="#1c1c1c">9,16%</text>
-              <text x="240" y="134" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="15" fill="#1c1c1c">Q3 · 61.371</text>
+              <text x="1040" y="89" text-anchor="end" font-family="Segoe UI, Arial, sans-serif" font-size="15" fill="#1c1c1c">9,16%</text>
+              <text x="240" y="134" text-anchor="end" font-family="Segoe UI, Arial, sans-serif" font-size="15" fill="#1c1c1c">Q3 · 61.371</text>
               <rect x="250" y="116" width="242.5" height="22" fill="#b7b2a9"/>
-              <text x="1040" y="133" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="15" fill="#1c1c1c">7,04%</text>
-              <text x="240" y="178" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="15" fill="#1c1c1c">Q4 · 61.377</text>
+              <text x="1040" y="133" text-anchor="end" font-family="Segoe UI, Arial, sans-serif" font-size="15" fill="#1c1c1c">7,04%</text>
+              <text x="240" y="178" text-anchor="end" font-family="Segoe UI, Arial, sans-serif" font-size="15" fill="#1c1c1c">Q4 · 61.377</text>
               <rect x="250" y="160" width="185.0" height="22" fill="#b7b2a9"/>
-              <text x="1040" y="177" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="15" fill="#1c1c1c">5,37%</text>
-              <text x="240" y="222" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="15" fill="#1c1c1c">Q5 cao nhất · 61.361</text>
+              <text x="1040" y="177" text-anchor="end" font-family="Segoe UI, Arial, sans-serif" font-size="15" fill="#1c1c1c">5,37%</text>
+              <text x="240" y="222" text-anchor="end" font-family="Segoe UI, Arial, sans-serif" font-size="15" fill="#1c1c1c">Q5 cao nhất · 61.361</text>
               <rect x="250" y="204" width="123.7" height="22" fill="#b7b2a9"/>
-              <text x="1040" y="221" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="15" fill="#1c1c1c">3,59%</text>
+              <text x="1040" y="221" text-anchor="end" font-family="Segoe UI, Arial, sans-serif" font-size="15" fill="#1c1c1c">3,59%</text>
               <line x1="528" y1="8" x2="528" y2="232" stroke="#ffffff" stroke-width="3"/>
               <line x1="528" y1="8" x2="528" y2="232" stroke="#243044" stroke-dasharray="3 3"/>
-              <text x="534" y="20" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#243044">8,07%</text>
+              <text x="534" y="20" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#243044">8,07%</text>
             </svg>
           </figure>
           <p class="note">Tỷ lệ giảm đơn điệu từ 15,21% xuống 3,59%, khoảng 4,2 lần. Các nhóm gần bằng nhau về số hồ sơ, nên độ dốc không bị kích thước mẫu làm méo. Đây là bằng chứng mô tả, chưa phải hệ số của mô hình.</p>
@@ -612,13 +697,13 @@
             <figure>
               <svg viewBox="0 0 700 150" role="img" aria-label="Tổn thất giảm từ 24314 xuống 20441 khi hạ ngưỡng từ 0,50 xuống 0,18">
                 <title>Tổn thất kỳ vọng theo ngưỡng</title>
-                <text x="210" y="36" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="14" fill="#1c1c1c">Ngưỡng 0,50</text>
+                <text x="210" y="36" text-anchor="end" font-family="Segoe UI, Arial, sans-serif" font-size="14" fill="#1c1c1c">Ngưỡng 0,50</text>
                 <rect x="220" y="18" width="340.4" height="26" fill="#b7b2a9"/>
-                <text x="568" y="36" font-family="Helvetica, Arial, sans-serif" font-size="14" fill="#1c1c1c">24.314</text>
-                <text x="210" y="92" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="14" fill="#1c1c1c">Ngưỡng 0,18</text>
+                <text x="568" y="36" font-family="Segoe UI, Arial, sans-serif" font-size="14" fill="#1c1c1c">24.314</text>
+                <text x="210" y="92" text-anchor="end" font-family="Segoe UI, Arial, sans-serif" font-size="14" fill="#1c1c1c">Ngưỡng 0,18</text>
                 <rect x="220" y="74" width="286.2" height="26" fill="#243044"/>
-                <text x="514" y="92" font-family="Helvetica, Arial, sans-serif" font-size="14" fill="#1c1c1c">20.441</text>
-                <text x="220" y="132" font-family="Helvetica, Arial, sans-serif" font-size="13" fill="#5c574f">Đơn vị chi phí. Thang tới 30.000. Chênh 3.873, tức 15,93%.</text>
+                <text x="514" y="92" font-family="Segoe UI, Arial, sans-serif" font-size="14" fill="#1c1c1c">20.441</text>
+                <text x="220" y="132" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#5c574f">Đơn vị chi phí. Thang tới 30.000. Chênh 3.873, tức 15,93%.</text>
               </svg>
             </figure>
             <div>
@@ -648,21 +733,21 @@
               <div class="legend"><span><i class="sw s"></i>Trước sốc</span><span><i class="sw d"></i>Sau sốc</span></div>
               <svg viewBox="0 0 560 168" role="img" aria-label="Nhóm rủi ro cao tăng từ 77 lên 104 hồ sơ sau sốc">
                 <title>Số hồ sơ theo bậc rủi ro trước và sau sốc</title>
-                <text x="78" y="28" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="13" fill="#1c1c1c">Thấp</text>
+                <text x="78" y="28" text-anchor="end" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#1c1c1c">Thấp</text>
                 <rect x="86" y="14" width="317.1" height="14" fill="#b7b2a9"/>
-                <text x="408" y="25" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#1c1c1c">248</text>
+                <text x="408" y="25" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#1c1c1c">248</text>
                 <rect x="86" y="32" width="248.0" height="14" fill="#243044"/>
-                <text x="338" y="43" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#1c1c1c">194</text>
-                <text x="78" y="78" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="13" fill="#1c1c1c">Trung bình</text>
+                <text x="338" y="43" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#1c1c1c">194</text>
+                <text x="78" y="78" text-anchor="end" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#1c1c1c">Trung bình</text>
                 <rect x="86" y="64" width="223.7" height="14" fill="#b7b2a9"/>
-                <text x="314" y="75" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#1c1c1c">175</text>
+                <text x="314" y="75" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#1c1c1c">175</text>
                 <rect x="86" y="82" width="258.3" height="14" fill="#243044"/>
-                <text x="348" y="93" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#1c1c1c">202</text>
-                <text x="78" y="128" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="13" fill="#1c1c1c">Cao</text>
+                <text x="348" y="93" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#1c1c1c">202</text>
+                <text x="78" y="128" text-anchor="end" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#1c1c1c">Cao</text>
                 <rect x="86" y="114" width="98.5" height="14" fill="#b7b2a9"/>
-                <text x="190" y="125" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#1c1c1c">77</text>
+                <text x="190" y="125" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#1c1c1c">77</text>
                 <rect x="86" y="132" width="133.1" height="14" fill="#243044"/>
-                <text x="224" y="143" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#1c1c1c">104</text>
+                <text x="224" y="143" font-family="Segoe UI, Arial, sans-serif" font-size="12" fill="#1c1c1c">104</text>
               </svg>
               <p class="note">PD trung bình 8,37% lên 10,38%. Bậc cao: 77 hồ sơ (15,4%) lên 104 (20,8%), thêm 27 hồ sơ. Chuỗi vĩ mô là dữ liệu sinh trong dự án.</p>
             </div>
