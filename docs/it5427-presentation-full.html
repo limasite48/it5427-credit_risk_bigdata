@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IT5427 — Đánh giá rủi ro tín dụng từ dữ liệu đa nguồn</title>
+<style>
+  :root {
+    --ink: #1c1c1c;
+    --muted: #5c574f;
+    --line: #d8d3cb;
+    --rule: #243044;
+    --paper: #ffffff;
+    --wash: #e7e4de;
+    --bar: #243044;
+    --bar-soft: #b7b2a9;
+    --frame: #e4e1da;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: var(--frame); color: var(--ink); }
+  body { font-family: Georgia, "Times New Roman", Times, serif; }
+  button, input { font: inherit; }
+  #viewport { height: 100%; display: flex; flex-direction: column; }
+  #progress { height: 2px; background: #d5d0c8; flex: none; }
+  #progress > div { height: 2px; background: var(--rule); width: 0; }
+  #frame { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; }
+  #wrap { overflow: hidden; flex: none; }
+  #stage { width: 1280px; height: 720px; position: relative; transform-origin: top left; }
+  .slide {
+    display: none;
+    position: absolute;
+    inset: 0;
+    background: var(--paper);
+    padding: 32px 46px 22px;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .slide.active { display: flex; }
+  .kicker {
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 6px;
+  }
+  h1 {
+    font-family: Helvetica, Arial, sans-serif;
+    font-weight: 600;
+    font-size: 28px;
+    line-height: 1.25;
+    letter-spacing: -0.015em;
+    margin: 0 0 14px;
+    color: var(--ink);
+  }
+  h2 {
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 8px;
+  }
+  p { margin: 0 0 10px; font-size: 17px; line-height: 1.42; }
+  ul, ol { margin: 0; padding-left: 1.15em; }
+  li { margin: 0 0 6px; font-size: 16.5px; line-height: 1.38; }
+  li:last-child { margin-bottom: 0; }
+  .note {
+    margin-top: 10px;
+    font-size: 13.5px;
+    line-height: 1.4;
+    color: var(--muted);
+  }
+  .foot {
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    border-top: 1px solid var(--line);
+    padding-top: 7px;
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; align-items: start; }
+  .cols-3 { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 26px; align-items: start; }
+  table { width: 100%; border-collapse: collapse; font-family: Helvetica, Arial, sans-serif; font-size: 14.5px; line-height: 1.35; }
+  th { text-align: left; font-weight: 600; border-bottom: 1.5px solid var(--rule); padding: 5px 8px; vertical-align: bottom; }
+  td { border-bottom: 1px solid var(--line); padding: 5px 8px; vertical-align: top; }
+  .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .compact table { font-size: 13.5px; }
+  .compact th, .compact td { padding: 4px 7px; }
+  code, .mono { font-family: "SFMono-Regular", ui-monospace, Menlo, Consolas, monospace; font-size: 0.92em; }
+  .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin: 4px 0 14px; }
+  .kpi { border-top: 2px solid var(--rule); padding-top: 8px; }
+  .kpi b {
+    display: block;
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 26px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+  }
+  .kpi span { display: block; margin-top: 4px; font-size: 13.5px; line-height: 1.35; color: #3e3a34; }
+  .src, .box, .arm, .tier, .node, .mode {
+    border: 1px solid var(--rule);
+    padding: 10px 12px;
+  }
+  .src { font-size: 14.5px; margin-bottom: 10px; }
+  .flow { display: grid; grid-template-columns: repeat(4, 1fr); }
+  .node + .node { border-left: none; }
+  .idx { font-family: Helvetica, Arial, sans-serif; font-size: 12px; letter-spacing: 0.08em; color: var(--muted); }
+  .node h2, .arm h2, .tier h2, .mode h2 { font-size: 16px; margin: 4px 0 6px; }
+  .node p, .arm p, .tier p, .mode p, .box p { margin: 0; font-size: 14.5px; line-height: 1.38; }
+  .medallion { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 10px; }
+  .medallion .node h2 { font-size: 15px; }
+  .arms { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .tiers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .stack-legend { display: flex; justify-content: space-between; font-family: Helvetica, Arial, sans-serif; font-size: 13px; color: var(--muted); margin-top: 4px; }
+  figure { margin: 0; }
+  figcaption { font-size: 13.5px; line-height: 1.4; color: #3e3a34; margin-top: 6px; }
+  svg { display: block; width: 100%; height: auto; }
+  .title-slide { justify-content: center; }
+  .title-slide h1 { font-size: 40px; line-height: 1.2; max-width: 18em; margin-bottom: 12px; }
+  .lede { font-size: 18px; max-width: 46em; color: #2a2723; }
+  .meta { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-top: 28px; border-top: 1px solid var(--line); padding-top: 14px; }
+  .meta dt { font-family: Helvetica, Arial, sans-serif; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .meta dd { margin: 4px 0 0; font-size: 16px; }
+  .toc { list-style: none; padding: 0; margin: 4px 0 0; display: grid; grid-template-columns: 1fr 1fr; gap: 0 36px; }
+  .toc li { margin: 0; }
+  .toc button {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--line);
+    padding: 11px 0;
+    text-align: left;
+    cursor: pointer;
+    color: var(--ink);
+    font-family: Georgia, "Times New Roman", Times, serif;
+    font-size: 16.5px;
+  }
+  .toc button em { font-style: normal; font-family: Helvetica, Arial, sans-serif; font-size: 13px; color: var(--muted); white-space: nowrap; }
+  .cm { display: grid; grid-template-columns: 148px 1fr 1fr; gap: 0; font-family: Helvetica, Arial, sans-serif; margin-top: 8px; }
+  .cm div { border-bottom: 1px solid var(--line); border-right: 1px solid var(--line); padding: 8px 10px; min-height: 52px; }
+  .cm .hd { font-size: 12px; color: var(--muted); border-top: 1.5px solid var(--rule); }
+  .cm b { display: block; font-size: 20px; font-variant-numeric: tabular-nums; }
+  .cm span { font-size: 12px; color: var(--muted); }
+  #chrome {
+    height: 42px;
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    color: #3e3a34;
+  }
+  #chrome button {
+    background: #fff;
+    border: 1px solid #cfcabe;
+    padding: 4px 12px;
+    cursor: pointer;
+  }
+  #chrome button:disabled { opacity: 0.4; cursor: default; }
+  #chrome button:focus-visible, .toc button:focus-visible { outline: 2px solid var(--rule); outline-offset: 2px; }
+  .legend { display: flex; gap: 16px; font-family: Helvetica, Arial, sans-serif; font-size: 12.5px; color: #3e3a34; margin: 2px 0 6px; }
+  .sw { display: inline-block; width: 12px; height: 12px; border: 1px solid var(--rule); vertical-align: -1px; margin-right: 5px; }
+  .sw.d { background: var(--bar); }
+  .sw.s { background: var(--bar-soft); }
+  .sw.o { background: #fff; }
+  @media print {
+    #chrome, #progress { display: none !important; }
+    html, body, #viewport, #frame, #wrap, #stage {
+      display: block !important; height: auto !important; width: auto !important;
+      overflow: visible !important; background: #fff !important; transform: none !important;
+    }
+    #stage { width: 1280px !important; height: auto !important; position: static !important; }
+    .slide {
+      display: flex !important; position: relative !important; width: 1280px; height: 720px;
+      page-break-after: always; break-after: page; border: none;
+    }
+    @page { size: 1280px 720px; margin: 0; }
+  }
+</style>
+</head>
+<body>
+<div id="viewport">
+  <div id="progress" aria-hidden="true"><div id="bar"></div></div>
+  <div id="frame">
+    <div id="wrap">
+      <div id="stage">
+
+        <section class="slide title-slide active" aria-label="Trang bìa">
+          <p class="kicker">IT5427 — Tích hợp và xử lý dữ liệu lớn</p>
+          <h1>Đánh giá và dự báo rủi ro tín dụng từ dữ liệu đa nguồn</h1>
+          <p class="lede">Đường ống dữ liệu lớn cho thẩm định khoản vay tiêu dùng: thu nhận nhiều nguồn, hồ dữ liệu Spark, ước lượng xác suất vỡ nợ và giao diện ra quyết định.</p>
+          <dl class="meta">
+            <div><dt>Tên đề tài</dt><dd>Credit Risk Intelligence</dd></div>
+            <div><dt>Tập dữ liệu</dt><dd>Home Credit Default Risk</dd></div>
+            <div><dt>Quy mô có nhãn</dt><dd>307.511 hồ sơ vay</dd></div>
+            <div><dt>Thời điểm</dt><dd>15 tháng 11 năm 2026</dd></div>
+          </dl>
+          <footer class="foot"><span>Phím mũi tên để chuyển slide. In trình duyệt để xuất PDF.</span><span class="pageno"></span></footer>
+        </section>
+
+        <section class="slide" aria-label="Mục lục">
+          <p class="kicker">Nội dung trình bày</p>
+          <h1>Tám phần của bài</h1>
+          <ol class="toc">
+            <li><button type="button" data-go="3">Tổng quan và ý nghĩa thực tế <em>3–4</em></button></li>
+            <li><button type="button" data-go="5">Ý tưởng và đường ống xử lý <em>5–7</em></button></li>
+            <li><button type="button" data-go="8">Tập dữ liệu và tiền xử lý <em>8–10</em></button></li>
+            <li><button type="button" data-go="11">Hạng mục đã triển khai <em>11–12</em></button></li>
+            <li><button type="button" data-go="13">Kết quả đo được <em>13–18</em></button></li>
+            <li><button type="button" data-go="19">Tình huống minh họa <em>19–21</em></button></li>
+            <li><button type="button" data-go="22">Ứng dụng thực tế <em>22</em></button></li>
+            <li><button type="button" data-go="23">Hiện trạng và hướng phát triển <em>23–25</em></button></li>
+          </ol>
+          <footer class="foot"><span>IT5427 · Tích hợp và xử lý dữ liệu lớn</span><span class="pageno"></span></footer>
+        </section>
+
+        <section class="slide" aria-label="Tổng quan đề tài">
+          <p class="kicker">01 · Tổng quan</p>
+          <h1>Bài toán thẩm định và phạm vi đề tài</h1>
+          <p>Thẩm định tín dụng bán lẻ yêu cầu ước lượng xác suất vỡ nợ trước khi giải ngân. Dữ liệu nằm ở nhiều hệ thống, lớp vỡ nợ là thiểu số, và mỗi quyết định từ chối cần truy được lý do.</p>
+          <p>Đề tài xây dựng đường ống khép kín, không dừng ở một bộ phân loại trên một bảng phẳng. Bốn khâu đã nối với nhau:</p>
+          <ol>
+            <li>Thu nhận có kiểm tra lược đồ, kèm chuỗi vĩ mô theo vùng.</li>
+            <li>Hồ dữ liệu ba lớp trên Apache Spark, có kiểm tra chống rò rỉ nhãn và rò rỉ thời gian.</li>
+            <li>Hai mô hình xác suất: thẻ điểm hồi quy logistic L2 để đối chứng, và LightGBM được huấn luyện sao cho xác suất bám tần suất thực. Ngưỡng quyết định chọn theo ma trận chi phí.</li>
+            <li>Lớp ra quyết định: dịch vụ chấm điểm, cổng REST có xác thực, và giao diện thẩm định.</li>
+          </ol>
+          <p class="note">Sản phẩm của mô hình là một xác suất gắn với một hành động: duyệt thẳng, chuyển cán bộ, hoặc từ chối. Điểm số đứng một mình không phải đầu ra vận hành.</p>
+          <footer class="foot"><span>IT5427 · Tích hợp và xử lý dữ liệu lớn</span><span class="pageno"></span></footer>
+        </section>
+
+        <section class="slide" aria-label="Ý nghĩa thực tế">
+          <p class="kicker">01 · Ý nghĩa thực tế</p>
+          <h1>Vì sao độ chính xác phân loại không đủ</h1>
+          <figure>
+            <svg viewBox="0 0 1100 78" role="img" aria-label="91,93 phần trăm hồ sơ trả nợ và 8,07 phần trăm vỡ nợ">
+              <title>Cơ cấu 307.511 hồ sơ có nhãn</title>
+              <rect x="0" y="28" width="1011.2" height="32" fill="#e7e4de" stroke="#243044"/>
+              <rect x="1011.2" y="28" width="88.8" height="32" fill="#243044"/>
+              <text x="12" y="18" font-family="Helvetica, Arial, sans-serif" font-size="14" fill="#1c1c1c">91,93% trả nợ đúng hạn · 282.686 hồ sơ</text>
+              <text x="1096" y="18" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="14" fill="#1c1c1c">8,07% vỡ nợ · 24.825</text>
+            </svg>
+          </figure>
+          <p>Một quy tắc gán mọi hồ sơ vào lớp đa số đạt độ chính xác khoảng 92% nhưng không phát hiện khoản vỡ nợ nào. Vì vậy đề tài không dùng độ chính xác làm hàm mục tiêu.</p>
+          <ul>
+            <li>Phê duyệt nhầm một khoản vỡ nợ được gán chi phí gấp năm lần từ chối nhầm một khách hàng trả nợ. Tỷ lệ 5:1 thể hiện mất gốc, chi phí thu hồi và trích lập dự phòng so với chi phí cơ hội.</li>
+            <li>Trên 61.503 hồ sơ kiểm định, ngưỡng 0,50 cho tổn thất kỳ vọng 24.314 đơn vị chi phí; ngưỡng 0,18 hạ xuống 20.441, tức giảm 15,93%.</li>
+            <li>Xác suất phải bám tần suất thực thì các mốc vận hành 5% và 15% mới có nghĩa.</li>
+            <li>Quyết định từ chối cần danh sách đặc trưng làm tăng rủi ro, để giải trình trong nội bộ và với người vay.</li>
+          </ul>
+          <p class="note">Mức giảm 15,93% là tổn thất kỳ vọng trên tập kiểm định theo hàm 5·FN + FP, không phải lợi nhuận đã hạch toán.</p>
+          <footer class="foot"><span>IT5427 · Tích hợp và xử lý dữ liệu lớn</span><span class="pageno"></span></footer>
+        </section>
+
+        <section class="slide" aria-label="Ý tưởng thực hiện">
+          <p class="kicker">02 · Ý tưởng</p>
+          <h1>Tách chuẩn hóa dữ liệu khỏi lớp ra quyết định</h1>
+          <p>Cùng một hồ sơ vay xuất hiện ở cục tín dụng, khoản vay trước, lịch trả góp, thẻ và điểm bán. Ý tưởng là gộp các nguồn đó thành đặc trưng ở mức khách hàng mà không đưa nhãn vào bảng đặc trưng, rồi mới ước lượng xác suất.</p>
+          <div class="arms">
+            <article class="arm">
+              <p class="idx">Đường ngoại tuyến</p>
+              <h2>Hồ dữ liệu Spark</h2>
+              <p>Nhiều bảng lịch sử đi qua Bronze, Silver, Gold. Biến mục tiêu chỉ nằm ở bảng nhãn. Đường này đang chạy trên tập con 5.000 khách hàng.</p>
+            </article>
+            <article class="arm">
+              <p class="idx">Đường trực tuyến</p>
+              <h2>Chấm một hồ sơ mới</h2>
+              <p>Các trường trên đơn vay và biến vĩ mô đã nối đúng thời điểm, 137 đặc trưng. LightGBM huấn luyện trên đủ 307.511 hồ sơ trả về xác suất, bậc rủi ro và đóng góp TreeSHAP.</p>
+            </article>
+          </div>
+          <p class="note">Hai đường chưa dùng chung một kho đặc trưng. Mô hình trực tuyến chưa đọc các tổng hợp lịch sử trả góp và cục tín dụng do Spark tạo ra. Việc ghép chúng là hạng mục tiếp theo, sau khi có lớp Gold đầy đủ.</p>
+          <footer class="foot"><span>IT5427 · Tích hợp và xử lý dữ liệu lớn</span><span class="pageno"></span></footer>
+        </section>
+
+        <section class="slide" aria-label="Sơ đồ đường ống">
+          <p class="kicker">02 · Đường ống</p>
+          <h1>Bốn khâu từ nguồn thô đến quyết định</h1>
+          <div class="src">Nguồn: CSV Home Credit · chuỗi vĩ mô 82 vùng do dự án sinh · hồ sơ giao thông tổng hợp, có đánh dấu là dữ liệu mô phỏng</div>
+          <div class="flow">
+            <article class="node">
+              <p class="idx">01</p>
+              <h2>Thu nhận</h2>
+              <p>Apache Kafka ở chế độ KRaft, lược đồ JSON Draft 2020-12, hàng đợi bản ghi lỗi, kho đối tượng MinIO.</p>
+            </article>
+            <article class="node">
+              <p class="idx">02</p>
+              <h2>Xử lý phân tán</h2>
+              <p>PySpark và Delta Lake hoặc Parquet. Structured Streaming dùng để phát lại luồng và khử trùng.</p>
+            </article>
+            <article class="node">
+              <p class="idx">03</p>
+              <h2>Mô hình</h2>
+              <p>Hồi quy logistic L2, LightGBM, quét ngưỡng theo chi phí, giải thích TreeSHAP.</p>
+            </article>
+            <article class="node">
+              <p class="idx">04</p>
+              <h2>Quyết định</h2>
+              <p>FastAPI nội bộ, cổng Spring Boot có JWT, giao diện React. Ba vai trò: thẩm định, phân tích, quản trị.</p>
+            </article>
+          </div>
+          <div class="medallion">
+            <article class="node">
+              <h2>Bronze</h2>
+              <p>Bản ghi thô, đúng nguồn, chưa sửa nghiệp vụ.</p>
+            </article>
+            <article class="node">
+              <h2>Silver</h2>
+              <p>Chuẩn hóa kiểu, cách ly bản ghi lỗi, đối soát số dòng.</p>
+            </article>
+            <article class="node">
+              <h2>Gold</h2>
+              <p>Gộp theo khoản vay và theo khách hàng. Nhãn không nằm trong bảng đặc trưng.</p>
+            </article>
+          </div>
+          <p class="note">Đường chấm điểm trực tuyến không chờ lô Spark. Đường Spark là nơi lịch sử nhiều bảng được chuẩn hóa.</p>
+          <footer class="foot"><span>IT5427 · Tích hợp và xử lý dữ liệu lớn</span><span class="pageno"></span></footer>
+        </section>
+
+        <section class="slide" aria-label="Các bước và hai chế độ chạy">
+          <p class="kicker">02 · Cách chạy</p>
+          <h1>Năm bước xử lý và hai chế độ thực thi</h1>
+          <div class="cols">
+            <div>
+              <h2>Thứ tự xử lý</h2>
+              <ol>
+                <li>Chia trục thời gian 104 tuần và kiểm lược đồ trước khi ghi vào MinIO hoặc Kafka.</li>
+                <li>Sinh chỉ số GDP, thất nghiệp, CPI cho 82 vùng và chuẩn lương theo nghề.</li>
+                <li>Làm sạch ở Silver; gộp lịch sử con trước khi nối; để biến mục tiêu ở bảng nhãn.</li>
+                <li>Huấn luyện logistic L2 và LightGBM trên 246.008 dòng, kiểm định 61.503 dòng. Quét ngưỡng từ 0,01 đến 0,99.</li>
+                <li>Phục vụ xác suất, bậc rủi ro và giải thích qua API có xác thực.</li>
+              </ol>
+            </div>
+            <div>
+              <article class="mode">
+                <h2>Chạy cục bộ, khoảng 2 phút</h2>
+                <p>Tính KPI, logistic, LightGBM, đường cong và biểu đồ SHAP trên đủ 307.511 hồ sơ. Báo cáo Spark giữ nguyên tập con.</p>
+              </article>
+              <article class="mode" style="border-top: none;">
+                <h2>Chạy Spark đầy đủ trên Colab</h2>
+                <p>Xử lý toàn bộ lịch sử con, cỡ vài chục triệu dòng, rồi xuất một tệp nén. Lệnh hợp nhất chỉ giải nén vào các thư mục đã cho phép.</p>
+              </article>
+              <p class="note">Lô Colab chưa được hợp nhất vào bản đang trình bày. Mọi số liệu Spark ở các slide sau là của tập con trên dữ liệu thật.</p>
+            </div>
+          </div>
+          <footer class="foot"><span>IT5427 · Tích hợp và xử lý dữ liệu lớn</span><span class="pageno"></span></footer>
+        </section>
+
+        <section class="slide" aria-label="Lý do chọn tập dữ liệu">
+          <p class="kicker">03 · Tập dữ liệu</p>
+          <h1>Vì sao dùng Home Credit Default Risk</h1>
+          <p>Đây là hồ sơ vay tiêu dùng do Home Credit công bố, có khóa <span class="mono">SK_ID_CURR</span> nối đơn vay với cục tín dụng, khoản vay trước, lịch trả góp, dư nợ điểm bán và thẻ. Cấu trúc đó sát hệ thống ngân hàng bán lẻ hơn một bảng phẳng dùng để giảng bài.</p>
+          <ul>
+            <li>Khối lượng buộc phải xử lý phân tán: trạng thái cục tín dụng theo tháng có 27.299.925 dòng; lịch trả góp khoảng 13,6 triệu dòng.</li>
+            <li>Lớp vỡ nợ chỉ chiếm 8,07%, nên phải chọn thước đo xếp hạng và hàm chi phí, không dùng độ chính xác.</li>
+            <li>Dữ liệu có lỗi mã hóa đã biết. <span class="mono">DAYS_EMPLOYED = 365243</span> là mốc thay cho người không đi làm, không phải thâm niên một nghìn năm.</li>
+            <li>Tập cố định và công khai, nên đường ống của đồ án tái lập được.</li>
+          </ul>
+          <p class="note">Giới hạn: đây là tập cuộc thi, không phải dòng giao dịch đang chạy tại ngân hàng. Tập kiểm tra 48.744 hồ sơ không có nhãn. Chuỗi vĩ mô và hồ sơ giao thông là dữ liệu do dự án sinh, không phải số liệu thống kê chính thức.</p>
+          <footer class="foot"><span>IT5427 · Tích hợp và xử lý dữ liệu lớn</span><span class="pageno"></span></footer>
+        </section>
+
+        <section class="slide compact" aria-label="Thành phần các nguồn">
+          <p class="kicker">03 · Thành phần dữ liệu</p>
+          <h1>Mười nguồn và phần Spark đã xử lý</h1>
+          <table>
+            <thead>
+              <tr><th>Nguồn</th><th>Nội dung</th><th class="num">Dòng đầy đủ</th><th class="num">Dòng tập con</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>application_train</td><td>Hồ sơ có nhãn, 122 cột</td><td class="num">307.511</td><td class="num">4.316</td></tr>
+              <tr><td>application_test</td><td>Hồ sơ không nhãn, 121 cột</td><td class="num">48.744</td><td class="num">684</td></tr>
+              <tr><td>bureau</td><td>Khoản vay tại tổ chức khác</td><td class="num">1.716.428</td><td class="num">24.618</td></tr>
+              <tr><td>bureau_balance</td><td>Trạng thái tín dụng theo tháng</td><td class="num">27.299.925</td><td class="num">352.119</td></tr>
+              <tr><td>previous_application</td><td>Hồ sơ vay trước trong hệ thống</td><td class="num">khoảng 1,67 triệu</td><td class="num">23.990</td></tr>
+              <tr><td>installments_payments</td><td>Kỳ trả và số ngày quá hạn</td><td class="num">khoảng 13,6 triệu</td><td class="num">192.599</td></tr>
+              <tr><td>POS_CASH_balance</td><td>Dư nợ điểm bán và tiền mặt</td><td class="num">khoảng 10,0 triệu</td><td class="num">142.543</td></tr>
+              <tr><td>credit_card_balance</td><td>Dư nợ và hạn mức thẻ</td><td class="num">khoảng 3,84 triệu</td><td class="num">53.618</td></tr>
+              <tr><td>synthetic_traffic</td><td>Vi phạm giao thông mô phỏng</td><td class="num">khớp mã hồ sơ</td><td class="num">5.000</td></tr>
+              <tr><td>macro, occupation</td><td>GDP, thất nghiệp, CPI, lương nghề</td><td class="num">82 vùng, 2016–2025</td><td class="num">làm giàu, không tính vào 799.487</td></tr>
+            </tbody>
+          </table>
+          <p class="note">Chín bảng đầu cộng lại 799.487 dòng ở cả Bronze và Silver của tập con: 4.316 + 684 + 24.618 + 352.119 + 23.990 + 192.599 + 142.543 + 53.618 + 5.000. Không có dòng bị cách ly và không có bản ghi trùng bị loại.</p>
+          <footer class="foot"><span>IT5427 · Tích hợp và xử lý dữ liệu lớn</span><span class="pageno"></span></footer>
+        </section>
+
+        <section class="slide compact" aria-label="Tiền xử lý">
+          <p class="kicker">03 · Tiền xử lý</p>
+          <h1>Sửa dị thường, tạo tỷ số, chặn rò rỉ thời gian</h1>
+          <table>
+            <thead>
+              <tr><th>Đặc trưng tạo thêm</th><th>Cách tính</th><th>Ý nghĩa thẩm định</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>CREDIT_TERM</td><td>Khoản trả định kỳ / dư nợ</td><td>Mức gánh nặng của từng kỳ trên số tiền vay</td></tr>
+              <tr><td>CREDIT_INCOME_RATIO</td><td>Dư nợ / thu nhập</td><td>Đòn bẩy; trung bình danh mục là 3,96 lần</td></tr>
+              <tr><td>ANNUITY_INCOME_RATIO</td><td>Khoản trả định kỳ / thu nhập</td><td>Tỷ lệ nghĩa vụ trả trên thu nhập</td></tr>
+              <tr><td>INCOME_PER_FAMILY_MEMBER</td><td>Thu nhập / số thành viên hộ</td><td>Thu nhập phân bổ trong hộ</td></tr>
+              <tr><td>EXT_SOURCES_MEAN, MIN</td><td>Trung bình và giá trị nhỏ nhất của ba điểm ngoài</td><td>Mức đồng thuận và sàn của điểm tín dụng ngoài</td></tr>
+              <tr><td>DAYS_EMPLOYED_ANOM</td><td>Bằng 1 nếu DAYS_EMPLOYED = 365243</td><td>Tách người không đi làm khỏi biến thâm niên</td></tr>
+            </tbody>
+          </table>
+          <ul style="margin-top: 12px;">
+            <li>Giá trị 365243 được thay bằng khuyết sau khi đã lập cờ, để không kéo phân phối thâm niên.</li>
+            <li>Biến vĩ mô được nối lùi theo vùng và ngày hồ sơ, nên điều kiện kinh tế dùng cho một hồ sơ không lấy từ kỳ sau ngày nộp.</li>
+            <li>Ở Spark, lịch sử nhiều dòng được gộp theo khoản vay và theo khách hàng trước khi nối. Sau mỗi phép nối, số dòng không đổi. Biến mục tiêu không có trong bảng đặc trưng.</li>
+            <li>Biến số được hạ kiểu để giảm bộ nhớ, điền trung vị, và mã hóa có thứ tự với giá trị lạ ánh xạ về −1.</li>
+          </ul>
+          <footer class="foot"><span>IT5427 · Tích hợp và xử lý dữ liệu lớn</span><span class="pageno"></span></footer>
+        </section>
+
+        <section class="slide compact" aria-label="Hạng mục đã triển khai">
+          <p class="kicker">04 · Hạng mục đã triển khai</p>
+          <h1>Công nghệ theo từng lớp</h1>
+          <table>
+            <thead>
+              <tr><th>Lớp</th><th>Công nghệ</th><th>Việc đã chạy được</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Thu nhận</td><td>Kafka 3.9, JSON Schema, MinIO</td><td>Sinh sự kiện, kiểm lược đồ, hàng đợi lỗi, chính sách quyền trên bucket</td></tr>
+              <tr><td>Hồ dữ liệu</td><td>PySpark 3.5.3, Delta Lake 3.2.1, Parquet</td><td>Ba lớp, đối soát số dòng, 31 kiểm tra, phát lại luồng</td></tr>
+              <tr><td>Mô hình</td><td>LightGBM, scikit-learn, SHAP</td><td>Logistic L2, LightGBM dừng sớm ở vòng 346, quét ngưỡng, biểu đồ SHAP</td></tr>
+              <tr><td>Chấm điểm</td><td>FastAPI, Python</td><td>Nhận một hồ sơ, trả xác suất, bậc rủi ro và đóng góp đặc trưng</td></tr>
+              <tr><td>Cổng API</td><td>Java 25, Spring Boot 4, JWT</td><td>Tổng quan, phân khúc, stress vĩ mô, pipeline, tra cứu, chấm điểm</td></tr>
+              <tr><td>Giao diện</td><td>React 19, TypeScript</td><td>Năm màn hình sau đăng nhập; Nginx ở cổng 8088</td></tr>
+              <tr><td>Đóng gói</td><td>Docker Compose</td><td>Ba dịch vụ: giao diện 8088, cổng API 8080, mô hình 8000</td></tr>
+              <tr><td>Kiểm thử</td><td>pytest, Maven, Vitest</td><td>20 kiểm thử Python, 13 kiểm thử Java, 4 kiểm thử giao diện</td></tr>
+            </tbody>
+          </table>
+          <p class="note">LightGBM tối ưu logloss không nhân trọng số lớp. Trọng số lớp khoảng 11,4 lần làm xác suất nhóm rủi ro thấp vượt mốc 5% dù tần suất danh mục chỉ là 8,07%, nên đã được bỏ.</p>
+          <footer class="foot"><span>IT5427 · Tích hợp và xử lý dữ liệu lớn</span><span class="pageno"></span></footer>
+        </section>
+
+        <section class="slide" aria-label="Quy tắc quyết định">
+          <p class="kicker">04 · Quy tắc đã gắn vào hệ thống</p>
+          <h1>Từ xác suất sang hành động thẩm định</h1>
+          <div class="src">Ba điều kiện loại trước khi chấm điểm: khoản trả định kỳ trên 50% thu nhập; hơn hai lần hỏi cục tín dụng trong một giờ hoặc hơn ba quan sát nợ xấu vòng xã hội trong 30 ngày; tuổi dưới 18.</div>
+          <div class="tiers">
+            <article class="tier">
+              <p class="idx">PD &lt; 5%</p>
+              <h2>Thấp</h2>
+              <p>Duyệt thẳng, không qua cán bộ. Hồ sơ mẫu “đủ chuẩn” cho PD 1,67%.</p>
+            </article>
+            <article class="tier">
+              <p class="idx">5% ≤ PD &lt; 15%</p>
+              <h2>Trung bình</h2>
+              <p>Chuyển xem xét thủ công và giới hạn đòn bẩy. Đây là nhóm cán bộ cần đọc.</p>
+            </article>
+            <article class="tier">
+              <p class="idx">PD ≥ 15%</p>
+              <h2>Cao</h2>
+              <p>Từ chối. Kèm các số hạng TreeSHAP làm tăng rủi ro để nêu lý do.</p>
+            </article>
+          </div>
+          <p style="margin-top: 14px;">TreeSHAP phân rã log-odds của xác suất thành tổng đóng góp từng đặc trưng. Số hạng dương đẩy xác suất lên; số hạng âm kéo xuống. Ngưỡng chi phí 0,18 là ngưỡng tối ưu tổn thất, khác với hai mốc 5% và 15% dùng để chia bậc xử lý.</p>
+          <footer class="foot"><span>IT5427 · Tích hợp và xử lý dữ liệu lớn</span><span class="pageno"></span></footer>
+        </section>
+
+        <section class="slide" aria-label="Kết quả danh mục">
+          <p class="kicker">05 · Kết quả danh mục</p>
+          <h1>307.511 hồ sơ có nhãn</h1>
+          <div class="kpis">
+            <div class="kpi"><b>8,07%</b><span>Tỷ lệ vỡ nợ. 24.825 hồ sơ vỡ nợ, 282.686 hồ sơ trả nợ.</span></div>
+            <div class="kpi"><b>3,96×</b><span>Dư nợ trung bình trên thu nhập. Trung vị dư nợ 513.531.</span></div>
+            <div class="kpi"><b>599.026</b><span>Dư nợ trung bình, theo đơn vị tiền của tập dữ liệu.</span></div>
+            <div class="kpi"><b>168.798</b><span>Thu nhập trung bình. Khoản trả định kỳ trung bình 27.109.</span></div>
+          </div>
+          <p>Các mức này là mô tả danh mục, chưa phải chất lượng mô hình. Thu nhập trung vị là 147.150, thấp hơn trung bình, nên phân phối thu nhập lệch phải.</p>
+          <p>Có 11,44% hồ sơ mang ít nhất một quan sát nợ xấu vòng xã hội trong 30 ngày, và 8,38% với cửa sổ 60 ngày. Hai số này là độ phổ biến của chỉ báo, không phải tỷ lệ vỡ nợ của nhóm đó.</p>
+          <p class="note">Nguồn: <span class="mono">outputs/metrics/risk_summary.json</span>, tính trên toàn bộ hồ sơ có nhãn. Đơn vị tiền không được quy đổi.</p>
+          <footer class="foot"><span>IT5427 · Tích hợp và xử lý dữ liệu lớn</span><span class="pageno"></span></footer>
+        </section>
+
+        <section class="slide" aria-label="Kết quả theo nhóm">
+          <p class="kicker">05 · Phân khúc</p>
+          <h1>Tỷ lệ vỡ nợ theo nghề và trình độ</h1>
+          <div class="legend" aria-hidden="true"><span><i class="sw d"></i>Cao hơn mức danh mục 8,07%</span><span><i class="sw s"></i>Thấp hơn 8,07%</span><span>Đường đứt: 8,07%. Thang 0–14%.</span></div>
+          <div class="cols">
+            <figure>
+              <svg viewBox="0 0 640 228" role="img" aria-label="Tỷ lệ vỡ nợ theo sáu nhóm nghề">
+                <title>Tỷ lệ vỡ nợ theo nghề</title>
+                <line x1="230" y1="198" x2="480" y2="198" stroke="#d8d3cb"/>
+                <text x="230" y="214" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#5c574f">0</text>
+                <text x="355" y="214" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#5c574f">7%</text>
+                <text x="480" y="214" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#5c574f">14%</text>
+                <text x="222" y="24" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#1c1c1c">Tài xế · 18.603</text>
+                <rect x="230" y="12" width="202.3" height="16" fill="#243044"/>
+                <text x="560" y="24" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#1c1c1c">11,33%</text>
+                <text x="222" y="56" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#1c1c1c">Bảo vệ · 6.721</text>
+                <rect x="230" y="44" width="191.8" height="16" fill="#243044"/>
+                <text x="560" y="56" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#1c1c1c">10,74%</text>
+                <text x="222" y="88" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#1c1c1c">LĐ phổ thông · 55.186</text>
+                <rect x="230" y="76" width="188.9" height="16" fill="#243044"/>
+                <text x="560" y="88" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#1c1c1c">10,58%</text>
+                <text x="222" y="120" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#1c1c1c">Quản lý · 21.371</text>
+                <rect x="230" y="108" width="110.9" height="16" fill="#b7b2a9"/>
+                <text x="560" y="120" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#1c1c1c">6,21%</text>
+                <text x="222" y="152" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#1c1c1c">Kỹ thuật cao · 11.380</text>
+                <rect x="230" y="140" width="110.0" height="16" fill="#b7b2a9"/>
+                <text x="560" y="152" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#1c1c1c">6,16%</text>
+                <text x="222" y="184" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#1c1c1c">Kế toán · 9.813</text>
+                <rect x="230" y="172" width="86.3" height="16" fill="#b7b2a9"/>
+                <text x="560" y="184" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#1c1c1c">4,83%</text>
+                <line x1="374.1" y1="4" x2="374.1" y2="198" stroke="#ffffff" stroke-width="3"/>
+                <line x1="374.1" y1="4" x2="374.1" y2="198" stroke="#243044" stroke-dasharray="3 3"/>
+              </svg>
+              <figcaption>LĐ phổ thông: lao động phổ thông. Tài xế gấp khoảng 2,3 lần kế toán.</figcaption>
+            </figure>
+            <figure>
+              <svg viewBox="0 0 640 196" role="img" aria-label="Tỷ lệ vỡ nợ theo trình độ học vấn">
+                <title>Tỷ lệ vỡ nợ theo học vấn</title>
+                <line x1="230" y1="166" x2="480" y2="166" stroke="#d8d3cb"/>
+                <text x="230" y="182" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#5c574f">0</text>
+                <text x="355" y="182" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#5c574f">7%</text>
+                <text x="480" y="182" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#5c574f">14%</text>
+                <text x="222" y="24" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#1c1c1c">THCS · 3.816</text>
+                <rect x="230" y="12" width="195.2" height="16" fill="#243044"/>
+                <text x="560" y="24" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#1c1c1c">10,93%</text>
+                <text x="222" y="56" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#1c1c1c">TH, trung cấp · 218.391</text>
+                <rect x="230" y="44" width="159.6" height="16" fill="#243044"/>
+                <text x="560" y="56" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#1c1c1c">8,94%</text>
+                <text x="222" y="88" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#1c1c1c">ĐH dở dang · 10.277</text>
+                <rect x="230" y="76" width="151.4" height="16" fill="#243044"/>
+                <text x="560" y="88" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#1c1c1c">8,48%</text>
+                <text x="222" y="120" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#1c1c1c">Đại học · 74.863</text>
+                <rect x="230" y="108" width="95.7" height="16" fill="#b7b2a9"/>
+                <text x="560" y="120" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#1c1c1c">5,36%</text>
+                <text x="222" y="152" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#1c1c1c">Học vị cao · 164</text>
+                <rect x="230" y="140" width="32.7" height="16" fill="#b7b2a9"/>
+                <text x="560" y="152" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#1c1c1c">1,83%</text>
+                <line x1="374.1" y1="4" x2="374.1" y2="166" stroke="#ffffff" stroke-width="3"/>
+                <line x1="374.1" y1="4" x2="374.1" y2="166" stroke="#243044" stroke-dasharray="3 3"/>
+              </svg>
+              <figcaption>THCS: trung học cơ sở. Học vị cao chỉ có 3 hồ sơ vỡ nợ trên 164 hồ sơ.</figcaption>
+            </figure>
+          </div>
+          <p class="note">Không vẽ ở đây: lao động kỹ năng thấp 17,15% (359/2.093); nghề để trống 6,51% (96.391 hồ sơ). Nam 10,14% (n = 105.059), nữ 7,00% (n = 202.448). Chênh lệch giới không được dùng làm quy tắc duyệt.</p>
+          <footer class="foot"><span>IT5427 · Tích hợp và xử lý dữ liệu lớn</span><span class="pageno"></span></footer>
+        </section>
+
+        <section class="slide" aria-label="Ngũ phân vị điểm tín dụng ngoài">
+          <p class="kicker">05 · Điểm tín dụng ngoài</p>
+          <h1>EXT_SOURCE_2 tách rủi ro theo một chiều</h1>
+          <div class="legend"><span><i class="sw d"></i>Cao hơn 8,07%</span><span><i class="sw s"></i>Thấp hơn 8,07%</span><span>Mỗi ngũ phân vị khoảng 61.400 hồ sơ. Thang 0–18%.</span></div>
+          <figure>
+            <svg viewBox="0 0 1100 264" role="img" aria-label="Tỷ lệ vỡ nợ giảm từ 15,21 phần trăm ở ngũ phân vị thấp nhất xuống 3,59 phần trăm ở ngũ phân vị cao nhất">
+              <title>Tỷ lệ vỡ nợ theo ngũ phân vị EXT_SOURCE_2</title>
+              <line x1="250" y1="232" x2="870" y2="232" stroke="#d8d3cb"/>
+              <text x="250" y="250" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#5c574f">0</text>
+              <text x="457" y="250" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#5c574f">6%</text>
+              <text x="663" y="250" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#5c574f">12%</text>
+              <text x="870" y="250" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#5c574f">18%</text>
+              <text x="240" y="46" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="15" fill="#1c1c1c">Q1 thấp nhất · 61.371</text>
+              <rect x="250" y="28" width="524.1" height="22" fill="#243044"/>
+              <text x="1040" y="45" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="15" fill="#1c1c1c">15,21%</text>
+              <text x="240" y="90" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="15" fill="#1c1c1c">Q2 · 61.371</text>
+              <rect x="250" y="72" width="315.5" height="22" fill="#243044"/>
+              <text x="1040" y="89" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="15" fill="#1c1c1c">9,16%</text>
+              <text x="240" y="134" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="15" fill="#1c1c1c">Q3 · 61.371</text>
+              <rect x="250" y="116" width="242.5" height="22" fill="#b7b2a9"/>
+              <text x="1040" y="133" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="15" fill="#1c1c1c">7,04%</text>
+              <text x="240" y="178" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="15" fill="#1c1c1c">Q4 · 61.377</text>
+              <rect x="250" y="160" width="185.0" height="22" fill="#b7b2a9"/>
+              <text x="1040" y="177" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="15" fill="#1c1c1c">5,37%</text>
+              <text x="240" y="222" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="15" fill="#1c1c1c">Q5 cao nhất · 61.361</text>
+              <rect x="250" y="204" width="123.7" height="22" fill="#b7b2a9"/>
+              <text x="1040" y="221" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="15" fill="#1c1c1c">3,59%</text>
+              <line x1="528" y1="8" x2="528" y2="232" stroke="#ffffff" stroke-width="3"/>
+              <line x1="528" y1="8" x2="528" y2="232" stroke="#243044" stroke-dasharray="3 3"/>
+              <text x="534" y="20" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#243044">8,07%</text>
+            </svg>
+          </figure>
+          <p class="note">Tỷ lệ giảm đơn điệu từ 15,21% xuống 3,59%, khoảng 4,2 lần. Các nhóm gần bằng nhau về số hồ sơ, nên độ dốc không bị kích thước mẫu làm méo. Đây là bằng chứng mô tả, chưa phải hệ số của mô hình.</p>
+          <footer class="foot"><span>IT5427 · Tích hợp và xử lý dữ liệu lớn</span><span class="pageno"></span></footer>
+        </section>
+
+        <section class="slide" aria-label="So sánh hai mô hình">
+          <p class="kicker">05 · Mô hình</p>
+          <h1>Logistic L2 và LightGBM trên cùng một phép chia</h1>
+          <p>Tập huấn luyện 246.008 dòng, tập kiểm định 61.503 dòng, 137 đặc trưng khi đã nối biến vĩ mô. ROC-AUC đo khả năng xếp hạng, không đo việc chọn ngưỡng.</p>
+          <table>
+            <thead>
+              <tr><th>Mô hình</th><th class="num">ROC-AUC huấn luyện</th><th class="num">ROC-AUC kiểm định</th><th>Vai trò</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Hồi quy logistic L2</td><td class="num">0,7486</td><td class="num">0,7493</td><td>Thẻ điểm tuyến tính, dùng làm mốc đối chứng</td></tr>
+              <tr><td>LightGBM</td><td class="num">0,835</td><td class="num">0,7685</td><td>Mô hình dùng để chấm điểm. Dừng sớm ở vòng 346</td></tr>
+            </tbody>
+          </table>
+          <ul style="margin-top: 14px;">
+            <li>Mức hơn trên tập kiểm định là 0,0192. Phần lợi ích vận hành lớn hơn nằm ở ngưỡng chi phí, không nằm ở khoảng AUC này.</li>
+            <li>PR-AUC của LightGBM trên tập kiểm định là 0,2595, cao hơn tỷ lệ lớp dương 8,07%. PR-AUC của logistic không có trong tệp kết quả.</li>
+            <li>LightGBM dùng logloss không trọng số để xác suất bám tần suất. Logistic đối chứng dùng trọng số lớp cân bằng, nên xác suất của nó không được so với mốc 5% và 15%.</li>
+            <li>Số lần tách cao nhất: CREDIT_TERM (871), DAYS_BIRTH (474), EXT_SOURCE_3 (363), DAYS_ID_PUBLISH (350), EXT_SOURCES_MEAN (340). Đây là số lần dùng trong cây, không phải biên độ SHAP.</li>
+          </ul>
+          <footer class="foot"><span>IT5427 · Tích hợp và xử lý dữ liệu lớn</span><span class="pageno"></span></footer>
+        </section>
+
+        <section class="slide" aria-label="Ngưỡng theo chi phí">
+          <p class="kicker">05 · Ngưỡng quyết định</p>
+          <h1>Tổn thất kỳ vọng trên 61.503 hồ sơ kiểm định</h1>
+          <p>Hàm mục tiêu là Loss(p) = 5·FN(p) + 1·FP(p). Ngưỡng được quét từ 0,01 đến 0,99.</p>
+          <div class="cols-3">
+            <figure>
+              <svg viewBox="0 0 700 150" role="img" aria-label="Tổn thất giảm từ 24314 xuống 20441 khi hạ ngưỡng từ 0,50 xuống 0,18">
+                <title>Tổn thất kỳ vọng theo ngưỡng</title>
+                <text x="210" y="36" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="14" fill="#1c1c1c">Ngưỡng 0,50</text>
+                <rect x="220" y="18" width="340.4" height="26" fill="#b7b2a9"/>
+                <text x="568" y="36" font-family="Helvetica, Arial, sans-serif" font-size="14" fill="#1c1c1c">24.314</text>
+                <text x="210" y="92" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="14" fill="#1c1c1c">Ngưỡng 0,18</text>
+                <rect x="220" y="74" width="286.2" height="26" fill="#243044"/>
+                <text x="514" y="92" font-family="Helvetica, Arial, sans-serif" font-size="14" fill="#1c1c1c">20.441</text>
+                <text x="220" y="132" font-family="Helvetica, Arial, sans-serif" font-size="13" fill="#5c574f">Đơn vị chi phí. Thang tới 30.000. Chênh 3.873, tức 15,93%.</text>
+              </svg>
+            </figure>
+            <div>
+              <div class="cm" role="table" aria-label="Ma trận nhầm lẫn tại ngưỡng 0,18">
+                <div class="hd"></div>
+                <div class="hd">Dự báo: trả nợ</div>
+                <div class="hd">Dự báo: vỡ nợ</div>
+                <div class="hd">Thực tế: trả nợ</div>
+                <div><b>52.027</b><span>Âm tính đúng</span></div>
+                <div><b>4.511</b><span>Dương tính sai</span></div>
+                <div class="hd">Thực tế: vỡ nợ</div>
+                <div><b>3.186</b><span>Âm tính sai</span></div>
+                <div><b>1.779</b><span>Dương tính đúng</span></div>
+              </div>
+            </div>
+          </div>
+          <p class="note">Tại p = 0,18: precision 28,28%, độ nhạy 35,83%, độ đặc hiệu 92,02%, F1 = 0,3161. Ngưỡng này chỉ bắt khoảng một phần ba hồ sơ vỡ nợ. Mức giảm tổn thất đến từ việc không bỏ qua các xác suất trong khoảng 18–50%, so với ngưỡng 0,50.</p>
+          <footer class="foot"><span>IT5427 · Tích hợp và xử lý dữ liệu lớn</span><span class="pageno"></span></footer>
+        </section>
+
+        <section class="slide" aria-label="Stress vĩ mô và chất lượng pipeline">
+          <p class="kicker">05 · Vĩ mô và chất lượng dữ liệu</p>
+          <h1>Sốc trên 500 hồ sơ, và kiểm tra tập con Spark</h1>
+          <div class="cols">
+            <div>
+              <p>Cả 500 hồ sơ đã chấm đều khớp được vào 82 vùng. Sốc cộng 2 điểm phần trăm vào thất nghiệp và 3% vào CPI.</p>
+              <div class="legend"><span><i class="sw s"></i>Trước sốc</span><span><i class="sw d"></i>Sau sốc</span></div>
+              <svg viewBox="0 0 560 168" role="img" aria-label="Nhóm rủi ro cao tăng từ 77 lên 104 hồ sơ sau sốc">
+                <title>Số hồ sơ theo bậc rủi ro trước và sau sốc</title>
+                <text x="78" y="28" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="13" fill="#1c1c1c">Thấp</text>
+                <rect x="86" y="14" width="317.1" height="14" fill="#b7b2a9"/>
+                <text x="408" y="25" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#1c1c1c">248</text>
+                <rect x="86" y="32" width="248.0" height="14" fill="#243044"/>
+                <text x="338" y="43" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#1c1c1c">194</text>
+                <text x="78" y="78" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="13" fill="#1c1c1c">Trung bình</text>
+                <rect x="86" y="64" width="223.7" height="14" fill="#b7b2a9"/>
+                <text x="314" y="75" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#1c1c1c">175</text>
+                <rect x="86" y="82" width="258.3" height="14" fill="#243044"/>
+                <text x="348" y="93" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#1c1c1c">202</text>
+                <text x="78" y="128" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="13" fill="#1c1c1c">Cao</text>
+                <rect x="86" y="114" width="98.5" height="14" fill="#b7b2a9"/>
+                <text x="190" y="125" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#1c1c1c">77</text>
+                <rect x="86" y="132" width="133.1" height="14" fill="#243044"/>
+                <text x="224" y="143" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#1c1c1c">104</text>
+              </svg>
+              <p class="note">PD trung bình 8,37% lên 10,38%. Bậc cao: 77 hồ sơ (15,4%) lên 104 (20,8%), thêm 27 hồ sơ. Chuỗi vĩ mô là dữ liệu sinh trong dự án.</p>
+            </div>
+            <div>
+              <h2>Spark trên tập con thật</h2>
+              <table>
+                <tbody>
+                  <tr><td>Bronze và Silver</td><td class="num">799.487 dòng</td></tr>
+                  <tr><td>Cách ly / trùng lặp</td><td class="num">0 / 0</td></tr>
+                  <tr><td>Gold, khoản vay trước</td><td class="num">23.990</td></tr>
+                  <tr><td>Hồ sơ khách hàng tích hợp</td><td class="num">5.000</td></tr>
+                  <tr><td>Đặc trưng tích hợp</td><td class="num">175</td></tr>
+                  <tr><td>Nhãn huấn luyện Gold</td><td class="num">4.316</td></tr>
+                  <tr><td>Kiểm tra chất lượng</td><td class="num">31 / 31 đạt</td></tr>
+                </tbody>
+              </table>
+              <p class="note">Trong 31 kiểm tra có: không dùng dòng lịch sử phát sinh sau ngày nộp, số dòng không đổi sau mỗi phép nối, và TARGET không có trong bảng đặc trưng. Sáu đặc trưng giao thông được đánh dấu là dữ liệu mô phỏng.</p>
+            </div>
+          </div>
+          <footer class="foot"><span>IT5427 · Tích hợp và xử lý dữ liệu lớn</span><span class="pageno"></span></footer>
+        </section>
+
+        <section class="slide compact" aria-label="Các tình huống trên giao diện">
+          <p class="kicker">06 · Minh họa</p>
+          <h1>Năm màn hình của giao diện thẩm định</h1>
+          <p>Ứng dụng chạy tại cổng 8088 sau khi dựng bằng Docker Compose. Ba vai trò dùng cho buổi demo được ghi trong tài liệu vận hành, không đưa mật khẩu lên slide.</p>
+          <table>
+            <thead>
+              <tr><th>Màn hình</th><th>Điều cần chỉ ra</th><th>Số đã đo</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Tổng quan</td><td>Quy mô danh mục, hai ROC-AUC, ngưỡng chi phí, đường cong và biểu đồ SHAP</td><td>307.511 hồ sơ; 0,7493 và 0,7685; p* = 0,18</td></tr>
+              <tr><td>Phân khúc</td><td>Nghề, học vấn và ngũ phân vị so với mức 8,07%</td><td>Tài xế 11,33%; kế toán 4,83%; Q1 15,21%; Q5 3,59%</td></tr>
+              <tr><td>Vĩ mô</td><td>Khớp vùng, rồi chạy một sốc thất nghiệp và lạm phát</td><td>500/500 khớp; bậc cao 77 lên 104</td></tr>
+              <tr><td>Đường ống</td><td>Số dòng ba lớp và các kiểm tra. Nhãn trên màn hình ghi đây là tập con</td><td>799.487 dòng; 31/31 kiểm tra đạt</td></tr>
+              <tr><td>Thẩm định</td><td>Hai hồ sơ giả định, một phép đổi tham số, và tra cứu hai mã Gold</td><td>Chi tiết ở slide sau</td></tr>
+            </tbody>
+          </table>
+          <p class="note">Màn hình tổng quan và phân khúc đọc kết quả của mô hình 307.511 dòng. Màn hình đường ống đọc báo cáo Spark của tập con. Hai nguồn số này không cùng một lô xử lý.</p>
+          <footer class="foot"><span>IT5427 · Tích hợp và xử lý dữ liệu lớn</span><span class="pageno"></span></footer>
+        </section>
+
+        <section class="slide compact" aria-label="Minh họa thẩm định hồ sơ">
+          <p class="kicker">06 · Thẩm định từng hồ sơ</p>
+          <h1>Bốn hồ sơ và chiều của giải thích</h1>
+          <table>
+            <thead>
+              <tr><th>Hồ sơ</th><th>Loại</th><th class="num">PD</th><th>Bậc</th><th>Hành động</th><th>Đóng góp nổi bật</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Đủ chuẩn</td><td>Hồ sơ giả định</td><td class="num">1,67%</td><td>Thấp</td><td>Duyệt thẳng</td><td>EXT_SOURCES_MEAN = 0,73; SHAP −0,6512</td></tr>
+              <tr><td>Dưới chuẩn</td><td>Hồ sơ giả định</td><td class="num">50,88%</td><td>Cao</td><td>Từ chối</td><td>EXT_SOURCES_MEAN = 0,1467; SHAP +0,7345. CREDIT_TERM = 0,0792; SHAP +0,4979</td></tr>
+              <tr><td>277603</td><td>Đã chấm ở Gold</td><td class="num">3,12%</td><td>Thấp</td><td>Duyệt thẳng</td><td>Mã tra cứu của tập con</td></tr>
+              <tr><td>298157</td><td>Đã chấm ở Gold</td><td class="num">56,31%</td><td>Cao</td><td>Từ chối</td><td>Mã tra cứu của tập con</td></tr>
+            </tbody>
+          </table>
+          <ul style="margin-top: 12px;">
+            <li>Hồ sơ đủ chuẩn: thu nhập 300.000, dư nợ 500.000, khoản trả 25.000, 42 tuổi, quản lý, 8,5 năm làm việc, đại học, ba điểm ngoài 0,78 / 0,72 / 0,69.</li>
+            <li>Hồ sơ dưới chuẩn: thu nhập 95.000, dư nợ 480.000, khoản trả 38.000, 23 tuổi, lao động phổ thông, một năm làm việc, trung học cơ sở, ba điểm ngoài 0,12 / 0,18 / 0,14.</li>
+            <li>Phép thử độ nhạy, xuất phát từ hồ sơ đủ chuẩn: đưa dư nợ lên 1.500.000, khoản trả lên 95.000 và ba điểm ngoài xuống 0,25. Tài liệu demo ghi bậc rủi ro rời nhóm thấp. Slide không gán một xác suất mới vì lần chạy đó không lưu con số.</li>
+          </ul>
+          <p class="note">Hai hồ sơ giả định kiểm tra chiều của mô hình. Hai mã Gold thuộc mô hình của tập con, không phải kết quả của mô hình 307.511 dòng.</p>
+          <footer class="foot"><span>IT5427 · Tích hợp và xử lý dữ liệu lớn</span><span class="pageno"></span></footer>
+        </section>
+
+        <section class="slide compact" aria-label="Minh họa dòng lệnh và luồng sự kiện">
+          <p class="kicker">06 · Dòng lệnh và luồng sự kiện</p>
+          <h1>Đối chiếu nhãn lịch sử và độ trễ chạy thử</h1>
+          <table>
+            <thead>
+              <tr><th>Tình huống</th><th>Đầu vào</th><th>Kết quả đã ghi</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Hồ sơ thật, nhãn vỡ nợ</td><td>SK_ID_CURR = 100002, TARGET = 1</td><td>PD 47,48%, bậc cao, từ chối. Khớp nhãn. EXT_SOURCES_MEAN = 0,1618; SHAP +0,8800</td></tr>
+              <tr><td>Hồ sơ thật, nhãn trả nợ</td><td>SK_ID_CURR = 100003, TARGET = 0</td><td>PD 4,65%, bậc thấp, duyệt thẳng. Khớp nhãn. CREDIT_TERM = 0,0276; SHAP −0,1632</td></tr>
+              <tr><td>Năm sự kiện Kafka, chạy khô</td><td>Kiểm lược đồ, chấm điểm, giải thích</td><td>3,24% thấp; 9,57% trung bình; 1,44% thấp; 5,71% trung bình; 15,67% cao</td></tr>
+            </tbody>
+          </table>
+          <ul style="margin-top: 14px;">
+            <li>Độ trễ trung bình của năm sự kiện là 38,40 ms mỗi bản ghi. Cỡ mẫu là năm sự kiện, không phải một phép đo tải.</li>
+            <li>Hai hồ sơ 100002 và 100003 chỉ cho thấy mô hình cùng chiều với nhãn của đúng hai dòng đó. Chúng không ước lượng tỷ lệ khớp trên toàn danh mục.</li>
+            <li>Cùng logic chấm điểm gọi được từ dòng lệnh, từ API và từ giao diện. Ba lối vào dùng một dịch vụ.</li>
+          </ul>
+          <footer class="foot"><span>IT5427 · Tích hợp và xử lý dữ liệu lớn</span><span class="pageno"></span></footer>
+        </section>
+
+        <section class="slide" aria-label="Ứng dụng thực tế">
+          <p class="kicker">07 · Ứng dụng</p>
+          <h1>Những việc kết quả này cho phép làm</h1>
+          <ol>
+            <li>Chia hàng chờ thẩm định. Hồ sơ dưới 5% có thể duyệt thẳng; cán bộ đọc nhóm từ 5% đến dưới 15%. Độ trễ đã đo, gồm cả giải thích, là 38,40 ms trên năm sự kiện chạy thử. Đây chưa phải cam kết mức dịch vụ.</li>
+            <li>Đổi khẩu vị rủi ro bằng tỷ lệ phạt, rồi tính lại ngưỡng và tổn thất kỳ vọng trước khi ban hành. Với tỷ lệ 5:1, ngưỡng tìm được là 0,18 và mức giảm trên tập kiểm định là 15,93%.</li>
+            <li>Soạn lý do từ chối từ các số hạng SHAP đã trả về, ví dụ điểm tín dụng ngoài thấp hoặc khoản trả trên dư nợ cao. Việc xuất bản PDF thông báo từ chối chưa được làm.</li>
+            <li>Xem danh mục dịch chuyển trước khi siết hạn mức theo vùng. Phép thử hiện tại chỉ trên 500 hồ sơ và trên chuỗi vĩ mô mô phỏng: thêm 27 hồ sơ vào bậc cao.</li>
+            <li>Giữ điều kiện tuổi, tỷ lệ nghĩa vụ trên thu nhập và vận tốc hỏi tin ngoài mô hình. Mô hình không thay thế ràng buộc đó.</li>
+          </ol>
+          <p class="note">Các ứng dụng trên dùng được trong phạm vi đồ án và dữ liệu Home Credit. Chúng chưa được kiểm chứng trên sổ vay của một tổ chức tín dụng cụ thể.</p>
+          <footer class="foot"><span>IT5427 · Tích hợp và xử lý dữ liệu lớn</span><span class="pageno"></span></footer>
+        </section>
+
+        <section class="slide" aria-label="Hiện trạng phát triển">
+          <p class="kicker">08 · Hiện trạng</p>
+          <h1>Phần đã kiểm tra và phần còn là tập con</h1>
+          <div class="cols">
+            <article class="box">
+              <h2>Đã chạy và đã kiểm thử</h2>
+              <ul>
+                <li>Ba dịch vụ trong Docker Compose, các API đã gọi trả về mã thành công.</li>
+                <li>Thu nhận Kafka và MinIO, hợp đồng lược đồ, hàng đợi lỗi.</li>
+                <li>Spark ba lớp và phát lại luồng trên tập con, 31/31 kiểm tra đạt.</li>
+                <li>KPI, logistic, LightGBM, SHAP và ngưỡng chi phí trên đủ 307.511 hồ sơ.</li>
+                <li>Mô phỏng sốc vĩ mô và năm màn hình thẩm định.</li>
+                <li>20 kiểm thử Python, 13 kiểm thử Java, 4 kiểm thử giao diện.</li>
+              </ul>
+            </article>
+            <article class="box">
+              <h2>Chưa phải bản Spark đầy đủ</h2>
+              <ul>
+                <li>Giao diện đường ống vẫn ghi nhãn tập con của dữ liệu Home Credit thật.</li>
+                <li>Lớp Gold hiện có 5.000 hồ sơ và 4.316 nhãn, không phải 307.511.</li>
+                <li>Mô hình Gold trên 4.316 nhãn và 131 đặc trưng có ROC-AUC huấn luyện 0,9947 nhưng kiểm định 0,7331, dừng ở vòng 20.</li>
+                <li>Vì chênh lệch đó, chỉ số chính của bài này lấy từ mô hình 307.511 dòng.</li>
+                <li>Lô Colab cho lịch sử con đầy đủ đã có đường chạy, nhưng chưa được hợp nhất bằng tệp kết quả.</li>
+              </ul>
+            </article>
+          </div>
+          <p class="note">Hai con số 0,7685 và 0,7331 là của hai mô hình khác nhau. Không lấy trung bình và không thay cho nhau.</p>
+          <footer class="foot"><span>IT5427 · Tích hợp và xử lý dữ liệu lớn</span><span class="pageno"></span></footer>
+        </section>
+
+        <section class="slide" aria-label="Hướng phát triển">
+          <p class="kicker">08 · Hướng phát triển</p>
+          <h1>Việc cần làm sau bản đang chạy</h1>
+          <ol>
+            <li>Hợp nhất lớp Gold đủ 307.511 hồ sơ trên Delta Lake, rồi đưa các tổng hợp cục tín dụng và lịch trả góp vào API chấm điểm. Khi đó đường trực tuyến và đường ngoại tuyến mới cùng một định nghĩa đặc trưng. Có thể đặt bộ nhớ đệm phục vụ độ trễ thấp.</li>
+            <li>Nối Kafka tới Spark Structured Streaming và đẩy số hồ sơ, cảnh báo cách ly, độ trễ lên giao diện bằng sự kiện máy chủ, thay cho việc tải lại trang.</li>
+            <li>Theo dõi hiệu chuẩn theo chu kỳ kinh tế bằng điểm Brier và đường tin cậy; thử ràng buộc đơn điệu cho các biến mà thẩm định yêu cầu chiều tác động cố định; bổ sung suy luận cho nhóm hồ sơ đã bị từ chối khi có kết cục.</li>
+            <li>Đăng ký mô hình để chạy logistic và LightGBM song song, theo dõi trôi phân phối đặc trưng trên luồng Kafka, và kiểm tra chênh lệch lỗi theo tuổi và giới trong quy trình kiểm thử.</li>
+            <li>Thay tài khoản demo bằng xác thực tập trung, lưu quyết định và lý do SHAP ở dạng không sửa được, rồi xuất thông báo từ chối.</li>
+          </ol>
+          <footer class="foot"><span>IT5427 · Tích hợp và xử lý dữ liệu lớn</span><span class="pageno"></span></footer>
+        </section>
+
+        <section class="slide" aria-label="Kết luận">
+          <p class="kicker">08 · Kết luận</p>
+          <h1>Những gì đồ án đã thiết lập</h1>
+          <ol>
+            <li>Một đường ống dữ liệu lớn cho rủi ro tín dụng bán lẻ, từ hợp đồng dữ liệu và hồ dữ liệu Spark đến xác suất vỡ nợ, ngưỡng theo chi phí và giao diện có giải thích.</li>
+            <li>Trên tập kiểm định 61.503 hồ sơ, LightGBM đạt ROC-AUC 0,7685 so với 0,7493 của thẻ điểm logistic. Ngưỡng 0,18 giảm 15,93% tổn thất kỳ vọng so với ngưỡng 0,50.</li>
+            <li>Điểm tín dụng ngoài EXT_SOURCE_2 tách tỷ lệ vỡ nợ từ 15,21% xuống 3,59% trên các nhóm gần cùng kích thước. Các tỷ số dư nợ, thu nhập và khoản trả đưa bài toán thẩm định vào ma trận đặc trưng.</li>
+            <li>Giới hạn cần nói rõ: thống kê Spark và mô hình Gold vẫn là tập con 5.000 khách hàng. Mô hình tập con đó chưa đủ ổn định để thay mô hình huấn luyện trên toàn bộ hồ sơ có nhãn.</li>
+          </ol>
+          <p class="note">Số liệu lấy từ báo cáo tổng kết ngày 15.11.2026, README, <span class="mono">outputs/metrics/</span> và <span class="mono">apache-spark/reports/</span>. Chuỗi vĩ mô và hồ sơ giao thông là dữ liệu do dự án sinh.</p>
+          <footer class="foot"><span>IT5427 · Tích hợp và xử lý dữ liệu lớn</span><span class="pageno"></span></footer>
+        </section>
+
+      </div>
+    </div>
+  </div>
+  <div id="chrome">
+    <button type="button" id="prev">Trước</button>
+    <span id="counter">1 / 1</span>
+    <span>← → chuyển slide</span>
+    <button type="button" id="next">Sau</button>
+  </div>
+</div>
+<script>
+(function () {
+  var slides = Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var index = 0;
+  var counter = document.getElementById("counter");
+  var bar = document.getElementById("bar");
+  var prev = document.getElementById("prev");
+  var next = document.getElementById("next");
+
+  function fit() {
+    var frame = document.getElementById("frame");
+    var scale = Math.min(frame.clientWidth / 1280, frame.clientHeight / 720);
+    if (!isFinite(scale) || scale <= 0) scale = 1;
+    var wrap = document.getElementById("wrap");
+    wrap.style.width = (1280 * scale) + "px";
+    wrap.style.height = (720 * scale) + "px";
+    var stage = document.getElementById("stage");
+    stage.style.transform = "scale(" + scale + ")";
+  }
+
+  function show(n) {
+    index = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach(function (slide, i) {
+      var on = i === index;
+      slide.classList.toggle("active", on);
+      slide.setAttribute("aria-hidden", on ? "false" : "true");
+    });
+    counter.textContent = (index + 1) + " / " + slides.length;
+    bar.style.width = ((index + 1) / slides.length * 100) + "%";
+    prev.disabled = index === 0;
+    next.disabled = index === slides.length - 1;
+    if (location.hash !== "#" + (index + 1)) {
+      history.replaceState(null, "", "#" + (index + 1));
+    }
+  }
+
+  slides.forEach(function (slide, i) {
+    var node = slide.querySelector(".pageno");
+    if (node) node.textContent = (i + 1) + " / " + slides.length;
+  });
+
+  document.getElementById("stage").addEventListener("click", function (event) {
+    if (event.target.closest("button, a")) return;
+    var rect = document.getElementById("wrap").getBoundingClientRect();
+    var x = event.clientX - rect.left;
+    if (x < rect.width * 0.18) show(index - 1);
+    else if (x > rect.width * 0.82) show(index + 1);
+  });
+
+  document.addEventListener("keydown", function (event) {
+    var tag = event.target && event.target.tagName;
+    if (tag === "INPUT" || tag === "TEXTAREA") return;
+    if (event.key === "ArrowRight" || event.key === "PageDown" || event.key === " ") {
+      event.preventDefault();
+      show(index + 1);
+    } else if (event.key === "ArrowLeft" || event.key === "PageUp") {
+      event.preventDefault();
+      show(index - 1);
+    } else if (event.key === "Home") {
+      show(0);
+    } else if (event.key === "End") {
+      show(slides.length - 1);
+    }
+  });
+
+  prev.addEventListener("click", function () { show(index - 1); });
+  next.addEventListener("click", function () { show(index + 1); });
+  document.querySelectorAll("[data-go]").forEach(function (button) {
+    button.addEventListener("click", function () {
+      show(Number(button.getAttribute("data-go")) - 1);
+    });
+  });
+  window.addEventListener("resize", fit);
+  window.addEventListener("hashchange", function () {
+    var n = parseInt(location.hash.replace("#", ""), 10);
+    if (n >= 1 && n <= slides.length) show(n - 1);
+  });
+
+  fit();
+  var start = parseInt(location.hash.replace("#", ""), 10);
+  show(start >= 1 && start <= slides.length ? start - 1 : 0);
+})();
+</script>
+</body>
+</html>

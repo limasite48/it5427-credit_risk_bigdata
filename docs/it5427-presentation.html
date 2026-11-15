@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IT5427 — Tích hợp dữ liệu đa nguồn cho thẩm định tín dụng</title>
+<style>
+  :root {
+    --ink: #1c1c1c;
+    --muted: #5c574f;
+    --line: #d8d3cb;
+    --rule: #243044;
+    --paper: #ffffff;
+    --wash: #f3f1ec;
+    --frame: #e4e1da;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: var(--frame); color: var(--ink); }
+  body { font-family: Georgia, "Times New Roman", Times, serif; }
+  button { font: inherit; }
+  #viewport { height: 100%; display: flex; flex-direction: column; }
+  #progress { height: 2px; background: #d5d0c8; flex: none; }
+  #progress > div { height: 2px; background: var(--rule); width: 0; }
+  #frame { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; }
+  #wrap { overflow: hidden; flex: none; }
+  #stage { width: 1280px; height: 720px; position: relative; transform-origin: top left; }
+  .slide {
+    display: none; position: absolute; inset: 0; background: var(--paper);
+    padding: 28px 42px 18px; flex-direction: column; overflow: hidden;
+  }
+  .slide.active { display: flex; }
+  .kicker {
+    font-family: Helvetica, Arial, sans-serif; font-size: 12px; letter-spacing: 0.11em;
+    text-transform: uppercase; color: var(--muted); margin: 0 0 4px;
+  }
+  h1 {
+    font-family: Helvetica, Arial, sans-serif; font-weight: 600; font-size: 26px;
+    line-height: 1.22; margin: 0 0 12px;
+  }
+  h2 { font-family: Helvetica, Arial, sans-serif; font-size: 15px; font-weight: 600; margin: 0 0 4px; }
+  p { margin: 0 0 8px; font-size: 16px; line-height: 1.38; }
+  ul, ol { margin: 0; padding-left: 1.15em; }
+  li { margin: 0 0 5px; font-size: 15.5px; line-height: 1.35; }
+  .note { margin-top: 8px; font-size: 13px; line-height: 1.35; color: var(--muted); }
+  .foot {
+    margin-top: auto; display: flex; justify-content: space-between; gap: 16px;
+    border-top: 1px solid var(--line); padding-top: 6px;
+    font-family: Helvetica, Arial, sans-serif; font-size: 12px; color: var(--muted);
+  }
+  .mono { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 0.92em; }
+  table { width: 100%; border-collapse: collapse; font-family: Helvetica, Arial, sans-serif; font-size: 13.5px; }
+  th { text-align: left; font-weight: 600; border-bottom: 1.5px solid var(--rule); padding: 4px 8px; }
+  td { border-bottom: 1px solid var(--line); padding: 4px 8px; vertical-align: top; }
+  .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .title-slide { padding-top: 78px; }
+  .title-slide h1 { font-size: 36px; max-width: 16em; }
+  .lede { font-size: 18px; max-width: 40em; }
+  .meta { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 26px; border-top: 1px solid var(--line); padding-top: 12px; }
+  .meta dt { font-family: Helvetica, Arial, sans-serif; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .meta dd { margin: 3px 0 0; font-size: 16px; }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+  .box, .chip, .step, .layer, .out {
+    border: 1px solid var(--rule); background: #fff;
+  }
+  .down {
+    text-align: center; font-family: Helvetica, Arial, sans-serif; font-size: 14px;
+    line-height: 1; color: var(--rule); margin: 3px 0;
+  }
+  .chips { display: grid; grid-template-columns: repeat(8, 1fr); gap: 6px; }
+  .chip { padding: 7px 6px; text-align: center; }
+  .chip b, .step b, .layer b, .out b {
+    display: block; font-family: Helvetica, Arial, sans-serif; font-size: 12.5px; font-weight: 600;
+  }
+  .chip span, .step span, .layer span, .out span, .box span, .hub span {
+    display: block; margin-top: 2px; font-size: 12.5px; line-height: 1.3; color: #3e3a34;
+  }
+  .box b, .hub b { font-family: Helvetica, Arial, sans-serif; }
+  .pair { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 8px; }
+  .pair .box, .layers .layer, .outs .out { padding: 8px 10px; }
+  .layers { display: grid; grid-template-columns: repeat(3, 1fr); }
+  .layers .layer + .layer { border-left: none; }
+  .outs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .flow { display: grid; grid-template-columns: 28px 1fr; gap: 0 10px; }
+  .rail { width: 2px; background: var(--rule); margin: 4px auto; }
+  .n {
+    width: 26px; height: 26px; border: 1px solid var(--rule); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 600;
+  }
+  .step { padding: 6px 10px; }
+  .keys { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 8px; }
+  .keys .box { padding: 8px 10px; }
+  .keys b { font-family: Helvetica, Arial, sans-serif; font-size: 13px; }
+  .spine { display: grid; grid-template-columns: 1fr 36px 1fr; gap: 6px 0; align-items: center; }
+  .spine .mid {
+    font-family: Helvetica, Arial, sans-serif; font-size: 18px; text-align: center; color: var(--rule);
+  }
+  .hub { border: 1.5px solid var(--rule); padding: 8px 10px; text-align: center; }
+  .hub b { font-family: Helvetica, Arial, sans-serif; font-size: 14px; }
+  .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 8px; }
+  .kpi { border-top: 2px solid var(--rule); padding-top: 6px; }
+  .kpi b { display: block; font-family: Helvetica, Arial, sans-serif; font-size: 22px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .kpi span { display: block; margin-top: 2px; font-size: 13px; line-height: 1.3; }
+  #chrome {
+    height: 40px; flex: none; display: flex; align-items: center; justify-content: space-between;
+    padding: 0 16px; font-family: Helvetica, Arial, sans-serif; font-size: 13px; color: #3e3a34;
+  }
+  #chrome button { background: #fff; border: 1px solid #cfcabe; padding: 4px 12px; cursor: pointer; }
+  #chrome button:disabled { opacity: 0.4; cursor: default; }
+  #chrome button:focus-visible { outline: 2px solid var(--rule); outline-offset: 2px; }
+  @media print {
+    #chrome, #progress { display: none !important; }
+    html, body, #viewport, #frame, #wrap, #stage {
+      display: block !important; height: auto !important; width: auto !important;
+      overflow: visible !important; background: #fff !important; transform: none !important;
+    }
+    #stage { width: 1280px !important; height: auto !important; position: static !important; }
+    .slide { display: flex !important; position: relative !important; width: 1280px; height: 720px; page-break-after: always; break-after: page; }
+    @page { size: 1280px 720px; margin: 0; }
+  }
+</style>
+</head>
+<body>
+<div id="viewport">
+  <div id="progress" aria-hidden="true"><div id="bar"></div></div>
+  <div id="frame"><div id="wrap"><div id="stage">
+
+    <section class="slide title-slide active">
+      <p class="kicker">IT5427 — Tích hợp và xử lý dữ liệu lớn</p>
+      <h1>Tích hợp dữ liệu đa nguồn cho thẩm định tín dụng</h1>
+      <p class="lede">Ghép đơn vay, cục tín dụng, lịch trả nợ, dư nợ thẻ và chỉ số vùng thành một hồ sơ khách hàng, rồi mới ước lượng xác suất vỡ nợ.</p>
+      <dl class="meta">
+        <div><dt>Đề tài</dt><dd>Credit Risk Intelligence</dd></div>
+        <div><dt>Tập dữ liệu</dt><dd>Home Credit Default Risk</dd></div>
+        <div><dt>Khóa gốc</dt><dd>SK_ID_CURR</dd></div>
+        <div><dt>Thời điểm</dt><dd>15 tháng 11 năm 2026</dd></div>
+      </dl>
+      <footer class="foot"><span>Phím mũi tên để chuyển slide. In trình duyệt để xuất PDF.</span><span class="pageno"></span></footer>
+    </section>
+
+    <section class="slide">
+      <p class="kicker">01 · Bài toán tích hợp</p>
+      <h1>Rủi ro không nằm trên một bảng</h1>
+      <div class="cols">
+        <div>
+          <p>Đơn vay ghi thu nhập, dư nợ và điểm tín dụng ngoài. Nợ tại tổ chức khác, kỳ trả quá hạn, dư nợ thẻ và thất nghiệp của vùng nằm ở hệ thống khác, với khóa và hạt dữ liệu khác nhau.</p>
+          <p>Trên 307.511 hồ sơ có nhãn, 24.825 hồ sơ vỡ nợ (8,07%). Một quy tắc gán mọi người vào lớp đa số đạt khoảng 92% độ chính xác nhưng không thấy khoản mất vốn. Phê duyệt nhầm được tính đắt gấp năm lần từ chối nhầm.</p>
+        </div>
+        <div>
+          <p>Vì vậy phép tích hợp phải thỏa ba điều kiện trước khi có mô hình:</p>
+          <ol>
+            <li>Một khách hàng còn đúng một dòng sau khi ghép.</li>
+            <li>Không lấy sự kiện phát sinh sau ngày nộp hồ sơ.</li>
+            <li>Biến mục tiêu không nằm trong bảng đặc trưng.</li>
+          </ol>
+          <p class="note">Đầu ra vận hành là xác suất vỡ nợ gắn với một hành động: duyệt thẳng dưới 5%, xem xét từ 5% đến dưới 15%, từ chối từ 15%.</p>
+        </div>
+      </div>
+      <footer class="foot"><span>IT5427 · Tích hợp dữ liệu</span><span class="pageno"></span></footer>
+    </section>
+
+    <section class="slide">
+      <p class="kicker">02 · Kiến trúc</p>
+      <h1>Từ nhiều hệ thống nguồn tới một hồ sơ</h1>
+      <div class="chips">
+        <div class="chip"><b>Đơn vay</b><span>SK_ID_CURR</span></div>
+        <div class="chip"><b>Cục tín dụng</b><span>SK_ID_BUREAU</span></div>
+        <div class="chip"><b>Khoản trước</b><span>SK_ID_PREV</span></div>
+        <div class="chip"><b>Trả góp</b><span>theo khoản</span></div>
+        <div class="chip"><b>POS</b><span>theo tháng</span></div>
+        <div class="chip"><b>Thẻ</b><span>theo tháng</span></div>
+        <div class="chip"><b>Giao thông</b><span>mô phỏng</span></div>
+        <div class="chip"><b>Vĩ mô</b><span>82 vùng</span></div>
+      </div>
+      <div class="down">↓</div>
+      <div class="pair">
+        <div class="box">
+          <h2>Kafka, chế độ KRaft</h2>
+          <p>Bảy topic theo hệ thống nguồn, phong bì sự kiện chung, lược đồ JSON Draft 2020-12. Bản ghi lỗi sang <span class="mono">hc.dlq.v1</span>.</p>
+        </div>
+        <div class="box">
+          <h2>MinIO</h2>
+          <p>Landing, bronze, quarantine và bảng tham chiếu vùng. Bronze giữ bản sao thô kèm mã băm và mã lô.</p>
+        </div>
+      </div>
+      <div class="down">↓</div>
+      <div class="layers">
+        <div class="layer"><b>Bronze</b><span>Thô, không sửa nghiệp vụ. Dữ liệu thật và dữ liệu mô phỏng để riêng.</span></div>
+        <div class="layer"><b>Silver</b><span>Chuẩn kiểu, khử trùng, cách ly, cột dòng dõi.</span></div>
+        <div class="layer"><b>Gold</b><span>Gộp theo khóa cha, nối trái, tách nhãn.</span></div>
+      </div>
+      <div class="down">↓</div>
+      <div class="outs">
+        <div class="out"><b>Khoản vay</b><span>1 dòng / SK_ID_PREV</span></div>
+        <div class="out"><b>Khách hàng</b><span>1 dòng / SK_ID_CURR</span></div>
+        <div class="out"><b>Hồ sơ tích hợp</b><span>không chứa TARGET</span></div>
+        <div class="out"><b>Nhãn</b><span>chỉ tập có kết cục</span></div>
+      </div>
+      <p class="note">Nhánh chấm điểm trực tuyến hiện đọc đơn vay và chuỗi vĩ mô, chưa đọc các tổng hợp Gold. Hai nhánh sẽ dùng chung một kho đặc trưng khi lô Spark đầy đủ được hợp nhất.</p>
+      <footer class="foot"><span>IT5427 · Tích hợp dữ liệu</span><span class="pageno"></span></footer>
+    </section>
+
+    <section class="slide">
+      <p class="kicker">03 · Thu nhận</p>
+      <h1>Hợp đồng sự kiện và khóa nối</h1>
+      <div class="box" style="padding: 10px 12px; margin-bottom: 10px;">
+        <h2>Phong bì chung cho mọi nguồn</h2>
+        <p style="margin:0;">event_id · event_type · schema_version · source_system · source_table · event_time · produced_at · customer_id · payload</p>
+      </div>
+      <table>
+        <thead>
+          <tr><th>Topic</th><th>Hệ thống</th><th>Khóa trong payload</th><th>Nối về</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>hc.los.loan-application.v1</td><td>Đơn vay</td><td>SK_ID_CURR</td><td>Gốc của mọi phép ghép</td></tr>
+          <tr><td>hc.bureau.credit-record.v1</td><td>Cục tín dụng</td><td>SK_ID_BUREAU</td><td>bureau → SK_ID_CURR</td></tr>
+          <tr><td>hc.bureau.credit-balance-monthly.v1</td><td>Cục tín dụng</td><td>SK_ID_BUREAU, tháng</td><td>balance → bureau</td></tr>
+          <tr><td>hc.history.previous-application.v1</td><td>Khoản vay trước</td><td>SK_ID_PREV</td><td>previous → SK_ID_CURR</td></tr>
+          <tr><td>hc.payments.installment.v1</td><td>Trả góp</td><td>SK_ID_PREV, số kỳ</td><td>kỳ trả → khoản trước</td></tr>
+          <tr><td>hc.pos.cash-balance.v1</td><td>Điểm bán</td><td>SK_ID_PREV, tháng</td><td>số dư tháng → khoản trước</td></tr>
+          <tr><td>hc.credit-card.balance.v1</td><td>Thẻ</td><td>SK_ID_PREV, tháng</td><td>số dư tháng → khoản trước</td></tr>
+        </tbody>
+      </table>
+      <p class="note">Bản ghi sai JSON hoặc sai lược đồ không vào hồ dữ liệu; chúng vào hàng đợi lỗi. Không sinh khách hàng giả để nối vào dữ liệu Home Credit. Hồ sơ giao thông được tạo tất định theo đúng SK_ID_CURR và được đánh dấu là dữ liệu mô phỏng.</p>
+      <footer class="foot"><span>IT5427 · Tích hợp dữ liệu</span><span class="pageno"></span></footer>
+    </section>
+
+    <section class="slide">
+      <p class="kicker">04 · Ba lớp hồ dữ liệu</p>
+      <h1>Bronze giữ nguyên, Silver làm sạch, Gold mới được ghép</h1>
+      <div class="layers" style="margin-bottom: 12px;">
+        <div class="layer">
+          <b>Bronze</b>
+          <span>Sao chép nguyên bản, ghi sha256, số dòng, ingest_id. Bỏ qua nếu mã băm đã có. Thư mục original và synthetic tách nhau.</span>
+        </div>
+        <div class="layer">
+          <b>Silver</b>
+          <span>Hạ tên cột, chuẩn kiểu. 365243 thành khuyết kèm cờ. XNA thành khuyết. Y/N thành 1/0. Khử trùng theo khóa. Mỗi dòng có nguồn, lô và thời điểm nạp.</span>
+        </div>
+        <div class="layer">
+          <b>Gold</b>
+          <span>Chỉ đọc Silver. Gộp lịch sử nhiều dòng về một khóa cha, rồi nối trái. Viết bảng khi mọi kiểm tra đã đạt.</span>
+        </div>
+      </div>
+      <div class="kpis">
+        <div class="kpi"><b>799.487</b><span>Dòng vào Bronze và ra Silver, chín bảng của tập con.</span></div>
+        <div class="kpi"><b>0</b><span>Dòng cách ly. 0 bản ghi trùng bị loại.</span></div>
+        <div class="kpi"><b>5.000</b><span>Hồ sơ khách hàng Gold. 23.990 khoản vay trước.</span></div>
+        <div class="kpi"><b>175</b><span>Đặc trưng trên hồ sơ tích hợp. 4.316 dòng nhãn.</span></div>
+      </div>
+      <p>Đối soát từng bảng: số dòng vào bằng số dòng ra cộng số dòng cách ly cộng số trùng. Với tập con hiện tại, vế sau bằng không nên hai lớp đầu cùng số dòng. Đây chưa phải lô đầy đủ: bureau_balance gốc có 27.299.925 dòng tháng, tập con mới xử lý 352.119 dòng.</p>
+      <footer class="foot"><span>IT5427 · Tích hợp dữ liệu</span><span class="pageno"></span></footer>
+    </section>
+
+    <section class="slide">
+      <p class="kicker">05 · Luồng ghép</p>
+      <h1>Gộp trước, nối sau, đếm lại sau mỗi phép nối</h1>
+      <div class="cols">
+        <div class="flow">
+          <div class="n">1</div><div class="step"><b>Chặn thời gian và dòng mồ côi</b><span>Bỏ dòng con có mốc sau ngày nộp và dòng không tìm thấy cha. Số dòng bị loại được ghi lại.</span></div>
+          <div class="rail"></div><div></div>
+          <div class="n">2</div><div class="step"><b>Tách nhãn</b><span>TARGET chỉ sang training_labels. Đơn vay dùng để ghép không còn cột này.</span></div>
+          <div class="rail"></div><div></div>
+          <div class="n">3</div><div class="step"><b>Hạt khoản vay</b><span>Trả góp gộp về từng kỳ, rồi cùng POS và thẻ gộp về SK_ID_PREV. Nối trái vào previous_application.</span></div>
+          <div class="rail"></div><div></div>
+          <div class="n">4</div><div class="step"><b>Hạt khách hàng</b><span>Bureau, số dư tháng, khoản trước và giao thông gộp về SK_ID_CURR. Nối trái lần lượt vào đơn vay.</span></div>
+          <div class="rail"></div><div></div>
+          <div class="n">5</div><div class="step"><b>Hồ sơ tích hợp</b><span>Một dòng mỗi SK_ID_CURR. Khách không có lịch sử con vẫn được giữ: count = 0, tỷ lệ để khuyết.</span></div>
+        </div>
+        <div>
+          <div class="spine">
+            <div class="box" style="padding:8px;"><b>Trả góp · POS · Thẻ</b><span>nhiều dòng / tháng</span></div>
+            <div class="mid">→</div>
+            <div class="hub"><b>SK_ID_PREV</b><span>loan_credit_features<br>23.990 dòng</span></div>
+            <div></div><div class="mid">↓</div><div></div>
+            <div class="box" style="padding:8px;"><b>Bureau · số dư · giao thông</b><span>nhiều khoản / một khách</span></div>
+            <div class="mid">→</div>
+            <div class="hub"><b>SK_ID_CURR</b><span>customer_credit_features<br>5.000 dòng</span></div>
+          </div>
+          <div class="down">↓ nối trái với đơn vay</div>
+          <div class="hub">
+            <b>integrated_credit_profile</b>
+            <span>5.000 dòng · 175 đặc trưng · không có TARGET</span>
+          </div>
+          <p class="note">Sau mỗi phép nối, số dòng bảng cha không đổi. Thiếu bảng con làm giảm số khách là lỗi tích hợp, không phải kết quả nghiệp vụ.</p>
+        </div>
+      </div>
+      <footer class="foot"><span>IT5427 · Tích hợp dữ liệu</span><span class="pageno"></span></footer>
+    </section>
+
+    <section class="slide">
+      <p class="kicker">06 · Nối đúng thời điểm</p>
+      <h1>Chỉ số vùng không được lấy từ tương lai</h1>
+      <div class="cols">
+        <div>
+          <svg viewBox="0 0 560 210" role="img" aria-label="Nối lùi: lấy kỳ công bố gần nhất trước ngày nộp hồ sơ">
+            <title>Nối lùi theo ngày công bố</title>
+            <line x1="36" y1="78" x2="520" y2="78" stroke="#243044"/>
+            <circle cx="120" cy="78" r="5" fill="#243044"/>
+            <circle cx="250" cy="78" r="5" fill="#243044"/>
+            <circle cx="430" cy="78" r="5" fill="#243044"/>
+            <text x="120" y="62" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="13" fill="#1c1c1c">kỳ T1</text>
+            <text x="250" y="62" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="13" fill="#1c1c1c">kỳ T2</text>
+            <text x="430" y="62" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="13" fill="#1c1c1c">kỳ T3</text>
+            <text x="120" y="100" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#5c574f">đã công bố</text>
+            <text x="250" y="100" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#5c574f">đã công bố</text>
+            <text x="430" y="100" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#5c574f">sau ngày nộp</text>
+            <line x1="330" y1="48" x2="330" y2="150" stroke="#243044" stroke-dasharray="3 3"/>
+            <text x="330" y="170" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="13" fill="#1c1c1c">ngày nộp hồ sơ</text>
+            <line x1="250" y1="78" x2="318" y2="78" stroke="#243044" stroke-width="2"/>
+            <text x="36" y="148" font-family="Helvetica, Arial, sans-serif" font-size="14" fill="#1c1c1c">Lấy T2. Không lấy T3.</text>
+            <text x="36" y="196" font-family="Helvetica, Arial, sans-serif" font-size="13" fill="#5c574f">merge_asof, chiều lùi, release_date ≤ ngày nộp</text>
+          </svg>
+        </div>
+        <div>
+          <p>Khóa vùng lấy từ mật độ dân số trên đơn vay, khớp sang 82 mã vùng. Chuỗi GDP, thất nghiệp và CPI theo quý hoặc tháng, cùng chuẩn lương theo nghề, do dự án sinh cho giai đoạn 2016–2025. Đây không phải số liệu thống kê nhà nước.</p>
+          <ul>
+            <li>Với từng hồ sơ, chỉ số được nối là kỳ công bố gần nhất không vượt ngày nộp.</li>
+            <li>Phép nối này thêm điều kiện vùng vào ma trận chấm điểm trực tuyến, đưa số chiều lên 137.</li>
+            <li>Trên 500 hồ sơ đã chấm, cả 500 khớp được vùng.</li>
+          </ul>
+          <p class="note">Home Credit được chọn vì có đủ quan hệ nhiều hệ thống và khối lượng buộc phải gộp phân tán. Giới hạn: đây là tập cuộc thi, không phải sổ vay đang chạy; tập kiểm tra 48.744 hồ sơ không có nhãn.</p>
+        </div>
+      </div>
+      <footer class="foot"><span>IT5427 · Tích hợp dữ liệu</span><span class="pageno"></span></footer>
+    </section>
+
+    <section class="slide">
+      <p class="kicker">07 · Kiểm tra phép ghép</p>
+      <h1>31 kiểm tra, tất cả đạt trên tập con</h1>
+      <table>
+        <thead><tr><th>Nhóm kiểm tra</th><th>Điều phải đúng</th></tr></thead>
+        <tbody>
+          <tr><td>Khóa</td><td>Một dòng mỗi SK_ID_CURR ở đơn vay, hồ sơ khách và hồ sơ tích hợp. Một dòng mỗi SK_ID_PREV ở khoản trước và ở đặc trưng khoản vay.</td></tr>
+          <tr><td>Sau khi gộp</td><td>Bảng tổng hợp bureau, số dư, trả góp, POS, thẻ và giao thông đều còn một dòng mỗi khóa cha.</td></tr>
+          <tr><td>Sau khi nối</td><td>Số dòng không đổi sau từng lần nối trái. Mọi đơn vay đều có mặt trong bảng đặc trưng khách hàng.</td></tr>
+          <tr><td>Thời gian</td><td>Không dùng dòng con có ngày sau ngày nộp hồ sơ.</td></tr>
+          <tr><td>Nhãn</td><td>TARGET không có trong bất kỳ bảng đặc trưng nào. Nhãn chỉ gồm phần hồ sơ huấn luyện.</td></tr>
+          <tr><td>Nguồn mô phỏng</td><td>Giao thông được ghi nhận là synthetic ở cả bước gộp và bước nối.</td></tr>
+        </tbody>
+      </table>
+      <p style="margin-top:10px;">Sau khi hồ sơ đã về một dòng, mới tính các tỷ số dùng cho thẩm định: khoản trả trên dư nợ, dư nợ trên thu nhập, khoản trả trên thu nhập, thu nhập trên số người trong hộ, trung bình và giá trị nhỏ nhất của ba điểm tín dụng ngoài.</p>
+      <p class="note">Giá trị DAYS_EMPLOYED = 365243 được tách thành cờ rồi thay bằng khuyết, để thâm niên không bị một mốc mã hóa kéo lệch trước khi đem đi ghép.</p>
+      <footer class="foot"><span>IT5427 · Tích hợp dữ liệu</span><span class="pageno"></span></footer>
+    </section>
+
+    <section class="slide">
+      <p class="kicker">08 · Kết quả</p>
+      <h1>Hai kết quả, hai phạm vi dữ liệu</h1>
+      <div class="cols">
+        <div class="box" style="padding:12px 14px;">
+          <h2>Phép ghép Spark — tập con thật</h2>
+          <ul>
+            <li>9 bảng, 799.487 dòng Bronze và Silver, không hao dòng.</li>
+            <li>Gold: 23.990 khoản, 5.000 khách, 175 đặc trưng, 4.316 nhãn.</li>
+            <li>31/31 kiểm tra đạt, gồm chặn thời gian và tách TARGET.</li>
+            <li>Mô hình riêng trên 4.316 nhãn có ROC-AUC huấn luyện 0,9947 và kiểm định 0,7331. Chênh lệch này nên không lấy làm kết quả chính.</li>
+          </ul>
+        </div>
+        <div class="box" style="padding:12px 14px;">
+          <h2>Đơn vay đầy đủ đã ghép tỷ số và vĩ mô</h2>
+          <ul>
+            <li>307.511 hồ sơ; huấn luyện 246.008, kiểm định 61.503; 137 đặc trưng.</li>
+            <li>Logistic L2: ROC-AUC kiểm định 0,7493. LightGBM: 0,7685.</li>
+            <li>Ngưỡng 0,18 theo chi phí 5:1 giảm tổn thất kỳ vọng từ 24.314 xuống 20.441, tức 15,93%.</li>
+            <li>Nhánh này chưa dùng tổng hợp bureau, trả góp, POS và thẻ do Spark tạo.</li>
+          </ul>
+        </div>
+      </div>
+      <p class="note">Điểm ngoài EXT_SOURCE_2, vốn nằm sẵn trên đơn, tách tỷ lệ vỡ nợ từ 15,21% ở ngũ phân vị thấp nhất xuống 3,59% ở ngũ phân vị cao nhất, mỗi nhóm khoảng 61.400 hồ sơ. Lịch sử cục tín dụng nhiều dòng chỉ vào được mô hình sau bước gộp.</p>
+      <footer class="foot"><span>IT5427 · Tích hợp dữ liệu</span><span class="pageno"></span></footer>
+    </section>
+
+    <section class="slide">
+      <p class="kicker">09 · Minh họa</p>
+      <h1>Ba chỗ nhìn thấy phép tích hợp</h1>
+      <table>
+        <thead><tr><th>Chỗ xem</th><th>Việc tích hợp được chỉ ra</th><th>Số đã đo</th></tr></thead>
+        <tbody>
+          <tr><td>Màn hình đường ống</td><td>Ba lớp, số dòng, kiểm tra, và nhãn tập con trên giao diện</td><td>799.487 dòng; 31/31 đạt</td></tr>
+          <tr><td>Màn hình vùng</td><td>Khớp vùng rồi áp một sốc lên đúng hồ sơ đã nối</td><td>500/500 khớp. Bậc cao 77 lên 104 khi thất nghiệp +2 điểm phần trăm và CPI +3%</td></tr>
+          <tr><td>Màn hình thẩm định</td><td>Hai hồ sơ giả định dùng điểm ngoài và tỷ số đã tính từ các trường trên đơn</td><td>PD 1,67% duyệt thẳng; PD 50,88% từ chối</td></tr>
+        </tbody>
+      </table>
+      <ul style="margin-top:12px;">
+        <li>Hai hồ sơ thật trong tập nhãn cho cùng chiều: mã 100002, nhãn vỡ nợ, PD 47,48%, từ chối; mã 100003, nhãn trả nợ, PD 4,65%, duyệt thẳng. Hai dòng không ước lượng tỷ lệ khớp toàn danh mục.</li>
+        <li>Năm sự kiện Kafka chạy thử, gồm kiểm lược đồ và chấm điểm, trung bình 38,40 ms mỗi bản ghi.</li>
+      </ul>
+      <p class="note">Giao diện tổng quan đọc mô hình 307.511 dòng. Giao diện đường ống đọc báo cáo Spark của tập con. Hai màn hình không cùng một lô tích hợp.</p>
+      <footer class="foot"><span>IT5427 · Tích hợp dữ liệu</span><span class="pageno"></span></footer>
+    </section>
+
+    <section class="slide">
+      <p class="kicker">10 · Ứng dụng và phần còn lại</p>
+      <h1>Hồ sơ đã ghép dùng được đến đâu</h1>
+      <div class="cols">
+        <div>
+          <h2>Việc đang làm được</h2>
+          <ul>
+            <li>Nhìn một khách hàng cùng lúc với lịch sử khoản trước, thay vì mở nhiều bảng.</li>
+            <li>Chia hàng chờ theo xác suất: duyệt thẳng, chuyển cán bộ, hoặc từ chối kèm đặc trưng làm tăng rủi ro.</li>
+            <li>Đổi tỷ lệ phạt 5:1 rồi tính lại ngưỡng trước khi ban hành. Mức giảm 15,93% đo trên tập kiểm định.</li>
+            <li>Xem danh mục vùng dịch chuyển trước khi siết hạn mức. Phép thử hiện tại chỉ trên 500 hồ sơ và chuỗi vĩ mô mô phỏng.</li>
+          </ul>
+        </div>
+        <div>
+          <h2>Việc tích hợp còn dở</h2>
+          <ul>
+            <li>Spark đầy đủ, cỡ vài chục triệu dòng lịch sử con, đã có đường chạy trên Colab nhưng chưa hợp nhất.</li>
+            <li>API chấm điểm chưa đọc tổng hợp Gold. Kho đặc trưng dùng chung cho cả hai nhánh là bước tiếp theo.</li>
+            <li>Luồng Kafka chưa ghi liên tục vào Gold và chưa đẩy số dòng, cảnh báo cách ly lên giao diện.</li>
+            <li>Quyết định và lý do chưa được lưu thành nhật ký không sửa. Xuất thông báo từ chối chưa làm.</li>
+          </ul>
+        </div>
+      </div>
+      <p class="note">Đã kiểm thử: 20 bài Python, 13 bài Java, 4 bài giao diện; ba dịch vụ Docker chạy được. Nguồn số liệu: báo cáo 15.11.2026, README, outputs/metrics và apache-spark/reports.</p>
+      <footer class="foot"><span>IT5427 · Tích hợp dữ liệu</span><span class="pageno"></span></footer>
+    </section>
+
+  </div></div></div>
+  <div id="chrome">
+    <button type="button" id="prev">Trước</button>
+    <span id="counter">1 / 1</span>
+    <span>← → chuyển slide</span>
+    <button type="button" id="next">Sau</button>
+  </div>
+</div>
+<script>
+(function () {
+  var slides = Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var index = 0;
+  var counter = document.getElementById("counter");
+  var bar = document.getElementById("bar");
+  var prev = document.getElementById("prev");
+  var next = document.getElementById("next");
+  function fit() {
+    var frame = document.getElementById("frame");
+    var scale = Math.min(frame.clientWidth / 1280, frame.clientHeight / 720);
+    if (!isFinite(scale) || scale <= 0) scale = 1;
+    var wrap = document.getElementById("wrap");
+    wrap.style.width = (1280 * scale) + "px";
+    wrap.style.height = (720 * scale) + "px";
+    document.getElementById("stage").style.transform = "scale(" + scale + ")";
+  }
+  function show(n) {
+    index = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach(function (slide, i) {
+      var on = i === index;
+      slide.classList.toggle("active", on);
+      slide.setAttribute("aria-hidden", on ? "false" : "true");
+    });
+    counter.textContent = (index + 1) + " / " + slides.length;
+    bar.style.width = ((index + 1) / slides.length * 100) + "%";
+    prev.disabled = index === 0;
+    next.disabled = index === slides.length - 1;
+    if (location.hash !== "#" + (index + 1)) history.replaceState(null, "", "#" + (index + 1));
+  }
+  slides.forEach(function (slide, i) {
+    var node = slide.querySelector(".pageno");
+    if (node) node.textContent = (i + 1) + " / " + slides.length;
+  });
+  document.getElementById("stage").addEventListener("click", function (event) {
+    if (event.target.closest("button, a")) return;
+    var rect = document.getElementById("wrap").getBoundingClientRect();
+    var x = event.clientX - rect.left;
+    if (x < rect.width * 0.18) show(index - 1);
+    else if (x > rect.width * 0.82) show(index + 1);
+  });
+  document.addEventListener("keydown", function (event) {
+    var tag = event.target && event.target.tagName;
+    if (tag === "INPUT" || tag === "TEXTAREA") return;
+    if (event.key === "ArrowRight" || event.key === "PageDown" || event.key === " ") { event.preventDefault(); show(index + 1); }
+    else if (event.key === "ArrowLeft" || event.key === "PageUp") { event.preventDefault(); show(index - 1); }
+    else if (event.key === "Home") show(0);
+    else if (event.key === "End") show(slides.length - 1);
+  });
+  prev.addEventListener("click", function () { show(index - 1); });
+  next.addEventListener("click", function () { show(index + 1); });
+  window.addEventListener("resize", fit);
+  window.addEventListener("hashchange", function () {
+    var n = parseInt(location.hash.replace("#", ""), 10);
+    if (n >= 1 && n <= slides.length) show(n - 1);
+  });
+  fit();
+  var start = parseInt(location.hash.replace("#", ""), 10);
+  show(start >= 1 && start <= slides.length ? start - 1 : 0);
+})();
+</script>
+</body>
+</html>
