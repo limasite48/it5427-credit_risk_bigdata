@@ -149,9 +149,7 @@ def main() -> None:
     # 1. Baseline Logistic Regression
     _, lr_metrics = train_logistic_regression_baseline(X_train, y_train, X_val, y_val)
 
-    # 2. Regularized LightGBM Classifier
-    pos = int(y_train.sum())
-    neg = len(y_train) - pos
+    # 2. Calibrated Regularized LightGBM Classifier (unweighted logloss keeps PDs aligned with risk tiers)
     model = LGBMClassifier(
         objective="binary",
         metric="auc",
@@ -166,7 +164,6 @@ def main() -> None:
         colsample_bytree=0.7,
         random_state=42,
         n_jobs=-1,
-        scale_pos_weight=neg / max(pos, 1),
         verbose=-1,
     )
     model.fit(

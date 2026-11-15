@@ -138,7 +138,7 @@ class MacroFeatureJoiner:
                 )
 
         if self.occupation_benchmarks is not None and "OCCUPATION_TYPE" in data.columns:
-            data["_occ_key"] = data["OCCUPATION_TYPE"].fillna("Missing/Unspecified").astype(str)
+            data["_occ_key"] = data["OCCUPATION_TYPE"].astype("string").fillna("Missing/Unspecified").astype(str)
             data = data.merge(
                 self.occupation_benchmarks[["OCCUPATION_TYPE", "occ_median_salary"]],
                 left_on="_occ_key",

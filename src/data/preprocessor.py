@@ -101,8 +101,8 @@ class CreditRiskPreprocessor(BaseEstimator, TransformerMixin):
                 handle_unknown="use_encoded_value",
                 unknown_value=-1
             )
-            # Fill NAs with 'Missing' before fitting
-            cat_df = data[self.cat_cols].fillna("Missing").astype(str)
+            # Fill NAs with 'Missing' before fitting (cast to string first for Categorical compatibility)
+            cat_df = data[self.cat_cols].astype("string").fillna("Missing").astype(str)
             self.encoder.fit(cat_df)
 
         self.feature_names_ = self.num_cols + self.cat_cols
@@ -126,7 +126,7 @@ class CreditRiskPreprocessor(BaseEstimator, TransformerMixin):
             cat_dict = {}
             for c in self.cat_cols:
                 if c in data.columns:
-                    cat_dict[c] = data[c].fillna("Missing").astype(str)
+                    cat_dict[c] = data[c].astype("string").fillna("Missing").astype(str)
                 else:
                     cat_dict[c] = pd.Series("Missing", index=data.index)
             cat_raw_df = pd.DataFrame(cat_dict, index=data.index)

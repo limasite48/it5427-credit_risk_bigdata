@@ -15,8 +15,9 @@ def _calculate_segment_rates(df: pd.DataFrame, col: str) -> Dict[str, Any]:
     if col not in df.columns or "TARGET" not in df.columns:
         return {}
 
+    segment_keys = df[col].astype("string").fillna("Missing/Unspecified")
     grouped = (
-        df.groupby(df[col].fillna("Missing/Unspecified"))["TARGET"]
+        df.groupby(segment_keys)["TARGET"]
         .agg(["count", "sum", "mean"])
         .reset_index()
     )

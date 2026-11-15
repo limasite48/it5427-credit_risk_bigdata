@@ -3,8 +3,10 @@ from __future__ import annotations
 
 import pandas as pd
 
+from src.analytics.risk_profiling import compute_demographic_risk_profiles
 from src.config import BASE_DIR
 from src.data.macro_loader import MacroFeatureJoiner
+from src.data.preprocessor import CreditRiskPreprocessor
 from src.integration.kafka_consumer_scorer import RealTimeCreditScorer
 
 
@@ -73,3 +75,41 @@ def test_real_time_scorer_dry_run_handles_zero_and_positive_limits():
     decisions = scorer.run_dry_run_simulation(sample_limit=2)
     assert len(decisions) == 2
     assert all("default_probability" in d and "risk_tier" in d for d in decisions)
+
+
+def test_categorical_fillna_regression_across_analytics_macro_and_preprocessor(tmp_path):
+    """Ensure pandas Categorical columns with NaNs do not raise TypeError on fillna()."""
+    df = pd.DataFrame(
+        {
+            "SK_ID_CURR": [1, 2, 3, 4, 5],
+            "TARGET": [0, 1, 0, 0, 1],
+            "OCCUPATION_TYPE": pd.Categorical(["Managers", None, "Laborers", "Managers", None]),
+            "NAME_INCOME_TYPE": pd.Categorical(["Working", "Working", None, "Pensioner", "Working"]),
+            "NAME_EDUCATION_TYPE": ["Higher education"] * 5,
+            "CODE_GENDER": ["F", "M", "F", "M", "F"],
+            "NAME_CONTRACT_TYPE": ["Cash loans"] * 5,
+            "EXT_SOURCE_2": [0.1, 0.3, 0.5, 0.7, 0.9],
+            "AMT_INCOME_TOTAL": [100000.0, 120000.0, 90000.0, 150000.0, 80000.0],
+            "AMT_CREDIT": [200000.0, 300000.0, 180000.0, 250000.0, 160000.0],
+            "AMT_ANNUITY": [10000.0, 15000.0, 9000.0, 12500.0, 8000.0],
+            "DAYS_BIRTH": [-12000, -14000, -16000, -18000, -20000],
+            "DAYS_EMPLOYED": [-1000, -2000, -1500, 365243, -500],
+            "CNT_FAM_MEMBERS": [2, 1, 3, 2, 4],
+            "REGION_POPULATION_RELATIVE": [0.02] * 5,
+        }
+    )
+
+    profiles = compute_demographic_risk_profiles(df, save_path=tmp_path / "demographics.json")
+    assert "Missing/Unspecified" in profiles["risk_by_occupation"]
+    assert len(profiles["risk_by_ext_source_2_quintile"]) == 5
+
+    prep = CreditRiskPreprocessor()
+    transformed = prep.fit_transform(df)
+    assert transformed.isnull().sum().sum() == 0
+
+    supp_dir = BASE_DIR / "ingestion-minio-kafka" / "data" / "supplementary"
+    joiner = MacroFeatureJoiner(supp_dir)
+    macro_df = joiner.join_macro_features(df)
+    assert "income_to_occ_median_ratio" in macro_df.columns
+    assert macro_df["income_to_occ_median_ratio"].isnull().sum() == 0
+

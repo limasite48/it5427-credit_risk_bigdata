@@ -157,7 +157,7 @@ The system is operational end-to-end and exceeds minimum course deliverables acr
 | **Macro & Stress Simulation** | `500 / 500` scored sample matched to 82 macro regions; `Rating 3` HIGH share `23.68%`; `+2.0 pp` unemployment & `+3.0%` CPI shock moves HIGH tier from `15.4%` (`77`) to `20.8%` (`104`, **`+27` customers**) | `GET /api/insights/regions`, `POST /api/insights/macro-stress` |
 | **Spark Medallion & DQ Gates** | `799,487` Bronze & Silver rows (`0` quarantined, `0` duplicates across 9 tables), `23,990` Gold loans, `5,000` integrated customer profiles (**`175` features**), **`31 / 31` DQ & anti-leakage checks passed** *(interim real dev subset pending full Colab zip)* | `apache-spark/reports/pipeline_stats.json`, `GET /api/insights/pipeline` |
 | **Streaming Dry-Run Latency** | Real-time schema validation + LightGBM + TreeSHAP scoring across 5 sample events: **`38.40ms/record`** average latency | `python src/integration/kafka_consumer_scorer.py --dry-run --limit 5` |
-| **Automated Test Suites** | **Python:** `20 passed` \| **Backend (JDK 25):** `13 passed, 0 failed` \| **Frontend:** Type-check clean, Vitest `4 passed` (`2` files), Vite production bundle `2,626` modules | `pytest tests/ -v`, `./mvnw -B test`, `npm test` |
+| **Automated Test Suites** | **Python:** `21 passed` \| **Backend (JDK 25):** `13 passed, 0 failed` \| **Frontend:** Type-check clean, Vitest `4 passed` (`2` files), Vite production bundle `2,626` modules | `pytest tests/ -v`, `./mvnw -B test`, `npm test` |
 | **Containerized Web Platform** | `frontend` (`:8088`), `backend` (`:8080`), and internal `ml-service` (`:8000`) all **healthy**; all authenticated REST endpoints & PNG figures verified **`200 OK`** | `docker compose ps`, `http://localhost:8088` |
 
 ---
@@ -283,11 +283,13 @@ it5427-credit_risk_bigdata/
 │   └── service/                               # Operational inference service
 │       └── scoring_service.py                 # CreditRiskScoringService (maps features -> PD -> Risk Tier)
 │
-├── tests/                                     # Automated Test Suite (20 passing Python tests)
+├── tests/                                     # Automated Test Suite (21 passing Python tests)
 │   ├── test_evaluate_profile.py               # Unit tests for manual evaluation & lookup CLI
 │   ├── test_ingestion_integration.py          # Integration tests (macro joiner, schema validation)
+│   ├── test_ml_adapter.py                     # FastAPI ML adapter endpoint & payload tests
 │   ├── test_preprocessor.py                   # Tests for banking ratios and anomaly correction
-│   └── test_scoring_service.py                # Tests for PD calculation and risk tier mappings
+│   ├── test_scoring_service.py                # Tests for PD calculation and risk tier mappings
+│   └── test_unified_fixes.py                  # Regression tests for macro joiner, dry-run & Categorical NaNs
 │
 └── outputs/                                   # Generated Model & Analytics Artifacts
     ├── figures/                               # Visual assets (`roc_curve.png`, `shap_summary.png`)
@@ -605,11 +607,13 @@ Before scoring applications with machine learning, applicants must satisfy three
 
 ## 8. Detailed Demo Case Instructions (Web Dashboard, REST API & CLI)
 
-This section provides step-by-step demonstration cases covering both the **Full Web Platform (`http://localhost:8088`)** and **CLI / Streaming / Python Interfaces**, with exact expected outputs measured on the calibrated platform.
+This section provides step-by-step demonstration cases covering both the **Full Web Platform (`http://localhost:8088`)** and **CLI / Streaming / Python Interfaces**, with exact expected outputs measured on the calibrated platform—structured specifically for **live presentations** and **report writing**.
 
 ### 8.1 Prerequisites & Launching the Demo Stack
 
 #### Option A — Full Docker Compose Platform (Recommended for Presentations)
+
+**Bash / Linux / macOS:**
 ```bash
 # 1. Copy default demo configuration (only if .env does not exist)
 cp -n .env.example .env
@@ -623,19 +627,45 @@ docker compose up --build -d
 # 4. Verify all 3 containers report healthy
 docker compose ps
 ```
+
+**Windows PowerShell:**
+```powershell
+# 1. Copy default demo configuration once if missing
+if (!(Test-Path .env)) { Copy-Item .env.example .env }
+
+# 2. Build and start Frontend (:8088), Spring Boot Backend (:8080), and FastAPI ML Service (:8000)
+docker compose up --build -d
+
+# 3. Verify all containers report healthy
+docker compose ps
+```
+
 Open **[http://localhost:8088](http://localhost:8088)** in your browser.
 
 | Role | Username | Password | Scope |
 | --- | --- | --- | --- |
-| **Underwriter** | `underwriter` | `UnderwriterDemo!234` | Full dashboard navigation + live manual scoring + lookups |
+| **Underwriter** | `underwriter` | `UnderwriterDemo!234` | Full dashboard navigation + live manual scoring + lookups *(recommended for demo)* |
 | **Risk Analyst** | `analyst` | `AnalystDemo!234` | Portfolio analytics, segments, macro stress, pipeline audit |
 | **Administrator** | `admin` | `AdminDemo!234` | All endpoints + admin configuration & refresh controls |
 
 *(Credentials are loaded from `.env` and defined for local demonstration only.)*
 
+### 8.2 5-Minute Live Presentation & Report-Writing Playbook
+
+Use this sequence during live grading/presentations so every major project requirement is demonstrated visually and backed by reproducible report artifacts:
+
+| Order | Surface / View | What to Highlight in Presentation | Report Evidence & Artifacts to Cite / Screenshot |
+| :---: | :--- | :--- | :--- |
+| **1** | **Web: `Overview`** (`/`) | Full `307,511`-row scale (`8.07%` NPL), LightGBM vs. Logistic Regression uplift (`0.7685` vs. `0.7493` val ROC-AUC; `0.2595` PR-AUC), and **`5:1` cost optimization** (`p* = 0.18` saving `15.93%` financial loss). | [`outputs/metrics/risk_summary.json`](outputs/metrics/risk_summary.json), [`outputs/metrics/model_evaluation.json`](outputs/metrics/model_evaluation.json), [`outputs/figures/roc_curve.png`](outputs/figures/roc_curve.png), [`outputs/figures/shap_summary.png`](outputs/figures/shap_summary.png) |
+| **2** | **Web: `Segment Risk`** (`/segments`) | Empirical risk separation vs. the `8.07%` baseline across occupation (`Drivers 11.33%` vs. `Accountants 4.83%`), education, and `EXT_SOURCE_2` quintiles (`Q1 15.21%` vs. `Q5 3.59%`, > 4.2x spread). | [`outputs/metrics/demographic_profiles.json`](outputs/metrics/demographic_profiles.json) + chart screenshots |
+| **3** | **Web: `Macro & Regions`** (`/macro`) | `500 / 500` macro join across 82 regions; submit **`+2.0 pp` Unemployment / `+3.0%` CPI shock** to show `HIGH` risk jumping from `15.4%` (`77`) to `20.8%` (`104`, **`+27` customers**). | `GET /api/insights/regions`, `POST /api/insights/macro-stress` + Before/After stress comparison |
+| **4** | **Web: `Data Pipeline`** (`/pipeline`) | Bronze -> Silver -> Gold funnel, `0` quarantined / `0` exact duplicates, **`31 / 31` DQ & anti-leakage checks passed**, and Structured Streaming metrics *(notes `5,000`-customer real dev subset until Colab zip is merged)*. | [`apache-spark/reports/pipeline_stats.json`](apache-spark/reports/pipeline_stats.json) + `Data Pipeline` funnel screenshot |
+| **5** | **Web: `Underwriting`** (`/underwriting`) | Run **Load Full Applicant** (`1.67%` `LOW` / `Auto-Approve`), **Load Subprime Applicant** (`50.88%` `HIGH` / `Decline`), a live **"What-If" sensitivity edit**, and Gold lookup (`298157` `HIGH`, `277603` `LOW`) with per-applicant SHAP bars. | [`sample_full_applicant.json`](sample_full_applicant.json), [`sample_subprime_applicant.json`](sample_subprime_applicant.json), [`outputs/gold_demo_ids.json`](outputs/gold_demo_ids.json) |
+| **6** | **CLI / Streaming** (Terminal) | Offline ground-truth lookup (`100002` `TARGET=1`, `100003` `TARGET=0`), real-time Kafka Draft 2020-12 schema + SHAP scoring (`--dry-run --limit 5`, `~38.4ms/record`), and `21`-test Python suite. | `evaluate_profile.py`, `src/integration/kafka_consumer_scorer.py`, `pytest tests/ -v` |
+
 ---
 
-### 8.2 Part A — Web Dashboard Demo Cases (`http://localhost:8088`)
+### 8.3 Part A — Detailed Web Dashboard Demo Cases (`http://localhost:8088`)
 
 Log in with **`underwriter` / `UnderwriterDemo!234`**, then step through the five workspace views in the left navigation sidebar:
 
@@ -711,7 +741,7 @@ This view demonstrates real-time FastAPI + LightGBM + TreeSHAP decisioning as we
 
 ---
 
-### 8.3 Part B — REST API Demo Case (`curl`)
+### 8.4 Part B — REST API Demo Case (`curl`)
 
 Demonstrate secured JWT authentication and live backend-to-ML inference directly from the terminal against the running Compose stack (`http://localhost:8088`):
 
@@ -741,13 +771,13 @@ curl -fsS -b /tmp/cookies.txt -X POST http://localhost:8088/api/auth/logout
 
 ---
 
-### 8.4 Part C — CLI, Streaming & Programmatic Python Demo Cases
+### 8.5 Part C — CLI, Streaming & Programmatic Python Demo Cases
 
-We provide `evaluate_profile.py` and `kafka_consumer_scorer.py` for offline CLI demonstrations without needing Docker running.
+We provide `evaluate_profile.py` and `kafka_consumer_scorer.py` for offline CLI demonstrations (and terminal screenshots for reports) without needing Docker running.
 
 #### Demo Case C1 — Automated Verification Suites
 ```bash
-# Python unit & integration suite (20 tests)
+# Python unit & integration suite (21 tests)
 python -m pytest tests/ -v
 
 # Full multi-layer suite (pytest + Maven + Vitest)
@@ -886,7 +916,7 @@ To craft custom scenarios: copy `sample_full_applicant.json` -> `my_applicant.js
 
 ---
 
-### 8.5 Part D — Upgrading the Demo After Google Colab Completes
+### 8.6 Part D — Upgrading the Demo After Google Colab Completes
 
 Once `notebooks/colab_full_pipeline.ipynb` exports `credit_risk_full_artifacts.zip` (containing all 307,511-row Spark Bronze/Silver/Gold metrics, Gold LightGBM model, and standardized dashboard CSV/JSON/PNG outputs), swap them into the live stack with:
 

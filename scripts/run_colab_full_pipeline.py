@@ -117,6 +117,11 @@ def main() -> None:
     parser.add_argument("--skip-eda", action="store_true", help="Skip pandas raw EDA printout")
     parser.add_argument("--skip-profiling", action="store_true", help="Skip Spark raw profiling stage")
     parser.add_argument("--skip-spark", action="store_true", help="Skip Spark Medallion batch+streaming stage")
+    parser.add_argument(
+        "--resume-if-gold-exists",
+        action="store_true",
+        help="Skip Spark stage when Gold parquet tables already exist in gold_dir (resumes fast after downstream failure)",
+    )
     parser.add_argument("--verify-delta", action="store_true", help="Run Delta Lake smoke round-trip check")
     parser.add_argument("--skip-track-a", action="store_true", help="Skip full-dataset real-time model training")
     parser.add_argument("--bundle", type=Path, default=ROOT / "credit_risk_full_artifacts.zip", help="Output zip bundle path")
@@ -165,7 +170,17 @@ def main() -> None:
         _run([py, "ingestion-minio-kafka/scripts/eda.py", str(raw_dir)])
 
     # 2. Apache Spark Medallion Pipeline + Streaming Demo (+ optional Delta check)
-    if not args.skip_spark:
+    gold_ready = (
+        any((gold_dir / "integrated_credit_profile").glob("*.parquet"))
+        and any((gold_dir / "training_labels").glob("*.parquet"))
+        if (gold_dir / "integrated_credit_profile").exists() and (gold_dir / "training_labels").exists()
+        else False
+    )
+    if args.skip_spark:
+        print("Skipping Spark stage (--skip-spark).")
+    elif args.resume_if_gold_exists and gold_ready:
+        print(f"Existing Spark Gold tables found at {gold_dir} — resuming directly from Step 3.")
+    else:
         spark_cmd = [py, "-m", "scripts.run_pipeline", "--raw-dir", str(raw_dir), "--streaming-demo", "--force-ingest"]
         if args.skip_profiling or args.fast:
             spark_cmd.append("--skip-profiling")

@@ -22,7 +22,7 @@ FIGURES = OUT / "figures"
 
 def rate_block(frame: pd.DataFrame, column: str) -> dict:
     blocks = {}
-    for label, part in frame.groupby(column, dropna=False):
+    for label, part in frame.groupby(frame[column].astype("string"), dropna=False):
         name = "Missing/Unspecified" if pd.isna(label) or str(label).strip() in {"", "<NA>", "nan"} else str(label)
         total = int(len(part))
         defaults = int(part["target"].sum())
@@ -111,7 +111,7 @@ def main() -> None:
     (METRICS / "risk_summary.json").write_text(json.dumps(summary, indent=2))
 
     labeled = labeled.copy()
-    labeled["occupation_type"] = labeled["occupation_type"].fillna("Missing/Unspecified")
+    labeled["occupation_type"] = labeled["occupation_type"].astype("string").fillna("Missing/Unspecified")
     profiles = {
         "risk_by_occupation": rate_block(labeled, "occupation_type"),
         "risk_by_income_type": rate_block(labeled, "name_income_type"),
